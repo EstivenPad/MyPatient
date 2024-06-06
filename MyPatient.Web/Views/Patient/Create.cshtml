@@ -1,0 +1,96 @@
+﻿@model Patient;
+
+<h1>Registro de Pacientes</h1>
+
+<div class="container">
+    <form method="post">
+        <div class="row">
+            <div class="col-12 col-md-6 mb-3">
+                <label for="record" class="form-label">Record</label>
+                <input class="form-control" id="record" asp-for="Record" />
+                <span asp-validation-for="Record" class="text-danger"></span>
+            </div>
+
+            <div class="col-12 col-md-6 mb-3">
+                <label for="identification" class="form-label">Identificación</label>
+                <input class="form-control" id="identification" placeholder="000-0000000-0" asp-for="Identification" />
+                <span asp-validation-for="Identification" class="text-danger"></span>
+            </div> 
+        </div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input class="form-control" id="name" asp-for="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12 col-md-4">
+                <label class="form-label">Sexo</label>
+                
+                <div>
+                    <input type="radio" class="form-check-input" id="male" asp-for="Sex" value="true" checked />
+                    <label for="male" class="form-check-label">Masculino</label>
+
+                    <input type="radio" class="form-check-input" id="female" asp-for="Sex" value="false"/>
+                    <label for="female" class="form-check-label">Femenino</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="age" class="form-label">Edad</label>
+                <input class="form-control" id="age" placeholder="0" asp-for="Age" min="1"/>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="weight" class="form-label">Peso</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" id="weight" placeholder="0" asp-for="Weight" min="1" />
+                    <span class="input-group-text" id="weight_measure">Lb</span>
+                </div>
+            </div>
+        </div>
+
+        <h4>Seguro Médico</h4>
+        <div class="border border-primary p-3" style="border-radius: 10px">
+            <div class="mb-3">
+                <input type="checkbox" class="form-check-input" id="isInsured" asp-for="IsInsured" />
+                <label for="isInsured" class="form-check-label">Es Asegurado</label>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label for="ars" class="form-label">ARS</label>
+                    <input class="form-control" id="ars" asp-for="ARS" disabled="@(Model?.IsInsured == null)" />
+                </div>
+                <div class="col-6 mb-3">
+                    <label for="nss" class="form-label">NSS</label>
+                    <input class="form-control" id="nss" asp-for="NSS" />
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var checkbox = document.getElementById('isInsured');
+            var arsTextInput = document.getElementById('ars');
+            var nssTextInput = document.getElementById('nss');
+
+            checkbox.addEventListener('change', function () {
+                arsTextInput.disabled = !this.checked;
+                nssTextInput.disabled = !this.checked;
+            });
+
+            // Initialize the state based on the model value
+            arsTextInput.disabled = !checkbox.checked;
+            nssTextInput.disabled = !checkbox.checked;
+        });
+    </script>
+
+    @{<partial name="_ValidationScriptsPartial"/>}
+}
