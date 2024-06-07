@@ -4,4 +4,44 @@
 
 <h1>PACIENTES</h1>
 
-<a class="btn btn-primary" asp-controller="Patient" asp-action="Create">Crear nuevo paciente</a>
+<div class="row mb-2">
+    <div class="col-2">
+        <select class="form-select" id="filtro">
+            <option selected>Filtrar por</option>
+            <option>Nombre</option>
+            <option>Record</option>
+            <option>MA</option>
+        </select>
+    </div>
+    <div class="col">
+        <input class="form-control" placeholder="Criterio de busqueda" id="filter" />
+    </div>
+    <div class="col">
+        <button class="btn btn-primary">Buscar</button>
+    </div>
+    <div class="col text-end">
+        <a class="btn btn-primary" asp-controller="Patient" asp-action="Create"><i class="bi bi-person-plus-fill"></i> Crear nuevo paciente</a>
+    </div>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="text-primary" scope="col">Record</th>
+            <th class="text-primary" scope="col">Nombre</th>
+            <th class="text-primary" scope="col">MA</th>
+            <th class="text-primary" scope="col">Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>123456</td>
+            <td>Pedro Martinez Aurelio</td>
+            <td>Dr. Julio Rodriguez</td>
+            <td>
+                <button class="btn btn-warning">Editar</button>
+                <button class="btn btn-danger">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
