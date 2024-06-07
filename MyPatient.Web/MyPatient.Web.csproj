@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MyPatient.DataAccess\MyPatient.DataAccess.csproj" />
+    <ProjectReference Include="..\MyPatient.Models\MyPatient.Models.csproj" />
+  </ItemGroup>
+
 </Project>
