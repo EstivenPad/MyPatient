@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPatient.Application.Services.Patient;
 using MyPatient.Models;
 
@@ -14,8 +15,15 @@ namespace MyPatient.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Patient> patients = await _patientService.GetAllPatients();
-            return View(patients);
+            return View(await _patientService.GetAllPatients());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(string filterOption, string filterCriteria)
+        {
+            ViewData["FilterCriteria"] = filterCriteria;
+
+            return View(await _patientService.GetFilteredPatients(filterOption, filterCriteria));
         }
 
         public IActionResult Create()
