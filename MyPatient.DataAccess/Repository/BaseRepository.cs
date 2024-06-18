@@ -32,7 +32,7 @@ namespace MyPatient.DataAccess.Repository
 
         public async Task<T> Get(Expression<Func<T, bool>> filter)
         {
-            return await _context.Set<T>().AsNoTracking().Where(filter).FirstOrDefaultAsync();
+            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(filter);
         }
 
         public async Task<List<T>> GetAll()
