@@ -1,4 +1,4 @@
-﻿@model MyPatient.Models.Patient
+﻿@model Patient
 
 <h1>Registro de Pacientes</h1>
 
@@ -27,7 +27,6 @@
         <div class="row mb-3">
             <div class="col-12 col-md-4">
                 <label class="form-label">Sexo</label>
-                
                 <div>
                     <input type="radio" class="form-check-input" id="male" asp-for="Sex" value="true" checked />
                     <label for="male" class="form-check-label">Masculino</label>
@@ -70,6 +69,7 @@
 
         <div class="mt-3">
             <button type="submit" class="btn btn-primary">Guardar</button>
+            <a class="btn btn-secondary" asp-controller="Patient" asp-action="Index">Volver</a>
         </div>
     </form>
 </div>
