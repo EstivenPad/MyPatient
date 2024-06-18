@@ -1,28 +1,31 @@
-﻿@{
+﻿@model List<Patient>
+
+@{
     ViewData["Title"] = "Pacientes";
 }
 
 <h1>PACIENTES</h1>
 
-<div class="row mb-2">
-    <div class="col-2">
-        <select class="form-select" id="filtro">
-            <option selected>Filtrar por</option>
-            <option>Nombre</option>
-            <option>Record</option>
-            <option>MA</option>
-        </select>
+<form method="post">
+    <div class="row mb-2">
+        <div class="col-2">
+            <select class="form-select" name="filterOption">
+                <option disabled selected>--Seleccione filtro--</option>
+                <option value="Name">Nombre</option>
+                <option value="Record">Record</option>
+            </select>
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Criterio de busqueda" name="filterCriteria" value="@ViewData["FilterCriteria"]" />
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+        <div class="col text-end">
+            <a class="btn btn-primary" asp-controller="Patient" asp-action="Create"><i class="bi bi-person-plus-fill"></i> Crear nuevo paciente</a>
+        </div>
     </div>
-    <div class="col">
-        <input class="form-control" placeholder="Criterio de busqueda" id="filter" />
-    </div>
-    <div class="col">
-        <button class="btn btn-primary">Buscar</button>
-    </div>
-    <div class="col text-end">
-        <a class="btn btn-primary" asp-controller="Patient" asp-action="Create"><i class="bi bi-person-plus-fill"></i> Crear nuevo paciente</a>
-    </div>
-</div>
+</form>
 
 <table class="table table-hover">
     <thead>
@@ -34,14 +37,17 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>123456</td>
-            <td>Pedro Martinez Aurelio</td>
-            <td>Dr. Julio Rodriguez</td>
-            <td>
-                <button class="btn btn-warning">Editar</button>
-                <button class="btn btn-danger">Eliminar</button>
-            </td>
-        </tr>
+        @foreach (var patient in Model)
+        {
+            <tr>
+                <td>@patient.Record</td>
+                <td>@patient.Name</td>
+                <td>-----</td>
+                <td>
+                    <a class="btn btn-warning" asp-controller="Patient" asp-action="Edit" asp-route-id="@patient.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                    <a class="btn btn-danger" asp-controller="Patient" asp-action="Delete" asp-route-id="@patient.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
