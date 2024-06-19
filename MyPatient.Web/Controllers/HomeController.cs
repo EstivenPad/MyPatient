@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using MyPatient.Models;
+using MyPatient.Web.Models;
 using System.Diagnostics;
 
 namespace MyPatient.Web.Controllers
@@ -14,6 +14,11 @@ namespace MyPatient.Web.Controllers
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
         {
             return View();
         }
