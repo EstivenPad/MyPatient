@@ -10,10 +10,9 @@ namespace MyPatient.Application.Services.Patient
 {
     public interface IPatientService
     {
-        Task<Models.Patient> GetPatient(Expression<Func<Models.Patient, bool>> filter);
-        Task<List<Models.Patient>> GetAllPatients();
-        Task<List<Models.Patient>> GetFilteredPatients(string filter, string filterCriteria);
         Task AddPatient(Models.Patient patient);
+        Task<IEnumerable<Models.Patient>> GetAllPatients(Expression<Func<Models.Patient, bool>>? filter, string? includeProperties = null);
+        Task<Models.Patient> GetPatient(Expression<Func<Models.Patient, bool>> filter, string? includeProperties = null);
         Task UpdatePatient(Models.Patient patient);
         Task RemovePatient(Models.Patient patient);
     }
