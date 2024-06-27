@@ -1,72 +1,89 @@
-﻿@model Patient
+﻿@model PatientDeleteVM
 
-<h1>Eliminar Paciente</h1>
+<h1>ELIMINACIÓN DE PACIENTE</h1>
 
 <div class="container">
     <form method="post">
+        <input asp-for="Patient.Id" hidden />
         <div class="row">
             <div class="col-12 col-md-6 mb-3">
                 <label for="record" class="form-label">Record</label>
-                <input class="form-control" id="record" asp-for="Record" disabled />
+                <input class="form-control" id="record" asp-for="Patient.Record" disabled />
             </div>
 
             <div class="col-12 col-md-6 mb-3">
                 <label for="identification" class="form-label">Identificación</label>
-                <input class="form-control" id="identification" placeholder="000-0000000-0" asp-for="Identification" disabled />
+                <input class="form-control" id="identification" asp-for="Patient.Identification" disabled />
             </div>
         </div>
 
         <div class="mb-3">
             <label for="name" class="form-label">Nombre</label>
-            <input class="form-control" id="name" asp-for="Name" disabled />
+            <input class="form-control" id="name" asp-for="Patient.Name" disabled />
         </div>
 
         <div class="row mb-3">
             <div class="col-12 col-md-4">
                 <label class="form-label">Sexo</label>
                 <div>
-                    <input type="radio" class="form-check-input" id="male" asp-for="Sex" value="true" checked disabled />
+                    <input type="radio" class="form-check-input" id="male" asp-for="Patient.Sex" value="true" checked disabled />
                     <label for="male" class="form-check-label">Masculino</label>
 
-                    <input type="radio" class="form-check-input" id="female" asp-for="Sex" value="false" disabled />
+                    <input type="radio" class="form-check-input" id="female" asp-for="Patient.Sex" value="false" disabled />
                     <label for="female" class="form-check-label">Femenino</label>
                 </div>
             </div>
             <div class="col-12 col-md-4">
                 <label for="age" class="form-label">Edad</label>
-                <input class="form-control" id="age" placeholder="0" asp-for="Age" min="1" disabled />
+                <input class="form-control" id="age" placeholder="0" asp-for="Patient.Age" min="1" disabled />
             </div>
             <div class="col-12 col-md-4">
                 <label for="weight" class="form-label">Peso</label>
                 <div class="input-group">
-                    <input type="number" class="form-control" id="weight" placeholder="0" asp-for="Weight" min="1" disabled />
+                    <input type="number" class="form-control" id="weight" placeholder="0" asp-for="Patient.Weight" min="1" disabled />
                     <span class="input-group-text" id="weight_measure">Lb</span>
                 </div>
             </div>
         </div>
 
-        <h4>Seguro Médico</h4>
-        <div class="border border-primary p-3" style="border-radius: 10px">
-            <div class="mb-3">
-                <input type="checkbox" class="form-check-input" id="isInsured" asp-for="IsInsured" disabled />
-                <label for="isInsured" class="form-check-label">Es Asegurado</label>
+        <div class="row">
+            <div class="col-6">
+                <h4>MA</h4>
+                <div class="border border-primary p-3 mb-3" style="border-radius: 10px">
+                    <div class="mb-3">
+                        <label class="form-label">MA</label>
+                        <input class="form-control" id="ma" asp-for="MA" disabled />
+                    </div>
+                </div>
+
+                <div class="mt-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-danger w-50">Eliminar</button>
+                   
+                    <a class="btn btn-secondary w-50" asp-controller="Patient" asp-action="Index">
+                        Volver
+                    </a>
+                </div>
             </div>
 
-            <div class="row">
-                <div class="col-6 mb-3">
-                    <label for="ars" class="form-label">ARS</label>
-                    <input class="form-control" id="ars" asp-for="ARS" disabled />
-                </div>
-                <div class="col-6 mb-3">
-                    <label for="nss" class="form-label">NSS</label>
-                    <input class="form-control" id="nss" asp-for="NSS" disabled />
+            <div class="col-6">
+                <h4>Seguro Médico</h4>
+                <div class="border border-primary p-3" style="border-radius: 10px">
+                    <div class="mb-3">
+                        <input type="checkbox" class="form-check-input" id="isInsured" asp-for="Patient.IsInsured" disabled />
+                        <label for="isInsured" class="form-check-label">Es Asegurado</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ars" class="form-label">ARS</label>
+                        <input class="form-control" id="ars" asp-for="Patient.ARS" disabled />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="nss" class="form-label">NSS</label>
+                        <input class="form-control" id="nss" asp-for="Patient.NSS" disabled />
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="mt-3">
-            <button type="submit" class="btn btn-danger">Eliminar</button>
-            <a class="btn btn-secondary" asp-controller="Patient" asp-action="Index">Volver</a>
         </div>
     </form>
 </div>
