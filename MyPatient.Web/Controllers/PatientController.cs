@@ -1,81 +1,139 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyPatient.Application.Services.MA;
 using MyPatient.Application.Services.Patient;
 using MyPatient.Models;
+using MyPatient.Models.ViewModels;
 
 namespace MyPatient.Web.Controllers
 {
     public class PatientController : Controller
     {
         private readonly IPatientService _patientService;
-        public PatientController(IPatientService patientService)
+        private readonly IMAService _maService;
+        public PatientController(IPatientService patientService, IMAService maService)
         {
             _patientService = patientService;
+            _maService = maService;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _patientService.GetAllPatients());
-        }
+            var patients = await _patientService.GetAllPatients(x => true, includeProperties: "MA");
 
-        [HttpPost]
-        public async Task<IActionResult> Index(string filterOption, string filterCriteria)
-        {
-            ViewData["FilterCriteria"] = filterCriteria;
-
-            return View(await _patientService.GetFilteredPatients(filterOption, filterCriteria));
-        }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(Patient patient)
-        {
-            if (ModelState.IsValid)
+            var patientIndexVM = new PatientIndexVM
             {
-                await _patientService.AddPatient(patient);
+                Patients = patients.ToList(),
+                Filters = new List<SelectListItem>
+                {
+                    new SelectListItem{ Text = "Nombre", Value = "Name" },
+                    new SelectListItem{ Text = "Record", Value = "Record" },
+                    new SelectListItem{ Text = "MA", Value = "MA" }
+                },
+                SelectedFilter = "",
+                FilterCriteria = ""
+            };
 
-                TempData["success"] = "Paciente creado correctamente.";
+            return View(patientIndexVM);
+        }
 
-                return RedirectToAction("Index");
+        [HttpPost]
+        public async Task<IActionResult> Index(PatientIndexVM patientsVM)
+        {
+            IEnumerable<Patient> patientsList;
+
+            if (!String.IsNullOrEmpty(patientsVM.FilterCriteria))
+            {
+                switch (patientsVM.SelectedFilter)
+                {
+                    case "Name":
+                        patientsList = await _patientService.GetAllPatients(p => p.Name.Contains(patientsVM.FilterCriteria), includeProperties: "MA");
+                        break;
+
+                    case "Record":
+                        patientsList = await _patientService.GetAllPatients(p => p.Record.Contains(patientsVM.FilterCriteria), includeProperties: "MA");
+                        break;
+
+                    case "MA":
+                        patientsList = await _patientService.GetAllPatients(p => p.MA.FirstName.Contains(patientsVM.FilterCriteria), includeProperties: "MA");
+                        break;
+
+                    default:
+                        patientsList = await _patientService.GetAllPatients(p => true, includeProperties: "MA");
+                        break;
+                }
+            }
+            else
+            {
+                patientsList = await _patientService.GetAllPatients(p => true, includeProperties: "MA");
             }
 
-            return View(patient);
+            var patientIndexVM = new PatientIndexVM
+            {
+                Patients = patientsList.ToList(),
+                Filters = new List<SelectListItem>
+                {
+                    new SelectListItem{ Text = "Nombre", Value = "Name" },
+                    new SelectListItem{ Text = "Record", Value = "Record" },
+                    new SelectListItem{ Text = "MA", Value = "MA" }
+                },
+                SelectedFilter = "",
+                FilterCriteria = ""
+            };
+
+            return View(patientIndexVM);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Upsert(int? id)
         {
+            var patientVM = new PatientUpsertVM
+            {
+                Patient = new Patient(),
+                MA = new MA(),
+                MAs = await _maService.PopulateMASelect()
+            };
+
             if (id == null || id == 0)
             {
-                return NotFound();
+                return View(patientVM);
             }
-
-            Patient patient = await _patientService.GetPatient(p => p.Id == id);
-
-            if (patient == null)
+            else
             {
-                return NotFound();
+                patientVM.Patient = await _patientService.GetPatient(p => p.Id == id);
+                return View(patientVM);
             }
-
-            return View(patient);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Patient patient)
+        public async Task<IActionResult> Upsert(PatientUpsertVM patientVM)
         {
             if (ModelState.IsValid)
             {
-                await _patientService.UpdatePatient(patient);
-
-                TempData["success"] = "Paciente actualizado correctamente.";
+                if(patientVM.Patient.Id == 0)
+                {
+                    await _patientService.AddPatient(patientVM.Patient);
+                    TempData["success"] = "Paciente creado correctamente.";
+                }
+                else
+                {
+                    await _patientService.UpdatePatient(patientVM.Patient);
+                    TempData["success"] = "Paciente actualizado correctamente.";
+                }
 
                 return RedirectToAction("Index");
             }
+            else
+            {
+                var MAList = await _maService.GetAllMAs(x => true);
 
-            return View();
+                patientVM.MAs = MAList.Select(ma => new SelectListItem
+                    {
+                        Text = String.Concat(ma.Sex ? "Dra. " : "Dr. ", " ", ma.FirstName, " ", ma.LastName),
+                        Value = ma.Id.ToString()
+                    });
+            }
+
+            return View(patientVM);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -85,14 +143,27 @@ namespace MyPatient.Web.Controllers
                 return NotFound();
             }
 
-            Patient patient = await _patientService.GetPatient(p => p.Id == id);
+            var patient = await _patientService.GetPatient(p => p.Id == id);
 
             if (patient == null)
             {
                 return NotFound();
             }
 
-            return View(patient);
+            var ma = await _maService.GetMA(m => m.Id == patient.MAId);
+
+            if (ma == null)
+            {
+                return NotFound();
+            }
+
+            var patientVM = new PatientDeleteVM
+            {
+                Patient = patient,
+                MA = String.Concat(ma.Sex ? "Dra. " : "Dr. ", " ", ma.FirstName, " ", ma.LastName)
+            };
+
+            return View(patientVM);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -103,10 +174,12 @@ namespace MyPatient.Web.Controllers
                 return NotFound();
             }
 
-            Patient? patient = await _patientService.GetPatient(p => p.Id == id);
+            var patient = await _patientService.GetPatient(p => p.Id == id);
 
             if (patient is null)
+            {
                 return NotFound();
+            }
 
             await _patientService.RemovePatient(patient);
 
