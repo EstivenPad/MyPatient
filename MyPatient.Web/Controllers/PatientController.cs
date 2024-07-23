@@ -11,6 +11,7 @@ namespace MyPatient.Web.Controllers
     {
         private readonly IPatientService _patientService;
         private readonly IMAService _maService;
+
         public PatientController(IPatientService patientService, IMAService maService)
         {
             _patientService = patientService;
@@ -124,13 +125,7 @@ namespace MyPatient.Web.Controllers
             }
             else
             {
-                var MAList = await _maService.GetAllMAs(x => true);
-
-                patientVM.MAs = MAList.Select(ma => new SelectListItem
-                    {
-                        Text = String.Concat(ma.Sex ? "Dra. " : "Dr. ", " ", ma.FirstName, " ", ma.LastName),
-                        Value = ma.Id.ToString()
-                    });
+                patientVM.MAs = await _maService.PopulateMASelect();
             }
 
             return View(patientVM);

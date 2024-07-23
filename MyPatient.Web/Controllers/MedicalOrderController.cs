@@ -1,0 +1,198 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using MyPatient.Application.Services.MedicalOrder;
+using MyPatient.Application.Services.Patient;
+using MyPatient.Models;
+using MyPatient.Models.ViewModels;
+using MyPatient.Web.Models.Enums;
+
+namespace MyPatient.Web.Controllers
+{
+    public class MedicalOrderController : Controller
+    {
+        private readonly IMedicalOrderService _medicalOrderService;
+        private readonly IPatientService _patientService;
+
+        public MedicalOrderController(IMedicalOrderService medicalOrderService, IPatientService patientService)
+        {
+            _medicalOrderService = medicalOrderService;
+            _patientService = patientService;
+        }
+
+        public async Task<IActionResult> Index(long patientId) 
+        {
+            var medicalOrderVM = new MedicalOrderIndexVM();
+
+            var patient = await _patientService.GetPatient(p => p.Id == patientId);
+
+            if (patient is null)
+            {
+                return NotFound();
+            }
+
+            var medicalOrderList = await _medicalOrderService.GetAllMedicalOrders(mo => mo.PatientId == patientId);
+
+            var incomeMedicalOrderList = medicalOrderList.Where(mo => mo.Type == TypeMedicalOrder.Ingreso).OrderByDescending(mo => mo.CreatedDate);
+            var dailyMedicalOrderList = medicalOrderList.Where(mo => mo.Type == TypeMedicalOrder.Diaria).OrderByDescending(mo => mo.CreatedDate);
+            var postOperativeMedicalOrderList = medicalOrderList.Where(mo => mo.Type == TypeMedicalOrder.Postquirurgica).OrderByDescending(mo => mo.CreatedDate);
+
+            medicalOrderVM.Patient = patient;
+            medicalOrderVM.Income = incomeMedicalOrderList;
+            // TODO: ADD THE OTHERS MEDICAL ORDERS: Daily & Postoperative
+
+            ViewData["Title"] = "Órdenes Médicas";
+
+            return View(medicalOrderVM);
+        }
+
+        public async Task<IActionResult> Create(long patientId)
+        {
+            var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
+
+            if(patient is null || patient.MA is null)
+            {
+                return NotFound();
+            }
+
+            var medicalOrderVM = new MedicalOrderVM();
+
+            medicalOrderVM.MedicalOrder = new MedicalOrder();
+            medicalOrderVM.MedicalOrder.Solutions = new List<MedicalOrderDetail>();
+
+            medicalOrderVM.MedicalOrder.Solutions.Add(new MedicalOrderDetail());
+
+            medicalOrderVM.MedicalOrder.Patient = patient;
+            medicalOrderVM.MedicalOrder.PatientId = patient.Id;
+
+            medicalOrderVM.MedicalOrder.MAId = patient.MAId;
+            medicalOrderVM.MedicalOrder.MA = patient.MA;
+            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+
+            ViewData["Title"] = "Órdenes Médicas";
+
+            return View(medicalOrderVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(MedicalOrderVM medicalOrderVM)
+        {
+            if (ModelState.IsValid)
+            {
+                await _medicalOrderService.AddMedicalOrder(medicalOrderVM.MedicalOrder);
+
+                TempData["success"] = "Orden Médica creada correctamente.";
+
+                return RedirectToAction("Index", new { patientId = medicalOrderVM.MedicalOrder.PatientId });
+            }
+
+            var patient = await _patientService.GetPatient(p => p.Id == medicalOrderVM.MedicalOrder.PatientId, includeProperties: "MA");
+                
+            medicalOrderVM.MedicalOrder.Patient = patient;
+            medicalOrderVM.MedicalOrder.PatientId = patient.Id;
+
+            medicalOrderVM.MedicalOrder.MAId = patient.MAId;
+            medicalOrderVM.MedicalOrder.MA = patient.MA;
+            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+
+            ViewData["Title"] = "Órdenes Médicas";
+
+            return View(medicalOrderVM);
+        }
+
+        public async Task<IActionResult> Edit(long patientId, long medicalOrderId)
+        {
+            var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Patient,MA,Solutions");
+
+            if (medicalOrder is null || medicalOrder.Patient is null || medicalOrder.MA is null)
+            {
+                return NotFound();
+            }
+
+            var medicalOrderVM = new MedicalOrderVM();
+
+            medicalOrderVM.MedicalOrder = medicalOrder;
+
+            medicalOrderVM.MedicalOrder.Patient = medicalOrder.Patient;
+            medicalOrderVM.MedicalOrder.PatientId = medicalOrder.PatientId;
+
+            medicalOrderVM.MedicalOrder.MAId = medicalOrder.MAId;
+            medicalOrderVM.MedicalOrder.MA = medicalOrder.MA;
+            medicalOrderVM.MA = String.Concat(medicalOrder.MA.Sex ? "Dra. " : "Dr. ", medicalOrder.MA.FirstName, " ", medicalOrder.MA.LastName);
+
+            ViewData["Title"] = "Órdenes Médicas";
+
+            return View(medicalOrderVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(MedicalOrderVM medicalOrderVM)
+        {
+            if (ModelState.IsValid)
+            {
+                medicalOrderVM.MedicalOrder.Solutions.ForEach(mo => mo.MedicalOrderId = medicalOrderVM.MedicalOrder.Id);
+
+                await _medicalOrderService.UpdateMedicalOrder(medicalOrderVM.MedicalOrder);
+                
+                TempData["success"] = "Orden Médica actualizada correctamente.";
+                
+                return RedirectToAction("Index", new { patientId = medicalOrderVM.MedicalOrder.PatientId });
+            }
+
+            var patient = await _patientService.GetPatient(p => p.Id == medicalOrderVM.MedicalOrder.PatientId, includeProperties: "MA");
+
+            medicalOrderVM.MedicalOrder.Patient = patient;
+            medicalOrderVM.MedicalOrder.PatientId = patient.Id;
+
+            medicalOrderVM.MedicalOrder.MAId = patient.MAId;
+            medicalOrderVM.MedicalOrder.MA = patient.MA;
+            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+
+            ViewData["Title"] = "Órdenes Médicas";
+
+            return View(medicalOrderVM);
+        }
+
+        public async Task<IActionResult> Delete(long medicalOrderId) 
+        {
+            var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Patient,MA,Solutions");
+
+            if (medicalOrder is null || medicalOrder.Patient is null || medicalOrder.MA is null)
+            {
+                return NotFound();
+            }
+
+            var medicalOrderVM = new MedicalOrderVM();
+
+            medicalOrderVM.MedicalOrder = medicalOrder;
+
+            medicalOrderVM.MedicalOrder.Patient = medicalOrder.Patient;
+            medicalOrderVM.MedicalOrder.PatientId = medicalOrder.PatientId;
+
+            medicalOrderVM.MedicalOrder.MAId = medicalOrder.MAId;
+            medicalOrderVM.MedicalOrder.MA = medicalOrder.MA;
+            medicalOrderVM.MA = String.Concat(medicalOrder.MA.Sex ? "Dra. " : "Dr. ", medicalOrder.MA.FirstName, " ", medicalOrder.MA.LastName);
+
+            ViewData["Title"] = "Órdenes Médicas";
+
+            return View("Delete", medicalOrderVM);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePost(long medicalOrderId)
+        {
+            var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Solutions");
+
+            if(medicalOrder is null) 
+            { 
+                return NotFound();
+            }
+
+            await _medicalOrderService.RemoveMedicalOrder(medicalOrder);
+            TempData["success"] = "Orden Médica eliminada correctamente.";
+
+            return RedirectToAction("Index", new { patientId = medicalOrder.PatientId });
+        }
+    }
+}

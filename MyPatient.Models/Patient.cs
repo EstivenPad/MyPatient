@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPatient.Models
 {
@@ -22,7 +23,7 @@ namespace MyPatient.Models
 
         public int? Age { get; set; }
         
-        public bool Sex { get; set; }
+        public bool Sex { get; set; } = false;
         
         public bool IsInsured { get; set; }
         
@@ -30,10 +31,11 @@ namespace MyPatient.Models
         
         public string? NSS { get; set; }
 
-        // **********MA REFERENCE***********
-        [Required(ErrorMessage = "El MA es requerido.")]
+        // **********MA***********
+        [Required(ErrorMessage = "Debe seleccionar un MA.")]
+        [ForeignKey("MA")]
         public int MAId { get; set; }
-        
+
         public MA? MA { get; set; }
     }
 }

@@ -18,6 +18,19 @@ namespace MyPatient.Web.Controllers
             return View();
         }
 
+        [Route("/StatusCodeError")]
+        public IActionResult Error(int statusCode)
+        {
+            if(statusCode == 404)
+            {
+                ViewBag.ErrorMessage = "404";
+            }
+
+            ViewData["Title"] = "Error 404";
+
+            return View("NotFound");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

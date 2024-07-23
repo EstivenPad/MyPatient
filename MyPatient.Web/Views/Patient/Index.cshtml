@@ -17,7 +17,10 @@
             <input type="text" class="form-control" placeholder="Criterio de búsqueda" asp-for="@Model.FilterCriteria" />
         </div>
         <div class="col">
-            <button type="submit" class="btn btn-primary">Buscar</button>
+            <button type="submit" class="btn btn-secondary">
+                <i class="bi bi-search"></i>
+                Buscar
+            </button>
         </div>
         <div class="col text-end">
             <a class="btn btn-primary" asp-controller="Patient" asp-action="Upsert"><i class="bi bi-person-plus-fill"></i> Crear nuevo paciente</a>
@@ -45,6 +48,7 @@
                 <td>
                     <a class="btn btn-warning" asp-controller="Patient" asp-action="Upsert" asp-route-id="@patient.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                     <a class="btn btn-danger" asp-controller="Patient" asp-action="Delete" asp-route-id="@patient.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                    <a class="btn btn-info" asp-controller="MedicalOrder" asp-action="Index" asp-route-patientId="@patient.Id"><i class="bi bi-file-earmark-text-fill"></i> Orden Medica</a>
                 </td>
             </tr>
         }

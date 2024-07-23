@@ -20,3 +20,24 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.DetailTable table {
+    width: 100%;
+}
+
+.DetailTable thead {
+    width: calc(100% - 1em);
+}
+
+.DetailTable tbody {
+    display: block;
+    height: 140px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+    .DetailTable thead, .DetailTable tbody tr {
+        display: table;
+        width: 97%;
+        table-layout: fixed;
+    }

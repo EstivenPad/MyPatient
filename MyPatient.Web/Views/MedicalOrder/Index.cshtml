@@ -1,0 +1,78 @@
+﻿@model MedicalOrderIndexVM
+
+@{
+    ViewData["Title"] = "Órdenes Médicas";
+}
+<div class="mb-3 d-flex align-items-center justify-content-center position-relative">
+
+    <a class="btn btn-secondary position-absolute start-0" asp-controller="Patient" asp-action="Index">
+        <i class="bi bi-box-arrow-left"></i>
+        Volver
+    </a>
+    <h1 class="text-center m-0">ÓRDENES MÉDICAS</h1>
+</div>
+
+<div>
+        <h3>Datos del paciente:</h3>
+    
+
+    <ul class="list-unstyled">
+        <li><b>Nombre:</b> @Model.Patient.Name</li>
+        <li><b>Record:</b> @Model.Patient.Record</li>
+        <li><b>Sexo:</b> @(Model.Patient.Sex ? "Femenino" : "Masculino")</li>
+        <li><b>Edad:</b> @Model.Patient.Age.ToString() @(Model.Patient.Age > 1 ? "años" : "año")</li>
+    </ul>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" data-bs-toggle="tab" href="#income" aria-selected="true" role="tab">Ingreso</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" data-bs-toggle="tab" href="#daily" aria-selected="false" role="tab" tabindex="-1">Diarias</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" data-bs-toggle="tab" href="#postoperative" aria-selected="false" role="tab" tabindex="-1">Postquirúrgicas</a>
+    </li>
+</ul>
+<div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade active show pt-3" id="income" role="tabpanel">
+        <a class="btn btn-outline-primary" asp-action="Create" asp-route-patientId="@Model.Patient.Id">Crear Nueva Orden Medica</a>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-primary" scope="col">Tipo</th>
+                    <th class="text-primary" scope="col">Fecha</th>
+                    <th class="text-primary" scope="col">Sala</th>
+                    <th class="text-primary" scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var incomeMedicalOrder in Model.Income)
+                {
+                    <tr>
+                        <td>@incomeMedicalOrder.Type</td>
+                        <td>@incomeMedicalOrder.CreatedDate.ToString()</td>
+                        <td>@incomeMedicalOrder.Room</td>
+                        <td>
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tab-pane fade" id="daily" role="tabpanel">
+        <p>DAILY</p>
+    </div>
+
+    <div class="tab-pane fade" id="postoperative" role="tabpanel">
+        <p>POST SURGERY</p>
+    </div>
+</div>
+
+

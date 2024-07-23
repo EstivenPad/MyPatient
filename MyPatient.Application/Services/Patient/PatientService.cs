@@ -11,7 +11,8 @@ namespace MyPatient.Application.Services.Patient
 {
     public class PatientService : IPatientService
     {
-        protected readonly IPatientRepository _patientRepository;
+        private readonly IPatientRepository _patientRepository;
+        
         public PatientService(IPatientRepository patientRepository)
         {
             _patientRepository = patientRepository;

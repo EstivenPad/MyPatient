@@ -18,8 +18,8 @@ namespace MyPatient.Models
         [RegularExpression(@"^\(?([0-9]{3})\)?[- ]?([0-9]{7})[- ]?([0-9]{1})$", ErrorMessage = "La Identificación no es válido.")]
         [Length(11,13,ErrorMessage = "La Identificación debe tener 11 digitos.")]
         public string? Identification { get; set; }
-        
-        public bool Sex { get; set; }
+
+        public bool Sex { get; set; } = false;
 
         [Required(ErrorMessage = "El Exequatur es requerido.")]
         [RegularExpression(@"^([0-9]{3,4})[- ]?([0-9]{2})", ErrorMessage = "El Exequatur no es válido.")]

@@ -13,7 +13,7 @@ namespace MyPatient.Application.Services.MA
 {
     public class MAService : IMAService
     {
-        protected readonly IMARepository _maRepository;
+        private readonly IMARepository _maRepository;
 
         public MAService(IMARepository maRepository)
         {

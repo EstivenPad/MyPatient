@@ -1,21 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using MyPatient.Application.Services.Patient;
-using MyPatient.DataAccess.DataContext;
-using MyPatient.DataAccess.Repository;
-using MyPatient.DataAccess.Repository.IRepository;
+using MyPatient.DataAccess;
+using MyPatient.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
-
-builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-
-builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddDataAccessServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
@@ -28,6 +20,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStatusCodePagesWithReExecute("/StatusCodeError", "?statusCode={0}");
+
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -36,6 +31,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 app.Run();

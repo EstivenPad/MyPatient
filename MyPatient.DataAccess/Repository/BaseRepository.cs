@@ -21,13 +21,13 @@ namespace MyPatient.DataAccess.Repository
             dbSet = _dbContext.Set<T>();
         }
 
-        public async Task Create(T entity)
+        public virtual async Task Create(T entity)
         {
             _dbContext.Set<T>().Add(entity);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task Delete(T entity)
+        public virtual async Task Delete(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
             await _dbContext.SaveChangesAsync();
@@ -55,7 +55,7 @@ namespace MyPatient.DataAccess.Repository
         {
             IQueryable<T> query = dbSet.AsNoTracking();
 
-            if(filter != null)
+            if (filter != null)
             {
                 query = query.Where(filter);
             }
@@ -72,7 +72,7 @@ namespace MyPatient.DataAccess.Repository
             return await query.ToListAsync();
         }
 
-        public async Task Update(T entity)
+        public virtual async Task Update(T entity)
         {
             _dbContext.Update(entity);
             await _dbContext.SaveChangesAsync();
