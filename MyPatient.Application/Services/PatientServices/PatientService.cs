@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyPatient.Application.Services.Patient
+namespace MyPatient.Application.Services.PatientServices
 {
     public class PatientService : IPatientService
     {
@@ -18,27 +18,27 @@ namespace MyPatient.Application.Services.Patient
             _patientRepository = patientRepository;
         }
 
-        public async Task AddPatient(Models.Patient patient)
+        public async Task AddPatient(Patient patient)
         {
             await _patientRepository.Create(patient);
         }
 
-        public async Task<IEnumerable<Models.Patient>> GetAllPatients(Expression<Func<Models.Patient, bool>>? filter, string? includeProperties = null)
+        public IQueryable<Patient> GetAllPatients(Expression<Func<Patient, bool>>? filter, string? includeProperties = null)
         {
-            return await _patientRepository.GetAll(filter, includeProperties);
+            return _patientRepository.GetAll(filter, includeProperties);
         }
 
-        public async Task<Models.Patient> GetPatient(Expression<Func<Models.Patient, bool>> filter, string? includeProperties = null)
+        public async Task<Patient> GetPatient(Expression<Func<Patient, bool>> filter, string? includeProperties = null)
         {
             return await _patientRepository.Get(filter, includeProperties);
         }
 
-        public async Task RemovePatient(Models.Patient patient)
+        public async Task RemovePatient(Patient patient)
         {
             await _patientRepository.Delete(patient);
         }
 
-        public async Task UpdatePatient(Models.Patient patient)
+        public async Task UpdatePatient(Patient patient)
         {
             await _patientRepository.Update(patient);
         }

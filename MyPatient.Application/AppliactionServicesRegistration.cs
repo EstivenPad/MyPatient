@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MyPatient.Application.Services.MA;
-using MyPatient.Application.Services.MedicalOrder;
-using MyPatient.Application.Services.Patient;
+using MyPatient.Application.Services.MAServices;
+using MyPatient.Application.Services.MedicalOrderServices;
+using MyPatient.Application.Services.PatientServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;

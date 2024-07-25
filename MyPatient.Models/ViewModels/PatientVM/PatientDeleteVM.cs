@@ -6,15 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyPatient.Models.ViewModels
+namespace MyPatient.Models.ViewModels.PatientVM
 {
-    public class PatientUpsertVM
+    public class PatientDeleteVM
     {
         public Patient Patient { get; set; }
 
-        public MA? MA { get; set; }
-
         [ValidateNever]
-        public IEnumerable<SelectListItem> MAs { get; set; }
+        public string MA { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyPatient.Application.Services.MedicalOrder
+namespace MyPatient.Application.Services.MedicalOrderServices
 {
     public class MedicalOrderService : IMedicalOrderService
     {
@@ -19,27 +19,27 @@ namespace MyPatient.Application.Services.MedicalOrder
             _medicalOrderRepository = medicalOrderRepository;
         }
 
-        public async Task AddMedicalOrder(Models.MedicalOrder medicalOrder)
+        public async Task AddMedicalOrder(MedicalOrder medicalOrder)
         {
             await _medicalOrderRepository.Create(medicalOrder);
         }
 
-        public async Task<IEnumerable<Models.MedicalOrder>> GetAllMedicalOrders(Expression<Func<Models.MedicalOrder, bool>>? filter)
+        public IQueryable<MedicalOrder> GetAllMedicalOrders(Expression<Func<MedicalOrder, bool>>? filter)
         {
-            return await _medicalOrderRepository.GetAll(filter, string.Empty);
+            return _medicalOrderRepository.GetAll(filter, string.Empty);
         }
 
-        public async Task<Models.MedicalOrder> GetMedicalOrder(Expression<Func<Models.MedicalOrder, bool>> filter, string? includeProperties = null)
+        public async Task<MedicalOrder> GetMedicalOrder(Expression<Func<MedicalOrder, bool>> filter, string? includeProperties = null)
         {
             return await _medicalOrderRepository.Get(filter, includeProperties);
         }
 
-        public async Task RemoveMedicalOrder(Models.MedicalOrder medicalOrder)
+        public async Task RemoveMedicalOrder(MedicalOrder medicalOrder)
         {
             await _medicalOrderRepository.Delete(medicalOrder);
         }
 
-        public async Task UpdateMedicalOrder(Models.MedicalOrder medicalOrder)
+        public async Task UpdateMedicalOrder(MedicalOrder medicalOrder)
         {
             await _medicalOrderRepository.Update(medicalOrder);
         }

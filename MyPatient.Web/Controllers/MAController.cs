@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MyPatient.Application.Services.MA;
+using MyPatient.Application.Services.MAServices;
 using MyPatient.Models;
-using MyPatient.Models.ViewModels;
+using MyPatient.Models.ViewModels.PatientVM;
 
 namespace MyPatient.Web.Controllers
 {
@@ -29,7 +29,7 @@ namespace MyPatient.Web.Controllers
                 MA = new MA(),
             };
 
-            var MAList = await _maService.GetAllMAs(x => true);
+            var MAList = _maService.GetAllMAs(x => true);
 
             patientVM.MAs = MAList.OrderBy(ma => ma.FirstName).Select(ma => new SelectListItem
             {

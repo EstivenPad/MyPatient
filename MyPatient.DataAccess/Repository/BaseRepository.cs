@@ -51,7 +51,7 @@ namespace MyPatient.DataAccess.Repository
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public IQueryable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet.AsNoTracking();
 
@@ -69,7 +69,7 @@ namespace MyPatient.DataAccess.Repository
                 }
             }
 
-            return await query.ToListAsync();
+            return query;
         }
 
         public virtual async Task Update(T entity)

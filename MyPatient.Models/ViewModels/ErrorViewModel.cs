@@ -1,4 +1,4 @@
-namespace MyPatient.Models
+namespace MyPatient.Models.ViewModels
 {
     public class ErrorViewModel
     {

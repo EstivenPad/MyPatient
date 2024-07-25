@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyPatient.Application.Services.MedicalOrder;
-using MyPatient.Application.Services.Patient;
+using MyPatient.Application.Services.MedicalOrderServices;
+using MyPatient.Application.Services.PatientServices;
 using MyPatient.Models;
-using MyPatient.Models.ViewModels;
+using MyPatient.Models.ViewModels.MedicalOrderVM;
 using MyPatient.Web.Models.Enums;
 
 namespace MyPatient.Web.Controllers
@@ -29,7 +29,7 @@ namespace MyPatient.Web.Controllers
                 return NotFound();
             }
 
-            var medicalOrderList = await _medicalOrderService.GetAllMedicalOrders(mo => mo.PatientId == patientId);
+            var medicalOrderList = _medicalOrderService.GetAllMedicalOrders(mo => mo.PatientId == patientId);
 
             var incomeMedicalOrderList = medicalOrderList.Where(mo => mo.Type == TypeMedicalOrder.Ingreso).OrderByDescending(mo => mo.CreatedDate);
             var dailyMedicalOrderList = medicalOrderList.Where(mo => mo.Type == TypeMedicalOrder.Diaria).OrderByDescending(mo => mo.CreatedDate);
@@ -39,7 +39,7 @@ namespace MyPatient.Web.Controllers
             medicalOrderVM.Income = incomeMedicalOrderList;
             // TODO: ADD THE OTHERS MEDICAL ORDERS: Daily & Postoperative
 
-            ViewData["Title"] = "Órdenes Médicas";
+            ViewData["Title"] = "Ordenes Médicas";
 
             return View(medicalOrderVM);
         }
@@ -67,7 +67,7 @@ namespace MyPatient.Web.Controllers
             medicalOrderVM.MedicalOrder.MA = patient.MA;
             medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
 
-            ViewData["Title"] = "Órdenes Médicas";
+            ViewData["Title"] = "Ordenes Médicas";
 
             return View(medicalOrderVM);
         }
@@ -94,7 +94,7 @@ namespace MyPatient.Web.Controllers
             medicalOrderVM.MedicalOrder.MA = patient.MA;
             medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
 
-            ViewData["Title"] = "Órdenes Médicas";
+            ViewData["Title"] = "Ordenes Médicas";
 
             return View(medicalOrderVM);
         }
@@ -119,7 +119,7 @@ namespace MyPatient.Web.Controllers
             medicalOrderVM.MedicalOrder.MA = medicalOrder.MA;
             medicalOrderVM.MA = String.Concat(medicalOrder.MA.Sex ? "Dra. " : "Dr. ", medicalOrder.MA.FirstName, " ", medicalOrder.MA.LastName);
 
-            ViewData["Title"] = "Órdenes Médicas";
+            ViewData["Title"] = "Ordenes Médicas";
 
             return View(medicalOrderVM);
         }
@@ -148,7 +148,7 @@ namespace MyPatient.Web.Controllers
             medicalOrderVM.MedicalOrder.MA = patient.MA;
             medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
 
-            ViewData["Title"] = "Órdenes Médicas";
+            ViewData["Title"] = "Ordenes Médicas";
 
             return View(medicalOrderVM);
         }
@@ -173,7 +173,7 @@ namespace MyPatient.Web.Controllers
             medicalOrderVM.MedicalOrder.MA = medicalOrder.MA;
             medicalOrderVM.MA = String.Concat(medicalOrder.MA.Sex ? "Dra. " : "Dr. ", medicalOrder.MA.FirstName, " ", medicalOrder.MA.LastName);
 
-            ViewData["Title"] = "Órdenes Médicas";
+            ViewData["Title"] = "Ordenes Médicas";
 
             return View("Delete", medicalOrderVM);
         }

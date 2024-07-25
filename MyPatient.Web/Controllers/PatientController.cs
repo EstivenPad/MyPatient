@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MyPatient.Application.Services.MA;
-using MyPatient.Application.Services.Patient;
+using Microsoft.Data.SqlClient;
+using MyPatient.Application.Services.MAServices;
+using MyPatient.Application.Services.PatientServices;
 using MyPatient.Models;
-using MyPatient.Models.ViewModels;
+using MyPatient.Models.ViewModels.PatientVM;
+using System.Drawing.Printing;
 
 namespace MyPatient.Web.Controllers
 {
@@ -18,70 +20,49 @@ namespace MyPatient.Web.Controllers
             _maService = maService;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var patients = await _patientService.GetAllPatients(x => true, includeProperties: "MA");
-
-            var patientIndexVM = new PatientIndexVM
-            {
-                Patients = patients.ToList(),
-                Filters = new List<SelectListItem>
-                {
-                    new SelectListItem{ Text = "Nombre", Value = "Name" },
-                    new SelectListItem{ Text = "Record", Value = "Record" },
-                    new SelectListItem{ Text = "MA", Value = "MA" }
-                },
-                SelectedFilter = "",
-                FilterCriteria = ""
-            };
-
-            return View(patientIndexVM);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Index(PatientIndexVM patientsVM)
+        public async Task<IActionResult> Index(int? page, string? filterSelected, string? filterCriteria)
         {
             IEnumerable<Patient> patientsList;
+            var patientIndexVM = new PatientIndexVM();
+            int pageSize = 1;
 
-            if (!String.IsNullOrEmpty(patientsVM.FilterCriteria))
+            ViewData["FilterSelected"] = filterSelected;
+            ViewData["FilterCriteria"] = filterCriteria;
+
+            if (!String.IsNullOrEmpty(filterCriteria))
             {
-                switch (patientsVM.SelectedFilter)
+                switch (filterSelected)
                 {
                     case "Name":
-                        patientsList = await _patientService.GetAllPatients(p => p.Name.Contains(patientsVM.FilterCriteria), includeProperties: "MA");
+                        patientsList = _patientService.GetAllPatients(p => p.Name.Contains(filterCriteria), includeProperties: "MA");
                         break;
 
                     case "Record":
-                        patientsList = await _patientService.GetAllPatients(p => p.Record.Contains(patientsVM.FilterCriteria), includeProperties: "MA");
+                        patientsList = _patientService.GetAllPatients(p => p.Record.Contains(filterCriteria), includeProperties: "MA");
                         break;
 
                     case "MA":
-                        patientsList = await _patientService.GetAllPatients(p => p.MA.FirstName.Contains(patientsVM.FilterCriteria), includeProperties: "MA");
+                        patientsList = _patientService.GetAllPatients(p => p.MA.FirstName.Contains(filterCriteria) || p.MA.LastName.Contains(filterCriteria), includeProperties: "MA");
                         break;
 
                     default:
-                        patientsList = await _patientService.GetAllPatients(p => true, includeProperties: "MA");
+                        patientsList = _patientService.GetAllPatients(p => true, includeProperties: "MA");
                         break;
                 }
             }
             else
             {
-                patientsList = await _patientService.GetAllPatients(p => true, includeProperties: "MA");
+                patientsList = _patientService.GetAllPatients(p => true, includeProperties: "MA");
             }
 
-            var patientIndexVM = new PatientIndexVM
+            patientIndexVM.Patients = await PaginatedList<Patient>.CreateAsync(patientsList.AsQueryable(), page ?? 1, pageSize);
+            patientIndexVM.FilterOptions = new List<SelectListItem>
             {
-                Patients = patientsList.ToList(),
-                Filters = new List<SelectListItem>
-                {
-                    new SelectListItem{ Text = "Nombre", Value = "Name" },
-                    new SelectListItem{ Text = "Record", Value = "Record" },
-                    new SelectListItem{ Text = "MA", Value = "MA" }
-                },
-                SelectedFilter = "",
-                FilterCriteria = ""
+                new SelectListItem{ Text = "Nombre", Value = "Name" },
+                new SelectListItem{ Text = "Record", Value = "Record" },
+                new SelectListItem{ Text = "MA", Value = "MA" }
             };
-
+            
             return View(patientIndexVM);
         }
 
@@ -91,7 +72,7 @@ namespace MyPatient.Web.Controllers
             {
                 Patient = new Patient(),
                 MA = new MA(),
-                MAs = await _maService.PopulateMASelect()
+                MAs = _maService.PopulateMASelect()
             };
 
             if (id == null || id == 0)
@@ -125,7 +106,7 @@ namespace MyPatient.Web.Controllers
             }
             else
             {
-                patientVM.MAs = await _maService.PopulateMASelect();
+                patientVM.MAs = _maService.PopulateMASelect();
             }
 
             return View(patientVM);
@@ -164,6 +145,7 @@ namespace MyPatient.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeletePost(int? id)
         {
+            id = 0;
             if (id == null || id == 0)
             {
                 return NotFound();
