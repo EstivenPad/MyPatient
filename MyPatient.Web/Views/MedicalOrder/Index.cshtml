@@ -1,26 +1,29 @@
 ﻿@model MedicalOrderIndexVM
 
 @{
-    ViewData["Title"] = "Órdenes Médicas";
+    ViewData["Title"] = "Ordenes Médicas";
 }
-<div class="mb-3 d-flex align-items-center justify-content-center position-relative">
 
+<div class="mb-3 d-flex align-items-center justify-content-center position-relative">
     <a class="btn btn-secondary position-absolute start-0" asp-controller="Patient" asp-action="Index">
         <i class="bi bi-box-arrow-left"></i>
         Volver
     </a>
-    <h1 class="text-center m-0">ÓRDENES MÉDICAS</h1>
+
+    <h1 class="text-center m-0">ORDENES MÉDICAS</h1>
 </div>
 
+@* PACIENT DATA *@
 <div>
-        <h3>Datos del paciente:</h3>
-    
+    <h3>Datos del paciente:</h3>
 
     <ul class="list-unstyled">
         <li><b>Nombre:</b> @Model.Patient.Name</li>
         <li><b>Record:</b> @Model.Patient.Record</li>
         <li><b>Sexo:</b> @(Model.Patient.Sex ? "Femenino" : "Masculino")</li>
         <li><b>Edad:</b> @Model.Patient.Age.ToString() @(Model.Patient.Age > 1 ? "años" : "año")</li>
+        <li><b>Peso:</b> @Model.Patient.Weight @("Lb")</li>
+        <li><b>Identificación:</b> @Model.Patient.Identification</li>
     </ul>
 </div>
 
@@ -34,12 +37,18 @@
     </li>
 
     <li class="nav-item" role="presentation">
-        <a class="nav-link" data-bs-toggle="tab" href="#postoperative" aria-selected="false" role="tab" tabindex="-1">Postquirúrgicas</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#postoperative" aria-selected="false" role="tab" tabindex="-1">Post-quirúrgicas</a>
     </li>
 </ul>
+
 <div id="myTabContent" class="tab-content">
+    @* INCOME MEDICAL ORDER *@
     <div class="tab-pane fade active show pt-3" id="income" role="tabpanel">
-        <a class="btn btn-outline-primary" asp-action="Create" asp-route-patientId="@Model.Patient.Id">Crear Nueva Orden Medica</a>
+        <a class="btn btn-outline-primary" asp-action="Create" asp-route-patientId="@Model.Patient.Id">
+            <i class="bi bi-file-earmark"></i>
+            Crear Nueva Orden Medica
+        </a>
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -65,13 +74,78 @@
             </tbody>
         </table>
     </div>
+    
+    @* DAILY MEDICAL ORDERS *@
+    <div class="tab-pane fade pt-3" id="daily" role="tabpanel">
+        <a class="btn btn-outline-primary" asp-action="CreateDaily" asp-route-patientId="@Model.Patient.Id">
+            <i class="bi bi-copy"></i>
+            Copiar Orden de Ingreso
+        </a>
 
-    <div class="tab-pane fade" id="daily" role="tabpanel">
-        <p>DAILY</p>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-primary" scope="col">Tipo</th>
+                    <th class="text-primary" scope="col">Fecha</th>
+                    <th class="text-primary" scope="col">Sala</th>
+                    <th class="text-primary" scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var incomeMedicalOrder in Model.Daily)
+                {
+                    <tr>
+                        <td>@incomeMedicalOrder.Type</td>
+                        <td>@incomeMedicalOrder.CreatedDate.ToString()</td>
+                        <td>@incomeMedicalOrder.Room</td>
+                        <td>
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 
+    @* POST-OPERATIVE MEDICAL ORDERS *@
     <div class="tab-pane fade" id="postoperative" role="tabpanel">
-        <p>POST SURGERY</p>
+        <div class="pt-3">
+            <a class="btn btn-outline-primary" asp-action="CreatePostOperative" asp-route-patientId="@Model.Patient.Id" asp-route-copyDaily="false">
+                <i class="bi bi-copy"></i>
+                Copiar Orden de Ingreso
+            </a>
+
+            <a class="btn btn-outline-primary ms-2" asp-action="CreatePostOperative" asp-route-patientId="@Model.Patient.Id" asp-route-copyDaily="true">
+                <i class="bi bi-copy"></i>
+                Copiar Última Orden Diaria
+            </a>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-primary" scope="col">Tipo</th>
+                    <th class="text-primary" scope="col">Fecha</th>
+                    <th class="text-primary" scope="col">Sala</th>
+                    <th class="text-primary" scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var incomeMedicalOrder in Model.PostOperative)
+                {
+                    <tr>
+                        <td>@incomeMedicalOrder.Type</td>
+                        <td>@incomeMedicalOrder.CreatedDate.ToString()</td>
+                        <td>@incomeMedicalOrder.Room</td>
+                        <td>
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 

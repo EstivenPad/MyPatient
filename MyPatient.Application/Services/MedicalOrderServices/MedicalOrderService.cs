@@ -1,6 +1,7 @@
 ﻿using MyPatient.DataAccess.Repository;
 using MyPatient.DataAccess.Repository.IRepository;
 using MyPatient.Models;
+using MyPatient.Web.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,11 @@ namespace MyPatient.Application.Services.MedicalOrderServices
         public IQueryable<MedicalOrder> GetAllMedicalOrders(Expression<Func<MedicalOrder, bool>>? filter)
         {
             return _medicalOrderRepository.GetAll(filter, string.Empty);
+        }
+
+        public async Task<MedicalOrder> GetLastMedicalOrder(TypeMedicalOrder type, long patientId)
+        {
+            return await _medicalOrderRepository.GetLast(type, patientId);
         }
 
         public async Task<MedicalOrder> GetMedicalOrder(Expression<Func<MedicalOrder, bool>> filter, string? includeProperties = null)

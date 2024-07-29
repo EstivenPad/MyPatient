@@ -1,13 +1,13 @@
 ﻿@model MedicalOrderVM
 
-<h1 class="text-center"><span class="text-primary">ELIMINAR ORDEN MÉDICA:</span> @(Enum.GetName(Model.MedicalOrder.Type).ToUpper())</h1>
+<h1 class="text-center"><span class="text-danger">ELIMINAR ORDEN MÉDICA:</span> @(Enum.GetName(Model.MedicalOrder.Type).ToUpper())</h1>
 
 <div class="container">
     <form method="post">
         @Html.AntiForgeryToken()
         @* PATIENT DATA *@
         <input asp-for="MedicalOrder.Id" hidden />
-
+        <input asp-for="MedicalOrder.Type" hidden />
         <input asp-for="MedicalOrder.PatientId" hidden />
         <input asp-for="MedicalOrder.MAId" hidden />
 

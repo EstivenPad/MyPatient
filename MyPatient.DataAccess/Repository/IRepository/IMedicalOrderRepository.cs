@@ -1,4 +1,5 @@
 ﻿using MyPatient.Models;
+using MyPatient.Web.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace MyPatient.DataAccess.Repository.IRepository
 {
     public interface IMedicalOrderRepository : IBaseRepository<MedicalOrder>
     {
+        Task<MedicalOrder> GetLast(TypeMedicalOrder type, long patientId);
     }
 }

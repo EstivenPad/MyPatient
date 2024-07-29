@@ -37,7 +37,8 @@ namespace MyPatient.Web.Controllers
 
             medicalOrderVM.Patient = patient;
             medicalOrderVM.Income = incomeMedicalOrderList;
-            // TODO: ADD THE OTHERS MEDICAL ORDERS: Daily & Postoperative
+            medicalOrderVM.Daily = dailyMedicalOrderList;
+            medicalOrderVM.PostOperative = postOperativeMedicalOrderList;
 
             ViewData["Title"] = "Ordenes Médicas";
 
@@ -57,7 +58,6 @@ namespace MyPatient.Web.Controllers
 
             medicalOrderVM.MedicalOrder = new MedicalOrder();
             medicalOrderVM.MedicalOrder.Solutions = new List<MedicalOrderDetail>();
-
             medicalOrderVM.MedicalOrder.Solutions.Add(new MedicalOrderDetail());
 
             medicalOrderVM.MedicalOrder.Patient = patient;
@@ -72,6 +72,86 @@ namespace MyPatient.Web.Controllers
             return View(medicalOrderVM);
         }
 
+        public async Task<IActionResult> CreateDaily(long patientId)
+        {
+            var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
+
+            if (patient is null || patient.MA is null)
+            {
+                return NotFound();
+            }
+
+            var lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Ingreso, patientId);
+
+            if (lastMedicalOrder is null)
+            {
+                TempData["IncomeNotExist"] = "¡No existe ninguna Orden Médica de Ingreso creada!";
+                return RedirectToAction("Index", new { patientId = patientId });
+            }
+
+            var medicalOrderVM = new MedicalOrderVM();
+
+            medicalOrderVM.MedicalOrder = lastMedicalOrder;
+            medicalOrderVM.MedicalOrder.Id = 0;
+            medicalOrderVM.MedicalOrder.Type = TypeMedicalOrder.Diaria;
+            medicalOrderVM.MedicalOrder.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
+            medicalOrderVM.MedicalOrder.CreatedTime = TimeOnly.FromDateTime(DateTime.Now);
+
+            for (int i = 0; i < medicalOrderVM.MedicalOrder.Solutions.Count(); i++)
+            {
+                medicalOrderVM.MedicalOrder.Solutions[i].MedicalOrderDetailId = 0;
+            }
+
+            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+
+            ViewData["Title"] = "Ordenes Médicas";
+
+            return View("Create", medicalOrderVM);
+        }
+
+        public async Task<IActionResult> CreatePostOperative(long patientId, bool copyDaily)
+        {
+            MedicalOrder lastMedicalOrder;
+            var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
+
+            if (patient is null || patient.MA is null)
+            {
+                return NotFound();
+            }
+
+            if (copyDaily)
+            {
+                lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Diaria, patientId);
+            }else{
+                lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Ingreso, patientId);
+            }
+
+            if (lastMedicalOrder is null)
+            {
+                TempData["IncomeNotExist"] = $"¡No existe ninguna Orden Médica {(copyDaily ? "de Ingreso" : "Diaria")} creada!";
+                return RedirectToAction("Index", new { patientId = patientId });
+            }
+
+            var medicalOrderVM = new MedicalOrderVM();
+
+            medicalOrderVM.MedicalOrder = lastMedicalOrder;
+            medicalOrderVM.MedicalOrder.Id = 0;
+            medicalOrderVM.MedicalOrder.Type = TypeMedicalOrder.Postquirurgica;
+            medicalOrderVM.MedicalOrder.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
+            medicalOrderVM.MedicalOrder.CreatedTime = TimeOnly.FromDateTime(DateTime.Now);
+
+            for (int i = 0; i < medicalOrderVM.MedicalOrder.Solutions.Count(); i++)
+            {
+                medicalOrderVM.MedicalOrder.Solutions[i].MedicalOrderDetailId = 0;
+            }
+
+            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+
+            ViewData["Title"] = "Ordenes Médicas";
+
+            return View("Create", medicalOrderVM);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MedicalOrderVM medicalOrderVM)
@@ -80,7 +160,7 @@ namespace MyPatient.Web.Controllers
             {
                 await _medicalOrderService.AddMedicalOrder(medicalOrderVM.MedicalOrder);
 
-                TempData["success"] = "Orden Médica creada correctamente.";
+                TempData["Success"] = "Orden Médica creada correctamente.";
 
                 return RedirectToAction("Index", new { patientId = medicalOrderVM.MedicalOrder.PatientId });
             }

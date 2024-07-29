@@ -1,6 +1,6 @@
 ﻿@model PatientUpsertVM
 
-<h1 class="ms-2">@(Model.Patient.Id == 0 ? "REGISTRO" : "EDICIÓN") DE PACIENTE</h1>
+<h1 class="ms-2 @(Model.Patient.Id == 0 ? "text-primary" : "text-warning")">@(Model.Patient.Id == 0 ? "REGISTRO" : "EDICIÓN") DE PACIENTE</h1>
 
 <div class="container">
     <form method="post">

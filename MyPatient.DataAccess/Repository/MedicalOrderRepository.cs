@@ -1,6 +1,8 @@
-﻿using MyPatient.DataAccess.DataContext;
+﻿using Microsoft.EntityFrameworkCore;
+using MyPatient.DataAccess.DataContext;
 using MyPatient.DataAccess.Repository.IRepository;
 using MyPatient.Models;
+using MyPatient.Web.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,21 @@ namespace MyPatient.DataAccess.Repository
         public MedicalOrderRepository(DatabaseContext context) : base(context)
         {
             _dbContext = context;
+        }
+
+        public async Task<MedicalOrder> GetLast(TypeMedicalOrder type, long patientId)
+        {
+            var lastMedicalOrder = await _dbContext.MedicalOrders
+                .Where(mo => mo.Type == type)
+                .Where(mo => mo.PatientId == patientId)
+                .Include(mo => mo.MA)
+                .Include(mo => mo.Patient)
+                .Include(mo => mo.Solutions)
+                .OrderBy(mo => mo.Id)
+                .AsNoTracking()
+                .LastOrDefaultAsync();
+
+            return lastMedicalOrder;
         }
 
         public override Task Create(MedicalOrder entity)
