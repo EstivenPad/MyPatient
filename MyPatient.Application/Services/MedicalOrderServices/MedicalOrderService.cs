@@ -25,9 +25,9 @@ namespace MyPatient.Application.Services.MedicalOrderServices
             await _medicalOrderRepository.Create(medicalOrder);
         }
 
-        public IQueryable<MedicalOrder> GetAllMedicalOrders(Expression<Func<MedicalOrder, bool>>? filter)
+        public IQueryable<MedicalOrder> GetAllMedicalOrders(Expression<Func<MedicalOrder, bool>>? filter, string? includeProperties = "")
         {
-            return _medicalOrderRepository.GetAll(filter, string.Empty);
+            return _medicalOrderRepository.GetAll(filter, includeProperties);
         }
 
         public async Task<MedicalOrder> GetLastMedicalOrder(TypeMedicalOrder type, long patientId)

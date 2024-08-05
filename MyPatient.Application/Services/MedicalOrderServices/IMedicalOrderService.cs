@@ -13,7 +13,7 @@ namespace MyPatient.Application.Services.MedicalOrderServices
     public interface IMedicalOrderService
     {
         Task AddMedicalOrder(MedicalOrder medicalOrder);
-        IQueryable<MedicalOrder> GetAllMedicalOrders(Expression<Func<MedicalOrder, bool>>? filter);
+        IQueryable<MedicalOrder> GetAllMedicalOrders(Expression<Func<MedicalOrder, bool>>? filter, string? includeProperties = "");
         Task<MedicalOrder> GetLastMedicalOrder(TypeMedicalOrder type, long patientId);
         Task<MedicalOrder> GetMedicalOrder(Expression<Func<MedicalOrder, bool>> filter, string? includeProperties = null);
         Task RemoveMedicalOrder(MedicalOrder medicalOrder);

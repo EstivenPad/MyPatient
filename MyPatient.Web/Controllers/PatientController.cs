@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using MyPatient.Application.Services.MAServices;
+using MyPatient.Application.Services.MedicalOrderServices;
 using MyPatient.Application.Services.PatientServices;
 using MyPatient.Models;
 using MyPatient.Models.ViewModels.PatientVM;
@@ -13,18 +14,20 @@ namespace MyPatient.Web.Controllers
     {
         private readonly IPatientService _patientService;
         private readonly IMAService _maService;
+        private readonly IMedicalOrderService _medicalOrderService;
 
-        public PatientController(IPatientService patientService, IMAService maService)
+        public PatientController(IPatientService patientService, IMAService maService, IMedicalOrderService medicalOrderService)
         {
             _patientService = patientService;
             _maService = maService;
+            _medicalOrderService = medicalOrderService;
         }
 
         public async Task<IActionResult> Index(int? page, string? filterSelected, string? filterCriteria)
         {
             IEnumerable<Patient> patientsList;
             var patientIndexVM = new PatientIndexVM();
-            int pageSize = 1;
+            int pageSize = 10;
 
             ViewData["FilterSelected"] = filterSelected;
             ViewData["FilterCriteria"] = filterCriteria;
@@ -66,7 +69,7 @@ namespace MyPatient.Web.Controllers
             return View(patientIndexVM);
         }
 
-        public async Task<IActionResult> Upsert(int? id)
+        public async Task<IActionResult> Upsert(long? id)
         {
             var patientVM = new PatientUpsertVM
             {
@@ -112,7 +115,7 @@ namespace MyPatient.Web.Controllers
             return View(patientVM);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(long? id)
         {
             if (id == null || id == 0)
             {
@@ -143,9 +146,8 @@ namespace MyPatient.Web.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeletePost(int? id)
+        public async Task<IActionResult> DeletePost(long? id)
         {
-            id = 0;
             if (id == null || id == 0)
             {
                 return NotFound();

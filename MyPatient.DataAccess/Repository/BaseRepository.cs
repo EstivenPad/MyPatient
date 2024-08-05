@@ -60,7 +60,7 @@ namespace MyPatient.DataAccess.Repository
                 query = query.Where(filter);
             }
 
-            if (!String.IsNullOrEmpty(includeProperties))
+            if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))

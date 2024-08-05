@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FastReport.Data;
+using FastReport.Export.PdfSimple;
+using FastReport.Web;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyPatient.Application.Services.MedicalOrderServices;
 using MyPatient.Application.Services.PatientServices;
 using MyPatient.Models;
 using MyPatient.Models.ViewModels.MedicalOrderVM;
 using MyPatient.Web.Models.Enums;
+using System.Data;
 
 namespace MyPatient.Web.Controllers
 {
@@ -11,13 +16,17 @@ namespace MyPatient.Web.Controllers
     {
         private readonly IMedicalOrderService _medicalOrderService;
         private readonly IPatientService _patientService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IConfiguration _configuration;
 
-        public MedicalOrderController(IMedicalOrderService medicalOrderService, IPatientService patientService)
+        public MedicalOrderController(IMedicalOrderService medicalOrderService, IPatientService patientService, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _medicalOrderService = medicalOrderService;
             _patientService = patientService;
+            _webHostEnvironment = webHostEnvironment;
+            _configuration = configuration;
         }
-
+        
         public async Task<IActionResult> Index(long patientId) 
         {
             var medicalOrderVM = new MedicalOrderIndexVM();
@@ -45,7 +54,41 @@ namespace MyPatient.Web.Controllers
             return View(medicalOrderVM);
         }
 
-        public async Task<IActionResult> Create(long patientId)
+        public IActionResult GenerateReport(long medicalOrderId, bool downloadPDF)
+        {
+            WebReport web = new WebReport();
+            
+            var path = $"{_webHostEnvironment.WebRootPath}\\Reports\\MedicalOrderReport.frx";
+            web.Report.Load(path);
+
+            var mssqlDataConnection = new MsSqlDataConnection();
+            mssqlDataConnection.ConnectionString = _configuration.GetConnectionString("DefaultConnectionString");
+            var Conn = mssqlDataConnection.ConnectionString;
+            
+            web.Report.SetParameterValue("conn", Conn);
+            web.Report.SetParameterValue("@Id", medicalOrderId);
+
+            if (web.Report.Prepare() && !downloadPDF)
+            {
+                return View(web);
+            }
+            else
+            {
+                var pdfExport = new PDFSimpleExport();
+
+                pdfExport.Title = "Orden medica";
+
+                MemoryStream stream = new MemoryStream();
+                web.Report.Export(pdfExport, stream);
+                web.Report.Dispose();
+                pdfExport.Dispose();
+                stream.Position = 0;
+
+                return File(stream, "application/pdf", "orden-medica.pdf");
+            }
+        }
+
+        public async Task<IActionResult> CreateIncome(long patientId)
         {
             var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
 
@@ -65,7 +108,7 @@ namespace MyPatient.Web.Controllers
 
             medicalOrderVM.MedicalOrder.MAId = patient.MAId;
             medicalOrderVM.MedicalOrder.MA = patient.MA;
-            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+            medicalOrderVM.MA = string.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
 
             ViewData["Title"] = "Ordenes Médicas";
 
@@ -97,12 +140,12 @@ namespace MyPatient.Web.Controllers
             medicalOrderVM.MedicalOrder.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
             medicalOrderVM.MedicalOrder.CreatedTime = TimeOnly.FromDateTime(DateTime.Now);
 
-            for (int i = 0; i < medicalOrderVM.MedicalOrder.Solutions.Count(); i++)
+            for (int i = 0; i < medicalOrderVM.MedicalOrder.Solutions?.Count(); i++)
             {
                 medicalOrderVM.MedicalOrder.Solutions[i].MedicalOrderDetailId = 0;
             }
 
-            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+            medicalOrderVM.MA = string.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
 
             ViewData["Title"] = "Ordenes Médicas";
 
@@ -145,7 +188,7 @@ namespace MyPatient.Web.Controllers
                 medicalOrderVM.MedicalOrder.Solutions[i].MedicalOrderDetailId = 0;
             }
 
-            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+            medicalOrderVM.MA = string.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
 
             ViewData["Title"] = "Ordenes Médicas";
 
@@ -172,7 +215,7 @@ namespace MyPatient.Web.Controllers
 
             medicalOrderVM.MedicalOrder.MAId = patient.MAId;
             medicalOrderVM.MedicalOrder.MA = patient.MA;
-            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+            medicalOrderVM.MA = string.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
 
             ViewData["Title"] = "Ordenes Médicas";
 
@@ -197,7 +240,7 @@ namespace MyPatient.Web.Controllers
 
             medicalOrderVM.MedicalOrder.MAId = medicalOrder.MAId;
             medicalOrderVM.MedicalOrder.MA = medicalOrder.MA;
-            medicalOrderVM.MA = String.Concat(medicalOrder.MA.Sex ? "Dra. " : "Dr. ", medicalOrder.MA.FirstName, " ", medicalOrder.MA.LastName);
+            medicalOrderVM.MA = string.Concat(medicalOrder.MA.Sex ? "Dra. " : "Dr. ", medicalOrder.MA.FirstName, " ", medicalOrder.MA.LastName);
 
             ViewData["Title"] = "Ordenes Médicas";
 
@@ -226,7 +269,7 @@ namespace MyPatient.Web.Controllers
 
             medicalOrderVM.MedicalOrder.MAId = patient.MAId;
             medicalOrderVM.MedicalOrder.MA = patient.MA;
-            medicalOrderVM.MA = String.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
+            medicalOrderVM.MA = string.Concat(patient.MA.Sex ? "Dra. " : "Dr. ", patient.MA.FirstName, " ", patient.MA.LastName);
 
             ViewData["Title"] = "Ordenes Médicas";
 
@@ -251,7 +294,7 @@ namespace MyPatient.Web.Controllers
 
             medicalOrderVM.MedicalOrder.MAId = medicalOrder.MAId;
             medicalOrderVM.MedicalOrder.MA = medicalOrder.MA;
-            medicalOrderVM.MA = String.Concat(medicalOrder.MA.Sex ? "Dra. " : "Dr. ", medicalOrder.MA.FirstName, " ", medicalOrder.MA.LastName);
+            medicalOrderVM.MA = string.Concat(medicalOrder.MA.Sex ? "Dra. " : "Dr. ", medicalOrder.MA.FirstName, " ", medicalOrder.MA.LastName);
 
             ViewData["Title"] = "Ordenes Médicas";
 
