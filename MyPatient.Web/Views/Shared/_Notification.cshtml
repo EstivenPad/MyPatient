@@ -7,9 +7,16 @@
     </script>
 }
 
-@if (TempData["IncomeNotExist"] != null)
+@if (TempData["Warning"] != null)
 {
     <script type="text/javascript">
-        toastr.warning('@TempData["IncomeNotExist"]')
+        toastr.warning('@TempData["Warning"]')
+    </script>
+}
+
+@if (TempData["Danger"] != null)
+{
+    <script type="text/javascript">
+        toastr.error('@TempData["Danger"]')
     </script>
 }

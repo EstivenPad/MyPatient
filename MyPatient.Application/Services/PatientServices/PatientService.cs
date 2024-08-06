@@ -33,6 +33,11 @@ namespace MyPatient.Application.Services.PatientServices
             return await _patientRepository.Get(filter, includeProperties);
         }
 
+        public async Task<bool> HasMedicalOrders(long patientId)
+        {
+            return await _patientRepository.HasAnyMedicalOrder(patientId);
+        }
+
         public async Task RemovePatient(Patient patient)
         {
             await _patientRepository.Delete(patient);

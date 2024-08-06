@@ -9,8 +9,8 @@ namespace MyPatient.Models.ViewModels.MedicalOrderVM
     public class MedicalOrderIndexVM
     {
         public Patient Patient { get; set; }
-        public IEnumerable<MedicalOrder>? Income { get; set; }
-        public IEnumerable<MedicalOrder>? Daily { get; set; }
-        public IEnumerable<MedicalOrder>? PostOperative { get; set; }
+        public IQueryable<MedicalOrder>? Income { get; set; }
+        public IQueryable<MedicalOrder>? Daily { get; set; }
+        public IQueryable<MedicalOrder>? PostOperative { get; set; }
     }
 }

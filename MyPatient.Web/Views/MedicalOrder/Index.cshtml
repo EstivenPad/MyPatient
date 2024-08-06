@@ -15,7 +15,7 @@
 
 @* PACIENT DATA *@
 <div>
-    <h3>DATOS DEL PACIENTE:</h3>
+    <h4 class="fw-semibold">DATOS DEL PACIENTE:</h4>
 
     <ul class="list-unstyled">
         <li><b>Nombre:</b> @Model.Patient.Name</li>
@@ -45,7 +45,7 @@
     @* INCOME MEDICAL ORDER *@
     <div class="tab-pane fade active show pt-3" id="income" role="tabpanel">
         <a class="btn btn-outline-primary" asp-action="CreateIncome" asp-route-patientId="@Model.Patient.Id">
-            <i class="bi bi-file-earmark"></i>
+            <i class="bi bi-file-earmark-fill"></i>
             Crear Nueva Orden Medica
         </a>
 
@@ -68,8 +68,8 @@
                         <td>
                             <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
-                            <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
                         </td>
                     </tr>
                 }
@@ -103,8 +103,8 @@
                         <td>
                             <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@dailyMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@dailyMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
-                            <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
                         </td>
                     </tr>
                 }
@@ -145,8 +145,8 @@
                         <td>
                             <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
-                            <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
                         </td>
                     </tr>
                 }

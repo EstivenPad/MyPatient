@@ -11,5 +11,6 @@ namespace MyPatient.DataAccess.Repository.IRepository
 {
     public interface IPatientRepository : IBaseRepository<Patient>
     {
+        Task<bool> HasAnyMedicalOrder(long patientId);
     }
 }

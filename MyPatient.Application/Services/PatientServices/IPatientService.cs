@@ -13,6 +13,7 @@ namespace MyPatient.Application.Services.PatientServices
         Task AddPatient(Patient patient);
         IQueryable<Patient> GetAllPatients(Expression<Func<Patient, bool>>? filter, string? includeProperties = null);
         Task<Patient> GetPatient(Expression<Func<Patient, bool>> filter, string? includeProperties = null);
+        Task<bool> HasMedicalOrders(long patientId);
         Task UpdatePatient(Patient patient);
         Task RemovePatient(Patient patient);
     }

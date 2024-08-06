@@ -54,7 +54,7 @@ namespace MyPatient.Web.Controllers
             return View(medicalOrderVM);
         }
 
-        public IActionResult GenerateReport(long medicalOrderId, bool downloadPDF)
+        public IActionResult GenerateReport(long medicalOrderId, TypeMedicalOrder medicalOrderType, bool downloadPDF)
         {
             WebReport web = new WebReport();
             
@@ -65,8 +65,9 @@ namespace MyPatient.Web.Controllers
             mssqlDataConnection.ConnectionString = _configuration.GetConnectionString("DefaultConnectionString");
             var Conn = mssqlDataConnection.ConnectionString;
             
-            web.Report.SetParameterValue("conn", Conn);
+            web.Report.SetParameterValue("Conn", Conn);
             web.Report.SetParameterValue("@Id", medicalOrderId);
+            web.Report.SetParameterValue("@Type", (int)medicalOrderType);
 
             if (web.Report.Prepare() && !downloadPDF)
             {
@@ -75,8 +76,6 @@ namespace MyPatient.Web.Controllers
             else
             {
                 var pdfExport = new PDFSimpleExport();
-
-                pdfExport.Title = "Orden medica";
 
                 MemoryStream stream = new MemoryStream();
                 web.Report.Export(pdfExport, stream);
@@ -128,7 +127,7 @@ namespace MyPatient.Web.Controllers
 
             if (lastMedicalOrder is null)
             {
-                TempData["IncomeNotExist"] = "¡No existe ninguna Orden Médica de Ingreso creada!";
+                TempData["Warning"] = "¡No existe ninguna Orden Médica de Ingreso creada!";
                 return RedirectToAction("Index", new { patientId = patientId });
             }
 
@@ -171,7 +170,7 @@ namespace MyPatient.Web.Controllers
 
             if (lastMedicalOrder is null)
             {
-                TempData["IncomeNotExist"] = $"¡No existe ninguna Orden Médica {(copyDaily ? "de Ingreso" : "Diaria")} creada!";
+                TempData["Warning"] = $"¡No existe ninguna Orden Médica {(copyDaily ? "de Ingreso" : "Diaria")} creada!";
                 return RedirectToAction("Index", new { patientId = patientId });
             }
 

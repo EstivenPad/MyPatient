@@ -5,24 +5,27 @@
 }
 
 <div class="">
-    <h1>PACIENTES</h1>
+    <h1 class="text-center mb-3">PACIENTES</h1>
 
     <form asp-action="Index" method="get">
-        <div class="row mb-2">
+        <div class="row input-group mb-2">
             <div class="col-2">
                 <select class="form-select" name="FilterSelected" asp-for="@ViewData["FilterSelected"]" asp-items="@Model.FilterOptions">
                     <option disabled selected>--Seleccione filtro--</option>
                 </select>
             </div>
+
             <div class="col">
-                <input type="text" class="form-control" placeholder="Criterio de búsqueda" name="FilterCriteria" value="@ViewData["FilterCriteria"]" />
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Criterio de búsqueda" name="FilterCriteria" value="@ViewData["FilterCriteria"]" />
+
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-search"></i>
+                        Buscar
+                    </button>
+                </div>
             </div>
-            <div class="col">
-                <button type="submit" class="btn btn-outline-primary">
-                    <i class="bi bi-search"></i>
-                    Buscar
-                </button>
-            </div>
+
             <div class="col text-end">
                 <a class="btn btn-primary" asp-controller="Patient" asp-action="Upsert"><i class="bi bi-person-plus-fill"></i> Crear nuevo paciente</a>
             </div>
@@ -49,7 +52,7 @@
                     <td>
                         <a class="btn btn-warning" asp-controller="Patient" asp-action="Upsert" asp-route-id="@patient.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                         <a class="btn btn-danger" asp-controller="Patient" asp-action="Delete" asp-route-id="@patient.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                        <a class="btn btn-info" asp-controller="MedicalOrder" asp-action="Index" asp-route-patientId="@patient.Id"><i class="bi bi-file-earmark-text-fill"></i> Orden Médica</a>
+                        <a class="btn btn-dark" asp-controller="MedicalOrder" asp-action="Index" asp-route-patientId="@patient.Id"><i class="bi bi-file-earmark-text-fill"></i> Orden Médica</a>
                     </td>
                 </tr>
             }

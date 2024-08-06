@@ -66,6 +66,8 @@ namespace MyPatient.Web.Controllers
                 new SelectListItem{ Text = "MA", Value = "MA" }
             };
             
+            ViewData["Title"] = "Pacientes";
+
             return View(patientIndexVM);
         }
 
@@ -77,6 +79,8 @@ namespace MyPatient.Web.Controllers
                 MA = new MA(),
                 MAs = _maService.PopulateMASelect()
             };
+            
+            ViewData["Title"] = "Pacientes";
 
             if (id == null || id == 0)
             {
@@ -90,6 +94,7 @@ namespace MyPatient.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(PatientUpsertVM patientVM)
         {
             if (ModelState.IsValid)
@@ -112,16 +117,13 @@ namespace MyPatient.Web.Controllers
                 patientVM.MAs = _maService.PopulateMASelect();
             }
 
+            ViewData["Title"] = "Pacientes";
+
             return View(patientVM);
         }
 
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(long id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
             var patient = await _patientService.GetPatient(p => p.Id == id);
 
             if (patient == null)
@@ -142,17 +144,15 @@ namespace MyPatient.Web.Controllers
                 MA = String.Concat(ma.Sex ? "Dra. " : "Dr. ", " ", ma.FirstName, " ", ma.LastName)
             };
 
+            ViewData["Title"] = "Pacientes";
+
             return View(patientVM);
         }
 
         [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeletePost(long? id)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePost(long id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
             var patient = await _patientService.GetPatient(p => p.Id == id);
 
             if (patient is null)
@@ -160,11 +160,20 @@ namespace MyPatient.Web.Controllers
                 return NotFound();
             }
 
+            var patientHasMedicalOrder = await _patientService.HasMedicalOrders(id);
+
+            if (patientHasMedicalOrder)
+            {
+                TempData["danger"] = "¡No se puede eliminar el Paciente debido a que tiene Ordenes Medicas asignadas!";
+
+                return Json(new { success = false, redirectUrl = $"/Patient/Delete/{id}"});
+            }
+
             await _patientService.RemovePatient(patient);
 
             TempData["success"] = "Paciente eliminado correctamente.";
 
-            return RedirectToAction("Index");
+            return Json(new { success = true });
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="07/28/2024 13:23:07" ReportInfo.Modified="08/05/2024 11:57:54" ReportInfo.CreatorVersion="2022.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="07/28/2024 13:23:07" ReportInfo.Modified="08/06/2024 13:59:55" ReportInfo.CreatorVersion="2022.2.0.0">
   <Dictionary>
-    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqM3/HbiZANEYP3Y6oNtE7mrUmT0ytl94C6DYS4DXvgc8JqhVjVQGe7Sc2pOMNI3eDtZ1+Zn/7Cy5AYXay0+gH/mr019ETOrhZLJV2hG1wfccHkIZtQpMYVAftEK98STPB7i4z8N+0V285xSEmSEJz0qSXUD3W/zPqziH2RugbxNXcnmcfgyaH0eHu422ylnzB" ConnectionStringExpression="[CONN]">
-      <TableDataSource Name="MedicalOrders" DataType="System.Int32" Enabled="true" TableName="MedicalOrders" SelectCommand="EXEC SP_GetMedicalOrderById @Id">
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqM3/HbiZANEYP3Y6oNtE7mrUmT0ytl94C6DYS4DXvgc8JqhVjVQGe7Sc2pOMNI3eDtZ1+Zn/7Cy5AYXay0+gH/mr019ETOrhZLJV2hG1wfccHkIZtQpMYVAftEK98STPB7i4z8N+0V285xSEmSEJz0qSXUD3W/zPqziH2RugbxNWQfopln9cXMQuyPg77+KAy" ConnectionStringExpression="[Conn]">
+      <TableDataSource Name="MedicalOrders" DataType="System.Int32" Enabled="true" TableName="MedicalOrders" SelectCommand="EXEC SP_GetMedicalOrderById @Id, @Type">
         <Column Name="Id" DataType="System.Int64"/>
         <Column Name="Type" DataType="System.Int32"/>
         <Column Name="Service" DataType="System.String"/>
@@ -46,11 +46,13 @@
         <Column Name="Sex1" DataType="System.Boolean" BindableControl="CheckBox"/>
         <Column Name="Exequatur" DataType="System.String"/>
         <CommandParameter Name="@Id" DataType="22" Expression="[@Id]"/>
+        <CommandParameter Name="@Type" DataType="22" Expression="[@Type]"/>
       </TableDataSource>
     </MsSqlDataConnection>
-    <Relation Name="MedicalOrders_MedicalOrderDetails" ParentDataSource="MedicalOrders" ChildDataSource="MedicalOrderDetails" ParentColumns="Id" ChildColumns="MedicalOrderId" Enabled="true"/>
-    <Parameter Name="conn" DataType="System.String" Expression="[conn]"/>
+    <Relation Name="MedicalOrders_MedicalOrderDetails" ParentDataSource="MedicalOrders" ChildDataSource="null" ParentColumns="Id" ChildColumns="MedicalOrderId" Enabled="true"/>
     <Parameter Name="@Id" DataType="System.String"/>
+    <Parameter Name="@Type" DataType="System.String"/>
+    <Parameter Name="Conn" DataType="System.String"/>
   </Dictionary>
   <ReportPage Name="Page1" PaperWidth="215.9" PaperHeight="279.4" RawPaperSize="1" LeftMargin="10.01" TopMargin="10.01" RightMargin="10.01" BottomMargin="10.01" Watermark.Font="Arial, 60pt">
     <ReportTitleBand Name="ReportTitle1" Width="740.43" Height="141.75">

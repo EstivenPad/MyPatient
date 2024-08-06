@@ -16,5 +16,10 @@ namespace MyPatient.DataAccess.Repository
         public PatientRepository(DatabaseContext context) : base(context) 
         {
         }
+
+        public async Task<bool> HasAnyMedicalOrder(long patientId)
+        {
+            return await _dbContext.MedicalOrders.AnyAsync(mo => mo.PatientId == patientId) == true;
+        }
     }
 }
