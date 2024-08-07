@@ -12,38 +12,70 @@ namespace MyPatient.DataAccess.Repository
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-        protected readonly DatabaseContext _context;
-        public BaseRepository(DatabaseContext context)
+        protected readonly DatabaseContext _dbContext;
+        internal DbSet<T> dbSet;
+
+        public BaseRepository(DatabaseContext dbContext)
         {
-            _context = context;
+            _dbContext = dbContext;
+            dbSet = _dbContext.Set<T>();
         }
 
-        public async Task Create(T entity)
+        public virtual async Task Create(T entity)
         {
-            _context.Set<T>().Add(entity);
-            await _context.SaveChangesAsync();
+            _dbContext.Set<T>().Add(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task Delete(T entity)
+        public virtual async Task Delete(T entity)
         {
-            _context.Set<T>().Remove(entity);
-            await _context.SaveChangesAsync();
+            _dbContext.Set<T>().Remove(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<T> Get(Expression<Func<T, bool>> filter)
+        public async Task<T> Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
-            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(filter);
+            IQueryable<T> query = dbSet.AsNoTracking();
+
+            query = query.Where(filter);
+
+            if (!String.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
+            return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<List<T>> GetAll()
+        public IQueryable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
-            return await _context.Set<T>().AsNoTracking().ToListAsync();
+            IQueryable<T> query = dbSet.AsNoTracking();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
+            return query;
         }
 
-        public async Task Update(T entity)
+        public virtual async Task Update(T entity)
         {
-            _context.Update(entity);
-            await _context.SaveChangesAsync();
+            _dbContext.Update(entity);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

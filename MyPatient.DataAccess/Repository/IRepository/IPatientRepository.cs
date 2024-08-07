@@ -11,6 +11,6 @@ namespace MyPatient.DataAccess.Repository.IRepository
 {
     public interface IPatientRepository : IBaseRepository<Patient>
     {
-        public Task<List<Patient>> GetAllFiltered(Expression<Func<Patient, bool>> expression);
+        Task<bool> HasAnyMedicalOrder(long patientId);
     }
 }

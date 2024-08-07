@@ -1,0 +1,158 @@
+﻿@model MedicalOrderIndexVM
+
+@{
+    ViewData["Title"] = "Ordenes Médicas";
+}
+
+<div class="mb-3 d-flex align-items-center justify-content-center position-relative">
+    <a class="btn btn-secondary position-absolute start-0" asp-controller="Patient" asp-action="Index">
+        <i class="bi bi-box-arrow-left"></i>
+        Volver
+    </a>
+
+    <h1 class="text-center m-0">ORDENES MÉDICAS</h1>
+</div>
+
+@* PACIENT DATA *@
+<div>
+    <h4 class="fw-semibold">DATOS DEL PACIENTE:</h4>
+
+    <ul class="list-unstyled">
+        <li><b>Nombre:</b> @Model.Patient.Name</li>
+        <li><b>Record:</b> @Model.Patient.Record</li>
+        <li><b>Sexo:</b> @(Model.Patient.Sex ? "Femenino" : "Masculino")</li>
+        <li><b>Edad:</b> @Model.Patient.Age.ToString() @(Model.Patient.Age > 1 ? "Años" : "Año")</li>
+        <li><b>Peso:</b> @Model.Patient.Weight @("Libras")</li>
+        <li><b>Identificación:</b> @Model.Patient.Identification</li>
+    </ul>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" data-bs-toggle="tab" href="#income" aria-selected="true" role="tab">Ingreso</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" data-bs-toggle="tab" href="#daily" aria-selected="false" role="tab" tabindex="-1">Diarias</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" data-bs-toggle="tab" href="#postoperative" aria-selected="false" role="tab" tabindex="-1">Post-quirúrgicas</a>
+    </li>
+</ul>
+
+<div id="myTabContent" class="tab-content">
+    @* INCOME MEDICAL ORDER *@
+    <div class="tab-pane fade active show pt-3" id="income" role="tabpanel">
+        <a class="btn btn-outline-primary" asp-action="CreateIncome" asp-route-patientId="@Model.Patient.Id">
+            <i class="bi bi-file-earmark-fill"></i>
+            Crear Nueva Orden Medica
+        </a>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-primary" scope="col">Tipo</th>
+                    <th class="text-primary" scope="col">Fecha</th>
+                    <th class="text-primary" scope="col">Sala</th>
+                    <th class="text-primary" scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var incomeMedicalOrder in Model.Income)
+                {
+                    <tr>
+                        <td>@incomeMedicalOrder.Type</td>
+                        <td>@incomeMedicalOrder.CreatedDate.ToString()</td>
+                        <td>@incomeMedicalOrder.Room</td>
+                        <td>
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    @* DAILY MEDICAL ORDERS *@
+    <div class="tab-pane fade pt-3" id="daily" role="tabpanel">
+        <a class="btn btn-outline-primary" asp-action="CreateDaily" asp-route-patientId="@Model.Patient.Id">
+            <i class="bi bi-copy"></i>
+            Copiar Orden de Ingreso
+        </a>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-primary" scope="col">Tipo</th>
+                    <th class="text-primary" scope="col">Fecha</th>
+                    <th class="text-primary" scope="col">Sala</th>
+                    <th class="text-primary" scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dailyMedicalOrder in Model.Daily)
+                {
+                    <tr>
+                        <td>@dailyMedicalOrder.Type</td>
+                        <td>@dailyMedicalOrder.CreatedDate.ToString()</td>
+                        <td>@dailyMedicalOrder.Room</td>
+                        <td>
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@dailyMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@dailyMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* POST-OPERATIVE MEDICAL ORDERS *@
+    <div class="tab-pane fade" id="postoperative" role="tabpanel">
+        <div class="pt-3">
+            <a class="btn btn-outline-primary" asp-action="CreatePostOperative" asp-route-patientId="@Model.Patient.Id" asp-route-copyDaily="false">
+                <i class="bi bi-copy"></i>
+                Copiar Orden de Ingreso
+            </a>
+
+            <a class="btn btn-outline-primary ms-2" asp-action="CreatePostOperative" asp-route-patientId="@Model.Patient.Id" asp-route-copyDaily="true">
+                <i class="bi bi-copy"></i>
+                Copiar Última Orden Diaria
+            </a>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-primary" scope="col">Tipo</th>
+                    <th class="text-primary" scope="col">Fecha</th>
+                    <th class="text-primary" scope="col">Sala</th>
+                    <th class="text-primary" scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var postOperativeMedicalOrder in Model.PostOperative)
+                {
+                    <tr>
+                        <td>@postOperativeMedicalOrder.Type</td>
+                        <td>@postOperativeMedicalOrder.CreatedDate.ToString()</td>
+                        <td>@postOperativeMedicalOrder.Room</td>
+                        <td>
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

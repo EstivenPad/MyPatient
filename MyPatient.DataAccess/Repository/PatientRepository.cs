@@ -17,12 +17,9 @@ namespace MyPatient.DataAccess.Repository
         {
         }
 
-        public async Task<List<Patient>> GetAllFiltered(Expression<Func<Patient, bool>> expression)
+        public async Task<bool> HasAnyMedicalOrder(long patientId)
         {
-            return await _context.Patients
-                        .Where(expression)
-                        .AsNoTracking()
-                        .ToListAsync();
+            return await _dbContext.MedicalOrders.AnyAsync(mo => mo.PatientId == patientId) == true;
         }
     }
 }

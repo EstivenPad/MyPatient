@@ -1,0 +1,130 @@
+﻿@model PatientUpsertVM
+
+<h1 class="text-center ms-2 @(Model.Patient.Id == 0 ? "text-primary" : "text-warning")">@(Model.Patient.Id == 0 ? "CREAR" : "EDITAR") PACIENTE</h1>
+
+<div class="container">
+    <form method="post">
+        <input asp-for="Patient.Id" hidden />
+
+        <div class="row">
+            <div class="col-12 col-md-6 mb-3">
+                <label for="record" class="form-label">Record</label>
+                <input class="form-control" id="record" asp-for="Patient.Record" />
+                <span asp-validation-for="Patient.Record" class="text-danger"></span>
+            </div>
+
+            <div class="col-12 col-md-6 mb-3">
+                <label for="identification" class="form-label">Identificación</label>
+                <input class="form-control" id="identification" placeholder="000-0000000-0" asp-for="Patient.Identification" />
+                <span asp-validation-for="Patient.Identification" class="text-danger"></span>
+            </div> 
+        </div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input class="form-control" id="name" asp-for="Patient.Name" />
+            <span asp-validation-for="Patient.Name" class="text-danger"></span>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12 col-md-4">
+                <label class="form-label">Sexo</label>
+
+                <div>
+                    <input type="radio" class="form-check-input" id="female" asp-for="Patient.Sex" value="false" />
+                    <label for="female" class="form-check-label">Masculino</label>
+
+                    <input type="radio" class="form-check-input" id="male" asp-for="Patient.Sex" value="true" />
+                    <label for="male" class="form-check-label">Femenino</label>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label for="age" class="form-label">Edad</label>
+                <input class="form-control" id="age" placeholder="0" asp-for="Patient.Age" min="1" />
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label for="weight" class="form-label">Peso</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" id="weight" placeholder="0" asp-for="Patient.Weight" min="1" />
+                    <span class="input-group-text" id="weight_measure">Lb.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <h4 class="text-primary">MA</h4>
+                <div class="border border-primary p-3 mb-3" style="border-radius: 10px">
+                    <div>
+                        <label class="form-label">MA</label>
+                        <div class="mb-3 input-group">
+                            <select class="form-select input-group-prepend" asp-for="@Model.Patient.MAId" asp-items="@Model.MAs">
+                                <option disabled selected>--Seleccione MA--</option>
+                            </select>
+
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#MAModal">
+                                <i class="bi bi-person-plus-fill"></i> Crear Nuevo MA
+                            </button>
+                        </div>
+                        <span asp-validation-for="Patient.MAId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mt-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-@(Model.Patient.Id == 0 ? "primary" : "warning") w-50">
+                        @(Model.Patient.Id == 0 ? "Guardar" : "Editar")
+                    </button>
+
+                    <a class="btn btn-secondary w-50" asp-controller="Patient" asp-action="Index">
+                        Volver
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <h4 class="text-primary">Seguro Médico</h4>
+                <div class="border border-primary p-3" style="border-radius: 10px">
+                    <div class="mb-3">
+                        <input type="checkbox" class="form-check-input" id="isInsured" asp-for="Patient.IsInsured" />
+                        <label for="isInsured" class="form-check-label">ES ASEGURADO</label>
+                    </div>
+                   
+                    <div class="mb-3">
+                        <label for="ars" class="form-label">ARS</label>
+                        <input class="form-control" id="ars" asp-for="Patient.ARS" disabled="@(Model?.Patient.IsInsured == null)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nss" class="form-label">NSS</label>
+                        <input class="form-control" id="nss" asp-for="Patient.NSS" />
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </form>
+</div>
+
+<partial name="~/Views/Shared/_MAUpsertPartial.cshtml" model="Model.MA"/>
+
+@section Scripts {
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var checkbox = document.getElementById('isInsured');
+            var arsTextInput = document.getElementById('ars');
+            var nssTextInput = document.getElementById('nss');
+
+            checkbox.addEventListener('change', function () {
+                arsTextInput.disabled = !this.checked;
+                nssTextInput.disabled = !this.checked;
+            });
+
+            // Initialize the state based on the model value
+            arsTextInput.disabled = !checkbox.checked;
+            nssTextInput.disabled = !checkbox.checked;
+        });
+    </script>
+
+    @{<partial name="_ValidationScriptsPartial"/>}
+}
