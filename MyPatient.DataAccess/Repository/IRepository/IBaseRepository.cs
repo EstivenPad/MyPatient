@@ -9,8 +9,8 @@ namespace MyPatient.DataAccess.Repository.IRepository
 {
     public interface IBaseRepository<T> where T : class
     {
-        Task<List<T>> GetAll();
-        Task<T> Get(Expression<Func<T, bool>> filter);
+        IQueryable<T> GetAll(Expression<Func<T, bool>>? filter, string? includePropeties);
+        Task<T> Get(Expression<Func<T, bool>> filter, string? includePropeties);
         Task Create(T entity);
         Task Update(T entity);
         Task Delete(T entity);

@@ -1,0 +1,183 @@
+﻿@model MedicalOrderVM
+
+<h1 class="text-center"><span class="text-danger">ELIMINAR ORDEN MÉDICA:</span> @(Enum.GetName(Model.MedicalOrder.Type).ToUpper())</h1>
+
+<div class="container">
+    <form method="post">
+        @Html.AntiForgeryToken()
+        @* PATIENT DATA *@
+        <input asp-for="MedicalOrder.Id" hidden />
+        <input asp-for="MedicalOrder.Type" hidden />
+        <input asp-for="MedicalOrder.PatientId" hidden />
+        <input asp-for="MedicalOrder.MAId" hidden />
+
+        <h4 class="text-primary">Datos Generales</h4>
+        <div class="row p-3 mb-3 border border-primary rounded-3">
+            <div class="col-6">
+                <div class="mb-2">
+                    <label for="record" class="form-label">Record</label>
+                    <input class="form-control" id="record" asp-for="MedicalOrder.Patient.Record" disabled />
+                </div>
+                <div class="mb-2">
+                    <label for="name" class="form-label">Nombre</label>
+                    <input class="form-control" id="name" asp-for="MedicalOrder.Patient.Name" disabled />
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <label for="age" class="form-label">Edad</label>
+                        <div class="input-group">
+                            <input class="form-control" id="age" placeholder="0" min="0" asp-for="MedicalOrder.Patient.Age" disabled />
+                            <span class="input-group-text" id="age_measure">Años</span>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label for="weight" class="form-label">Peso</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="weight" placeholder="0" asp-for="MedicalOrder.Patient.Weight" min="1" disabled />
+                            <span class="input-group-text" id="weight_measure">Lb.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label for="ars" class="form-label">Seguro</label>
+                    <input class="form-control" id="ars" asp-for="MedicalOrder.Patient.ARS" disabled />
+                </div>
+                <div class="mb-2">
+                    <label for="nss" class="form-label">NSS</label>
+                    <input class="form-control" id="nss" asp-for="MedicalOrder.Patient.NSS" disabled />
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="mb-2">
+                    <label for="service" class="form-label">Servicio</label>
+                    <input class="form-control" id="service" asp-for="MedicalOrder.Service" disabled />
+                </div>
+                <div class="mb-2">
+                    <label for="room" class="form-label">Sala</label>
+                    <input class="form-control" id="room" asp-for="MedicalOrder.Room" disabled />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Sexo</label>
+                    <div class="mt-1">
+                        <input type="radio" class="form-check-input" id="female" asp-for="MedicalOrder.Patient.Sex" value="false" disabled />
+                        <label for="female" class="form-check-label">Masculino</label>
+
+                        <input type="radio" class="form-check-input" id="male" asp-for="MedicalOrder.Patient.Sex" value="true" disabled />
+                        <label for="male" class="form-check-label">Femenino</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <label for="created_date" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="created_date" asp-for="MedicalOrder.CreatedDate" disabled />
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label for="created_time" class="form-label">Hora</label>
+                        <input type="time" class="form-control" id="created_time" asp-for="MedicalOrder.CreatedTime" disabled />
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label for="ma" class="form-label">Medico Responsable (MA)</label>
+                    <input type="text" class="form-control" id="ma" asp-for="MedicalOrder.MAId" value="@Model.MA" disabled />
+                </div>
+            </div>
+        </div>
+
+        <h4 class="text-primary">Diagnóstico</h4>
+        <div class="row mb-3 p-3 border border-primary rounded-3">
+            <div>
+                <label for="diagnostic" class="form-label">Diagnóstico</label>
+                <input class="form-control" id="diagnostic" asp-for="MedicalOrder.Diagnostic" disabled />
+            </div>
+        </div>
+
+        <div class="row mb-3 p-3 border border-primary rounded-3">
+            <div class="col-6">
+                <div class="mb-2">
+                    <label for="general_measure" class="form-label">Medidas Generales</label>
+                    <input class="form-control" id="general_measure" asp-for="MedicalOrder.GeneralMeasures" disabled />
+                </div>
+                <div class="mb-2">
+                    <label for="diet" class="form-label">Dieta</label>
+                    <input class="form-control" id="diet" asp-for="MedicalOrder.Diet" disabled />
+                </div>
+                <div class="mb-2">
+                    <label for="cures" class="form-label">Curas</label>
+                    <input class="form-control" id="cures" asp-for="MedicalOrder.Cures" disabled />
+                </div>
+                <div class="mb-2">
+                    <label for="position" class="form-label">Postura</label>
+                    <input class="form-control" id="position" asp-for="MedicalOrder.Position" disabled />
+                </div>
+                <div class="mb-2">
+                    <label for="special_controls" class="form-label">Controles Especiales</label>
+                    <input class="form-control" id="special_controls" asp-for="MedicalOrder.SpecialControls" disabled />
+                </div>
+            </div>
+
+
+            <div class="col-6">
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label for="dren" class="form-label">DREN</label>
+                        <input class="form-control" id="dren" asp-for="MedicalOrder.DREN" disabled />
+                    </div>
+
+                    <div class="col-6">
+                        <label for="alergies" class="form-label">Alergias</label>
+                        <input class="form-control" id="alergies" asp-for="MedicalOrder.Alergies" disabled />
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label for="enterconsult" class="form-label">Interconsultas</label>
+                    <input class="form-control" id="enterconsult" asp-for="MedicalOrder.Enterconsult" disabled />
+                </div>
+                <div class="mb-2">
+                    <label for="labs" class="form-label">Laboratorios</label>
+                    <input class="form-control" id="labs" asp-for="MedicalOrder.Labs" disabled />
+                </div>
+            </div>
+        </div>
+
+        @* SOLUTIONS DETAIL *@
+        <h4 class="text-primary">Soluciones</h4>
+        <div class="row p-3 border border-primary rounded-3">
+            <table id="ExpTable" class="table DetailTable">
+                <thead>
+                    <tr>
+                        <th class="text-primary" scope="col">Solucion</th>
+                        <th class="text-primary" scope="col">Dosis</th>
+                        <th class="text-primary" scope="col">Frecuencia</th>
+                        <th class="text-primary" scope="col">Via</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.MedicalOrder.Solutions.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <input asp-for="@Model.MedicalOrder.Solutions[i].SolutionName" class="form-control" disabled />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.MedicalOrder.Solutions[i].Dose" class="form-control" disabled />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.MedicalOrder.Solutions[i].Frecuency" class="form-control" disabled />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.MedicalOrder.Solutions[i].Via" class="form-control" disabled />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3 d-flex gap-2">
+            <a onclick="AlertDelete('Esta seguro que desea eliminar esta Orden Médica?', 'La Orden Médica ha sido eliminada.','/MedicalOrder/Delete?patientId=@Model.MedicalOrder.PatientId&medicalOrderId=@Model.MedicalOrder.Id', '/MedicalOrder?patientId=@Model.MedicalOrder.PatientId')" class="btn btn-danger w-50">Eliminar</a>
+
+            <a class="btn btn-secondary w-50" asp-action="Index" asp-route-patientId="@Model.MedicalOrder.PatientId">Volver</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,61 @@
+﻿@model MA
+
+<div class="modal fade" id="MAModal" tabindex="-1" aria-labelledby="MAModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="MA" asp-action="Create" method="post">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="MAModalLabel">REGISTRO DE MA</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="firstname" class="form-label">Nombre</label>
+                                <input class="form-control" id="firstname" asp-for="FirstName" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-6">
+                                <label for="lastname" class="form-label">Apellidos</label>
+                                <input class="form-control" id="lastname" asp-for="LastName" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div> 
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">Sexo</label>
+                                <div>
+                                    <input type="radio" class="form-check-input" id="female" asp-for="Sex" value="false" />
+                                    <label for="female" class="form-check-label">Masculino</label>
+
+                                    <input type="radio" class="form-check-input" id="male" asp-for="Sex" value="true" />
+                                    <label for="male" class="form-check-label">Femenino</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="identification" class="form-label">Identificación</label>
+                                <input class="form-control" id="identification" placeholder="000-0000000-0" asp-for="Identification" />
+                                <span asp-validation-for="Identification" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-6">
+                                <label for="exequatur" class="form-label">Exequatur</label>
+                                <input class="form-control" id="exequatur" placeholder="00000-00" asp-for="Exequatur" />
+                                <span asp-validation-for="Exequatur" class="text-danger"></span>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -1,118 +1,179 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MyPatient.Application.Services.Patient;
+using Microsoft.Data.SqlClient;
+using MyPatient.Application.Services.MAServices;
+using MyPatient.Application.Services.MedicalOrderServices;
+using MyPatient.Application.Services.PatientServices;
 using MyPatient.Models;
+using MyPatient.Models.ViewModels.PatientVM;
+using System.Drawing.Printing;
 
 namespace MyPatient.Web.Controllers
 {
     public class PatientController : Controller
     {
         private readonly IPatientService _patientService;
-        public PatientController(IPatientService patientService)
+        private readonly IMAService _maService;
+        private readonly IMedicalOrderService _medicalOrderService;
+
+        public PatientController(IPatientService patientService, IMAService maService, IMedicalOrderService medicalOrderService)
         {
             _patientService = patientService;
+            _maService = maService;
+            _medicalOrderService = medicalOrderService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page, string? filterSelected, string? filterCriteria)
         {
-            return View(await _patientService.GetAllPatients());
-        }
+            IEnumerable<Patient> patientsList;
+            var patientIndexVM = new PatientIndexVM();
+            int pageSize = 10;
 
-        [HttpPost]
-        public async Task<IActionResult> Index(string filterOption, string filterCriteria)
-        {
+            ViewData["FilterSelected"] = filterSelected;
             ViewData["FilterCriteria"] = filterCriteria;
 
-            return View(await _patientService.GetFilteredPatients(filterOption, filterCriteria));
+            if (!String.IsNullOrEmpty(filterCriteria))
+            {
+                switch (filterSelected)
+                {
+                    case "Name":
+                        patientsList = _patientService.GetAllPatients(p => p.Name.Contains(filterCriteria), includeProperties: "MA");
+                        break;
+
+                    case "Record":
+                        patientsList = _patientService.GetAllPatients(p => p.Record.Contains(filterCriteria), includeProperties: "MA");
+                        break;
+
+                    case "MA":
+                        patientsList = _patientService.GetAllPatients(p => p.MA.FirstName.Contains(filterCriteria) || p.MA.LastName.Contains(filterCriteria), includeProperties: "MA");
+                        break;
+
+                    default:
+                        patientsList = _patientService.GetAllPatients(p => true, includeProperties: "MA");
+                        break;
+                }
+            }
+            else
+            {
+                patientsList = _patientService.GetAllPatients(p => true, includeProperties: "MA");
+            }
+
+            patientIndexVM.Patients = await PaginatedList<Patient>.CreateAsync(patientsList.AsQueryable(), page ?? 1, pageSize);
+            patientIndexVM.FilterOptions = new List<SelectListItem>
+            {
+                new SelectListItem{ Text = "Nombre", Value = "Name" },
+                new SelectListItem{ Text = "Record", Value = "Record" },
+                new SelectListItem{ Text = "MA", Value = "MA" }
+            };
+            
+            ViewData["Title"] = "Pacientes";
+
+            return View(patientIndexVM);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Upsert(long? id)
         {
-            return View();
+            var patientVM = new PatientUpsertVM
+            {
+                Patient = new Patient(),
+                MA = new MA(),
+                MAs = _maService.PopulateMASelect()
+            };
+            
+            ViewData["Title"] = "Pacientes";
+
+            if (id == null || id == 0)
+            {
+                return View(patientVM);
+            }
+            else
+            {
+                patientVM.Patient = await _patientService.GetPatient(p => p.Id == id);
+                return View(patientVM);
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Patient patient)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upsert(PatientUpsertVM patientVM)
         {
             if (ModelState.IsValid)
             {
-                await _patientService.AddPatient(patient);
-
-                TempData["success"] = "Paciente creado correctamente.";
+                if(patientVM.Patient.Id == 0)
+                {
+                    await _patientService.AddPatient(patientVM.Patient);
+                    TempData["success"] = "Paciente creado correctamente.";
+                }
+                else
+                {
+                    await _patientService.UpdatePatient(patientVM.Patient);
+                    TempData["success"] = "Paciente actualizado correctamente.";
+                }
 
                 return RedirectToAction("Index");
             }
-
-            return View(patient);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || id == 0)
+            else
             {
-                return NotFound();
+                patientVM.MAs = _maService.PopulateMASelect();
             }
 
-            Patient patient = await _patientService.GetPatient(p => p.Id == id);
+            ViewData["Title"] = "Pacientes";
+
+            return View(patientVM);
+        }
+
+        public async Task<IActionResult> Delete(long id)
+        {
+            var patient = await _patientService.GetPatient(p => p.Id == id);
 
             if (patient == null)
             {
                 return NotFound();
             }
 
-            return View(patient);
-        }
+            var ma = await _maService.GetMA(m => m.Id == patient.MAId);
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(Patient patient)
-        {
-            if (ModelState.IsValid)
-            {
-                await _patientService.UpdatePatient(patient);
-
-                TempData["success"] = "Paciente actualizado correctamente.";
-
-                return RedirectToAction("Index");
-            }
-
-            return View();
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || id == 0)
+            if (ma == null)
             {
                 return NotFound();
             }
 
-            Patient patient = await _patientService.GetPatient(p => p.Id == id);
-
-            if (patient == null)
+            var patientVM = new PatientDeleteVM
             {
-                return NotFound();
-            }
+                Patient = patient,
+                MA = String.Concat(ma.Sex ? "Dra. " : "Dr. ", " ", ma.FirstName, " ", ma.LastName)
+            };
 
-            return View(patient);
+            ViewData["Title"] = "Pacientes";
+
+            return View(patientVM);
         }
 
         [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeletePost(int? id)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePost(long id)
         {
-            if (id == null || id == 0)
+            var patient = await _patientService.GetPatient(p => p.Id == id);
+
+            if (patient is null)
             {
                 return NotFound();
             }
 
-            Patient? patient = await _patientService.GetPatient(p => p.Id == id);
+            var patientHasMedicalOrder = await _patientService.HasMedicalOrders(id);
 
-            if (patient is null)
-                return NotFound();
+            if (patientHasMedicalOrder)
+            {
+                TempData["danger"] = "¡No se puede eliminar el Paciente debido a que tiene Ordenes Medicas asignadas!";
+
+                return Json(new { success = false, redirectUrl = $"/Patient/Delete/{id}"});
+            }
 
             await _patientService.RemovePatient(patient);
 
             TempData["success"] = "Paciente eliminado correctamente.";
 
-            return RedirectToAction("Index");
+            return Json(new { success = true });
         }
     }
 }
