@@ -50,7 +50,6 @@ namespace MyPatient.DataAccess.DataContext
                     Identification = "402-1234567-0",
                     Exequatur = "1536-23"
                 });
-
             modelBuilder.Entity<Patient>().HasData(
                 new Patient
                 {

@@ -23,7 +23,7 @@ namespace MyPatient.Web.Controllers
         {
             if(statusCode == 404)
             {
-                ViewBag.ErrorMessage = "Oops! La página que estás buscando no existe.";
+                ViewBag.ErrorMessage = "Oops! La pï¿½gina que estï¿½s buscando no existe.";
                 ViewData["Title"] = "Error 404";
             }
 
