@@ -111,7 +111,7 @@ namespace MyPatient.Web.Controllers
 
             ViewData["Title"] = "Ordenes Médicas";
 
-            return View(medicalOrderVM);
+            return View("Create", medicalOrderVM);
         }
 
         public async Task<IActionResult> CreateDaily(long patientId)
@@ -170,12 +170,11 @@ namespace MyPatient.Web.Controllers
 
             if (lastMedicalOrder is null)
             {
-                TempData["Warning"] = $"¡No existe ninguna Orden Médica {(copyDaily ? "de Ingreso" : "Diaria")} creada!";
+                TempData["Warning"] = $"¡No existe ninguna Orden Médica {(copyDaily ? "Diaria" : "de Ingreso")} creada!";
                 return RedirectToAction("Index", new { patientId = patientId });
             }
 
             var medicalOrderVM = new MedicalOrderVM();
-
             medicalOrderVM.MedicalOrder = lastMedicalOrder;
             medicalOrderVM.MedicalOrder.Id = 0;
             medicalOrderVM.MedicalOrder.Type = TypeMedicalOrder.Postquirurgica;
@@ -202,7 +201,7 @@ namespace MyPatient.Web.Controllers
             {
                 await _medicalOrderService.AddMedicalOrder(medicalOrderVM.MedicalOrder);
 
-                TempData["Success"] = "Orden Médica creada correctamente.";
+                TempData["Success"] = $"Orden Médica {Enum.GetName(medicalOrderVM.MedicalOrder.Type)} creada correctamente.";
 
                 return RedirectToAction("Index", new { patientId = medicalOrderVM.MedicalOrder.PatientId });
             }
@@ -314,7 +313,8 @@ namespace MyPatient.Web.Controllers
             await _medicalOrderService.RemoveMedicalOrder(medicalOrder);
             TempData["success"] = "Orden Médica eliminada correctamente.";
 
-            return RedirectToAction("Index", new { patientId = medicalOrder.PatientId });
+            return Json(new { success = true });
+            //return RedirectToAction("Index", new { patientId = medicalOrder.PatientId });
         }
     }
 }

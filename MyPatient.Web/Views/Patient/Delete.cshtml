@@ -1,6 +1,6 @@
 ﻿@model PatientDeleteVM
 
-<h1 class="text-danger">ELIMINACIÓN DE PACIENTE</h1>
+<h1 class="text-center text-danger">ELIMINAR PACIENTE</h1>
 
 <div class="container">
     <form method="post">
@@ -48,7 +48,7 @@
 
         <div class="row">
             <div class="col-6">
-                <h4>MA</h4>
+                <h4 class="text-primary">MA</h4>
                 <div class="border border-primary p-3 mb-3" style="border-radius: 10px">
                     <div class="mb-3">
                         <label class="form-label">MA</label>
@@ -66,7 +66,7 @@
             </div>
 
             <div class="col-6">
-                <h4>Seguro Médico</h4>
+                <h4 class="text-primary">Seguro Médico</h4>
                 <div class="border border-primary p-3" style="border-radius: 10px">
                     <div class="mb-3">
                         <input type="checkbox" class="form-check-input" id="isInsured" asp-for="Patient.IsInsured" disabled />
