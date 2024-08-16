@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="07/28/2024 13:23:07" ReportInfo.Modified="08/06/2024 22:01:43" ReportInfo.CreatorVersion="2022.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="07/28/2024 13:23:07" ReportInfo.Modified="08/10/2024 14:34:50" ReportInfo.CreatorVersion="2022.2.0.0">
   <Dictionary>
-    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqM3/HbiZANEYP3Y6oNtE7mrUmT0ytl94C6DYS4DXvgc8JqhVjVQGe7Sc2pOMNI3eDtZ1+Zn/7Cy5AYXay0+gH/mr019ETOrhZLJV2hG1wfccHkIZtQpMYVAftEK98STPB7i4z8N+0V285xSEmSEJz0qSXUD3W/zPqziH2RugbxNWNvc369q/XP752ROUSdgPu" ConnectionStringExpression="[Conn]">
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqM3/HbiZANEYP3Y6oNtE7mrUmT0ytl94C6DYS4DXvgc8JqhVjVQGe7Sc2pOMNI3eDtZ1+Zn/7Cy5AYXay0+gH/mr019ETOrhZLJV2hG1wfccHkIZtQpMYVAftEK98STPB7i4z8N+0V285xSEmSEJz0qSXUD3W/zPqziH2RugbxNU+ryJX7y7ToF9MMhfrQ50N" ConnectionStringExpression="[Conn]">
       <TableDataSource Name="MedicalOrders" DataType="System.Int32" Enabled="true" TableName="MedicalOrders" SelectCommand="EXEC SP_GetMedicalOrderById @Id, @Type">
         <Column Name="Id" DataType="System.Int64"/>
         <Column Name="Type" DataType="System.Int32"/>
@@ -285,16 +285,16 @@
       </DataBand>
     </DataBand>
     <PageFooterBand Name="PageFooter1" Top="526.11" Width="740.43" Height="229.35">
-      <TableObject Name="Table4" Left="528" Top="28.8" Width="181.35" Height="161.4" Border.Lines="All">
+      <TableObject Name="Table4" Left="528" Top="19.2" Width="181.35" Height="189.9" Border.Lines="All">
         <TableColumn Name="Column23" Width="181.35"/>
         <TableRow Name="Row25" Height="27.54">
-          <TableCell Name="Cell217" Text="MA" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell217" Text="[IIf([MedicalOrders.Sex1], &quot;Dra.&quot;, &quot;Dr.&quot;)] [MedicalOrders.FirstName] [MedicalOrders.LastName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" RowSpan="2"/>
         </TableRow>
         <TableRow Name="Row26" Height="27.54">
           <TableCell Name="Cell222" Border.Lines="Bottom" Font="Arial, 10pt"/>
         </TableRow>
         <TableRow Name="Row27" Height="27.54">
-          <TableCell Name="Cell227" Border.Lines="Bottom" Font="Arial, 10pt"/>
+          <TableCell Name="Cell227" Border.Lines="Top, Bottom" Font="Arial, 10pt"/>
         </TableRow>
         <TableRow Name="Row28" Height="27.54">
           <TableCell Name="Cell232" Border.Lines="Bottom" Font="Arial, 10pt"/>
@@ -303,7 +303,10 @@
           <TableCell Name="Cell237" Border.Lines="Bottom" Font="Arial, 10pt"/>
         </TableRow>
         <TableRow Name="Row30" Height="23.7">
-          <TableCell Name="Cell238" Font="Arial, 10pt"/>
+          <TableCell Name="Cell238" Border.Lines="Bottom" Font="Arial, 10pt"/>
+        </TableRow>
+        <TableRow Name="Row32" Height="28.5">
+          <TableCell Name="Cell279" Font="Arial, 10pt"/>
         </TableRow>
       </TableObject>
     </PageFooterBand>

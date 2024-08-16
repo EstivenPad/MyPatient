@@ -34,15 +34,24 @@ namespace MyPatient.Web.Controllers
             var patient = await _patientService.GetPatient(p => p.Id == patientId);
 
             if (patient is null)
-            {
                 return NotFound();
-            }
 
             var medicalOrderList = _medicalOrderService.GetAllMedicalOrders(mo => mo.PatientId == patientId);
 
-            var incomeMedicalOrderList = medicalOrderList.Where(mo => mo.Type == TypeMedicalOrder.Ingreso).OrderByDescending(mo => mo.CreatedDate);
-            var dailyMedicalOrderList = medicalOrderList.Where(mo => mo.Type == TypeMedicalOrder.Diaria).OrderByDescending(mo => mo.CreatedDate);
-            var postOperativeMedicalOrderList = medicalOrderList.Where(mo => mo.Type == TypeMedicalOrder.Postquirurgica).OrderByDescending(mo => mo.CreatedDate);
+            var incomeMedicalOrderList = medicalOrderList
+                .Where(mo => mo.Type == TypeMedicalOrder.Ingreso)
+                .OrderByDescending(mo => mo.CreatedDate)
+                .OrderByDescending(mo => mo.CreatedTime);
+
+            var dailyMedicalOrderList = medicalOrderList
+                .Where(mo => mo.Type == TypeMedicalOrder.Diaria)
+                .OrderByDescending(mo => mo.CreatedDate)
+                .OrderByDescending(mo => mo.CreatedTime);
+
+            var postOperativeMedicalOrderList = medicalOrderList
+                .Where(mo => mo.Type == TypeMedicalOrder.Postquirurgica)
+                .OrderByDescending(mo => mo.CreatedDate)
+                .OrderByDescending(mo => mo.CreatedTime);
 
             medicalOrderVM.Patient = patient;
             medicalOrderVM.Income = incomeMedicalOrderList;
@@ -54,7 +63,7 @@ namespace MyPatient.Web.Controllers
             return View(medicalOrderVM);
         }
 
-        public IActionResult GenerateReport(long medicalOrderId, TypeMedicalOrder medicalOrderType, bool downloadPDF)
+        public IActionResult GenerateReport(long medicalOrderId, TypeMedicalOrder medicalOrderType, bool downloadPDF, long patientId = 0)
         {
             WebReport web = new WebReport();
             
@@ -71,6 +80,7 @@ namespace MyPatient.Web.Controllers
 
             if (web.Report.Prepare() && !downloadPDF)
             {
+                ViewData["PatientId"] = patientId;
                 return View(web);
             }
             else
@@ -83,7 +93,7 @@ namespace MyPatient.Web.Controllers
                 pdfExport.Dispose();
                 stream.Position = 0;
 
-                return File(stream, "application/pdf", "orden-medica.pdf");
+                return File(stream, "application/pdf", "orden_medica.pdf");
             }
         }
 
@@ -114,20 +124,23 @@ namespace MyPatient.Web.Controllers
             return View("Create", medicalOrderVM);
         }
 
-        public async Task<IActionResult> CreateDaily(long patientId)
+        public async Task<IActionResult> CreateDaily(long patientId, bool copyIncome)
         {
+            MedicalOrder lastMedicalOrder;
+
             var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
 
             if (patient is null || patient.MA is null)
-            {
                 return NotFound();
-            }
 
-            var lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Ingreso, patientId);
-
+            if (copyIncome)
+                lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Ingreso, patientId);
+            else
+                lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Postquirurgica, patientId);
+            
             if (lastMedicalOrder is null)
             {
-                TempData["Warning"] = "¡No existe ninguna Orden Médica de Ingreso creada!";
+                TempData["Warning"] = $"¡No existe ninguna Orden Médica {(copyIncome ? "de Ingreso" : "Post-quirúrgica")} creada!";
                 return RedirectToAction("Index", new { patientId = patientId });
             }
 
@@ -151,9 +164,8 @@ namespace MyPatient.Web.Controllers
             return View("Create", medicalOrderVM);
         }
 
-        public async Task<IActionResult> CreatePostOperative(long patientId, bool copyDaily)
+        public async Task<IActionResult> CreatePostOperative(long patientId)
         {
-            MedicalOrder lastMedicalOrder;
             var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
 
             if (patient is null || patient.MA is null)
@@ -161,16 +173,11 @@ namespace MyPatient.Web.Controllers
                 return NotFound();
             }
 
-            if (copyDaily)
-            {
-                lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Diaria, patientId);
-            }else{
-                lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Ingreso, patientId);
-            }
-
+            var lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Ingreso, patientId);
+            
             if (lastMedicalOrder is null)
             {
-                TempData["Warning"] = $"¡No existe ninguna Orden Médica {(copyDaily ? "Diaria" : "de Ingreso")} creada!";
+                TempData["Warning"] = $"¡No existe ninguna Orden Médica de Ingreso creada!";
                 return RedirectToAction("Index", new { patientId = patientId });
             }
 
@@ -251,11 +258,9 @@ namespace MyPatient.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                medicalOrderVM.MedicalOrder.Solutions.ForEach(mo => mo.MedicalOrderId = medicalOrderVM.MedicalOrder.Id);
-
                 await _medicalOrderService.UpdateMedicalOrder(medicalOrderVM.MedicalOrder);
                 
-                TempData["success"] = "Orden Médica actualizada correctamente.";
+                TempData["Success"] = "Orden Médica actualizada correctamente.";
                 
                 return RedirectToAction("Index", new { patientId = medicalOrderVM.MedicalOrder.PatientId });
             }
@@ -311,10 +316,9 @@ namespace MyPatient.Web.Controllers
             }
 
             await _medicalOrderService.RemoveMedicalOrder(medicalOrder);
-            TempData["success"] = "Orden Médica eliminada correctamente.";
+            TempData["Success"] = "Orden Médica eliminada correctamente.";
 
             return Json(new { success = true });
-            //return RedirectToAction("Index", new { patientId = medicalOrder.PatientId });
         }
     }
 }

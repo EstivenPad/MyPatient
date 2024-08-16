@@ -27,9 +27,6 @@ namespace MyPatient.Models
         [ForeignKey("MedicalOrder")]
         public long MedicalOrderId { get; set; }
         
-        [NotMapped]
-        public bool IsDeleted { get; set; } = false;
-        
         public MedicalOrder? MedicalOrder { get; set; }
     }
 }

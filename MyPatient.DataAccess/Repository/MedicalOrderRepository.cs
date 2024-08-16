@@ -36,23 +36,51 @@ namespace MyPatient.DataAccess.Repository
         }
 
         public override Task Create(MedicalOrder entity)
-        {
-            var solutions = entity.Solutions.Where(s => s.IsDeleted == false);
-
-            _dbContext.Set<MedicalOrderDetail>().AddRange(solutions);
-            
+        {   
             return base.Create(entity);
         }
 
-        public override Task Update(MedicalOrder entity)
+        public override async Task Update(MedicalOrder entity)
         {
-            var solutions = entity.Solutions.Where(s => s.IsDeleted == true);
-            
-            _dbContext.MedicalOrderDetails.RemoveRange(solutions);
+            // Update the Order entity
+            _dbContext.Entry(entity).State = EntityState.Modified;
 
-            entity.Solutions.RemoveAll(s => s.IsDeleted == true);
+            // Get the existing details from the database
+            var existingDetails = _dbContext.MedicalOrderDetails
+                .Where(d => d.MedicalOrderId == entity.Id)
+                .AsNoTracking()
+                .ToList();
 
-            return base.Update(entity);
+            // Process each detail in the model
+            foreach (var detail in entity.Solutions)
+            {
+                if (detail.MedicalOrderDetailId == 0)
+                {
+                    // New detail - add it to the database
+                    detail.MedicalOrderId = entity.Id;
+                    _dbContext.MedicalOrderDetails.Add(detail);
+                }
+                else
+                {
+                    // Existing detail - update it
+                    var existingDetail = existingDetails.SingleOrDefault(d => d.MedicalOrderDetailId == detail.MedicalOrderDetailId);
+                    if (existingDetail != null)
+                    {
+                        _dbContext.Entry(existingDetail).CurrentValues.SetValues(detail);
+                    }
+                }
+            }
+
+            // Handle deleted details
+            foreach (var existingDetail in existingDetails)
+            {
+                if (!entity.Solutions.Any(d => d.MedicalOrderDetailId == existingDetail.MedicalOrderDetailId))
+                {
+                    _dbContext.MedicalOrderDetails.Remove(existingDetail);
+                }
+            }
+
+            await _dbContext.SaveChangesAsync();
         }
 
         public override Task Delete(MedicalOrder entity)

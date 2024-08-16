@@ -14,7 +14,7 @@ namespace MyPatient.Models
         [Required(ErrorMessage = "El Servicio es requerido.")]
         public string Service { get; set; } = string.Empty;
         
-        [Required(ErrorMessage = "La Sala es requerida.")]
+        [Required(ErrorMessage = "La Sala y Cama son requeridas.")]
         public string Room { get; set; } = string.Empty;
         
         public DateOnly CreatedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
@@ -40,8 +40,9 @@ namespace MyPatient.Models
         public string SpecialControls { get; set; } = string.Empty;
         
         public string? DREN { get; set; }
-        
-        public string? Alergies { get; set; }
+
+        [Required(ErrorMessage = "Las Alergias son requeridas.")]
+        public string Alergies { get; set; } = string.Empty;
         
         public string? Enterconsult { get; set; }
         

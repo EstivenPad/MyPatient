@@ -175,7 +175,7 @@
         </div>
 
         <div class="mt-3 d-flex gap-2">
-            <a onclick="AlertDelete('Esta seguro que desea eliminar esta Orden Médica?', 'La Orden Médica ha sido eliminada.','/MedicalOrder/Delete?patientId=@Model.MedicalOrder.PatientId&medicalOrderId=@Model.MedicalOrder.Id', '/MedicalOrder?patientId=@Model.MedicalOrder.PatientId')" class="btn btn-danger w-50">Eliminar</a>
+            <a onclick="alertDelete('Esta seguro que desea eliminar esta Orden Médica?', 'La Orden Médica ha sido eliminada.','/MedicalOrder/Delete?patientId=@Model.MedicalOrder.PatientId&medicalOrderId=@Model.MedicalOrder.Id', '/MedicalOrder?patientId=@Model.MedicalOrder.PatientId')" class="btn btn-danger w-50">Eliminar</a>
 
             <a class="btn btn-secondary w-50" asp-action="Index" asp-route-patientId="@Model.MedicalOrder.PatientId">Volver</a>
         </div>

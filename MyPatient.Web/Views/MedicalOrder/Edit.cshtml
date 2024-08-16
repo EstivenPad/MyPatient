@@ -55,7 +55,7 @@
                     <span asp-validation-for="MedicalOrder.Service" class="text-danger"></span>
                 </div>
                 <div class="mb-2">
-                    <label for="room" class="form-label">Sala</label>
+                    <label for="room" class="form-label">Sala y Cama</label>
                     <input class="form-control" id="room" asp-for="MedicalOrder.Room" />
                     <span asp-validation-for="MedicalOrder.Room" class="text-danger"></span>
                 </div>
@@ -163,19 +163,18 @@
                         <th class="text-primary" scope="col">Frecuencia</th>
                         <th class="text-primary" scope="col">Via</th>
                         <th class="text-primary" scope="col" style="position: relative">
-                            <button id="btnadd" type="button" class="btn btn-secondary visible" style="position: absolute; top: 0%; left: 0%" onclick="AddItem(this)">
+                            <button id="btnadd" type="button" class="btn btn-secondary visible" style="position: absolute; top: 0%; left: 0%" onclick="addDetail(this)">
                                 Agregar
                             </button>
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="solutionDetails">
                     @for (int i = 0; i < Model.MedicalOrder.Solutions.Count; i++)
                     {
                         <tr>
                             <td>
                                 <input type="hidden" asp-for="@Model.MedicalOrder.Solutions[i].MedicalOrderDetailId" />
-                                <input type="hidden" asp-for="@Model.MedicalOrder.Solutions[i].IsDeleted" />
                                 <input asp-for="@Model.MedicalOrder.Solutions[i].SolutionName" class="form-control" />
                                 <span asp-validation-for="@Model.MedicalOrder.Solutions[i].SolutionName" class="text-danger"></span>
                             </td>
@@ -192,7 +191,7 @@
                                 <span asp-validation-for="@Model.MedicalOrder.Solutions[i].Via" class="text-danger"></span>
                             </td>
                             <td style="position: relative">
-                                <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="DeleteItem(this)">Eliminar</button>
+                                <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeDetail(this)">Eliminar</button>
                             </td>
                         </tr>
                     }

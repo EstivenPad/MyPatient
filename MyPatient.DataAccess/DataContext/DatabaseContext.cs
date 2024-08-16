@@ -5,9 +5,7 @@ namespace MyPatient.DataAccess.DataContext
 {
     public class DatabaseContext : DbContext
     {
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
-        {
-        }
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options){}
 
         public DbSet<Patient> Patients { get; set; }
         public DbSet<MA> MAs { get; set; }

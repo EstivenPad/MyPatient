@@ -1,73 +1,31 @@
-﻿function DeleteItem(btn) {
-    var rows = document.getElementsByTagName("tr");
-    var rowCounter = 0;
+﻿function addDetail() {
+    var index = $('#solutionDetails tr').length;
+    var row = '<tr>'
+        + '<td><input class="form-control" name="MedicalOrder.Solutions[' + index + '].MedicalOrderDetailId" type="hidden" value="0" />'
+        + '<input class="form-control" name="MedicalOrder.Solutions[' + index + '].SolutionName" type="text" /></td>'
+        + '<td><input class="form-control" name="MedicalOrder.Solutions[' + index + '].Dose" type="text" /></td>'
+        + '<td><input class="form-control" name="MedicalOrder.Solutions[' + index + '].Frecuency" type="text" /></td>'
+        + '<td><input class="form-control" name="MedicalOrder.Solutions[' + index + '].Via" type="text" /></td>'
+        + '<td style="position: relative"><button type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeDetail(this)">Eliminar</button></td>'
+        + '</tr>';
+    $('#solutionDetails').append(row);
 
-    for (var i = 0; i < rows.length; i++) {
-        console.log(rows[i].innerHTML)
-        if (rows[i].innerHTML.includes('False'))
-            rowCounter++;
-    }
-
-    if (rowCounter == 1) {
-        toastr.warning('¡No se puede eliminar la última fila!')
-        return;
-    }
-
-    var btnId = btn.id.replaceAll('btnremove-', '');
-    var idOfIsDeleted = btnId + '__IsDeleted';
-    var hidIsDelId = document.querySelector("[id$='" + idOfIsDeleted + "']").id;
-
-    document.getElementById(hidIsDelId).value = "true";
-
-    $(btn).closest('tr').hide();
+    // Re-apply validation to the newly added row
+    var form = $("form");
+    $.validator.unobtrusive.parse(form);
 }
 
-function AddItem(btn) {
-    var table = document.getElementById('ExpTable');
-    var rows = table.getElementsByTagName('tr');
+function removeDetail(button) {
+    var rows = $('#solutionDetails tr');
 
-    var rowOuterHtml = rows[rows.length - 1].outerHTML;
-
-    var lastrowIdx = rows.length - 2;
-
-    var nextrowIdx = eval(lastrowIdx) + 1;
-
-    rowOuterHtml = rowOuterHtml.replaceAll('_' + lastrowIdx + '_', '_' + nextrowIdx + '_');
-    rowOuterHtml = rowOuterHtml.replaceAll('[' + lastrowIdx + ']', '[' + nextrowIdx + ']');
-    rowOuterHtml = rowOuterHtml.replaceAll('-' + lastrowIdx, '-' + nextrowIdx);
-
-    var newRow = table.insertRow();
-    newRow.innerHTML = rowOuterHtml;
-
-    var inputs = document.getElementsByTagName("input");
-
-    for (var x = 0; x < inputs.length; x++) {
-        if (inputs[x].type == "text" && inputs[x].id.indexOf('_' + nextrowIdx + '_') > 0)
-            inputs[x].value = "";
-
-        if (inputs[x].type == "hidden" && inputs[x].id.indexOf('MedicalOrderDetailId') > 0 && inputs[x].id.indexOf('_' + nextrowIdx + '_') > 0)
-            inputs[x].value = "0";
-
-        if (inputs[x].type == "hidden" && inputs[x].id.indexOf('IsDeleted') > 0 && inputs[x].id.indexOf('_' + nextrowIdx + '_') > 0)
-            inputs[x].value = "False";
+    if (rows.length > 1) {
+        $(button).closest('tr').remove();
+    } else {
+        toastr.warning('¡No se puede eliminar la última fila!');
     }
-
-    rebindValidators();
 }
 
-function rebindValidators() {
-    var form = $("#medicalOrderForm");
-
-    $form.unbind();
-
-    $form.data("validator", null);
-
-    $.validator.unobtrusive.parse($form);
-
-    $form.validate($form.data("unobtrusiveValidation").options);
-}
-
-function AlertDelete(title, text, deleteUrl, redirectUrl) {
+function alertDelete(title, text, deleteUrl, redirectUrl) {
     Swal.fire({
         title: title,
         text: "Los cambios son irrevertibles!",

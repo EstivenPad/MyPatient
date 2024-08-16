@@ -4,4 +4,11 @@
     ViewData["Title"] = "Ordenes Médicas - Reporte";
 }
 
+<div>
+    <a class="btn btn-secondary" asp-controller="MedicalOrder" asp-action="Index" asp-route-patientId="@(ViewData["PatientId"])">
+        <i class="bi bi-box-arrow-left"></i>
+        Volver
+    </a>
+</div>
+
 @await Model.Render()

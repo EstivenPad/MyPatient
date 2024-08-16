@@ -68,7 +68,7 @@
                         <td>
                             <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="false" asp-route-patientId="@incomeMedicalOrder.PatientId"><i class="bi bi-printer-fill"></i> Imprimir</a>
                             <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
                         </td>
                     </tr>
@@ -79,9 +79,14 @@
     
     @* DAILY MEDICAL ORDERS *@
     <div class="tab-pane fade pt-3" id="daily" role="tabpanel">
-        <a class="btn btn-outline-primary" asp-action="CreateDaily" asp-route-patientId="@Model.Patient.Id">
+        <a class="btn btn-outline-primary me-2" asp-action="CreateDaily" asp-route-patientId="@Model.Patient.Id" asp-route-copyIncome="true">
             <i class="bi bi-copy"></i>
-            Copiar Orden de Ingreso
+            Copiar Última Orden de Ingreso
+        </a>
+
+        <a class="btn btn-outline-primary" asp-action="CreateDaily" asp-route-patientId="@Model.Patient.Id" asp-route-copyIncome="false">
+            <i class="bi bi-copy"></i>
+            Copiar Última Orden Post-quirúrgica
         </a>
 
         <table class="table table-hover">
@@ -103,7 +108,7 @@
                         <td>
                             <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@dailyMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@dailyMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="false" asp-route-patientId="@dailyMedicalOrder.PatientId"><i class="bi bi-printer-fill"></i> Imprimir</a>
                             <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
                         </td>
                     </tr>
@@ -115,14 +120,9 @@
     @* POST-OPERATIVE MEDICAL ORDERS *@
     <div class="tab-pane fade" id="postoperative" role="tabpanel">
         <div class="pt-3">
-            <a class="btn btn-outline-primary" asp-action="CreatePostOperative" asp-route-patientId="@Model.Patient.Id" asp-route-copyDaily="false">
+            <a class="btn btn-outline-primary" asp-action="CreatePostOperative" asp-route-patientId="@Model.Patient.Id">
                 <i class="bi bi-copy"></i>
-                Copiar Orden de Ingreso
-            </a>
-
-            <a class="btn btn-outline-primary ms-2" asp-action="CreatePostOperative" asp-route-patientId="@Model.Patient.Id" asp-route-copyDaily="true">
-                <i class="bi bi-copy"></i>
-                Copiar Última Orden Diaria
+                Copiar Última Orden de Ingreso
             </a>
         </div>
 
@@ -145,7 +145,7 @@
                         <td>
                             <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="false" asp-route-patientId="@postOperativeMedicalOrder.PatientId"><i class="bi bi-printer-fill"></i> Imprimir</a>
                             <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
                         </td>
                     </tr>

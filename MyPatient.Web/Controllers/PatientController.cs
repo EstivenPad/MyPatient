@@ -102,12 +102,12 @@ namespace MyPatient.Web.Controllers
                 if(patientVM.Patient.Id == 0)
                 {
                     await _patientService.AddPatient(patientVM.Patient);
-                    TempData["success"] = "Paciente creado correctamente.";
+                    TempData["Success"] = "Paciente creado correctamente.";
                 }
                 else
                 {
                     await _patientService.UpdatePatient(patientVM.Patient);
-                    TempData["success"] = "Paciente actualizado correctamente.";
+                    TempData["Success"] = "Paciente actualizado correctamente.";
                 }
 
                 return RedirectToAction("Index");
@@ -164,14 +164,14 @@ namespace MyPatient.Web.Controllers
 
             if (patientHasMedicalOrder)
             {
-                TempData["danger"] = "¡No se puede eliminar el Paciente debido a que tiene Ordenes Medicas asignadas!";
+                TempData["Danger"] = "¡No se puede eliminar el Paciente debido a que tiene Ordenes Medicas asignadas!";
 
                 return Json(new { success = false, redirectUrl = $"/Patient/Delete/{id}"});
             }
 
             await _patientService.RemovePatient(patient);
 
-            TempData["success"] = "Paciente eliminado correctamente.";
+            TempData["Success"] = "Paciente eliminado correctamente.";
 
             return Json(new { success = true });
         }
