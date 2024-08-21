@@ -1,0 +1,62 @@
+﻿@using MyPatient.Models.Enums;
+
+@model PaginatedList<Doctor>
+
+@{
+    ViewData["Title"] = "Doctores";
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="text-primary" scope="col">Nivel Médico</th>
+            <th class="text-primary" scope="col">Exequatur</th>
+            <th class="text-primary" scope="col">Nombre</th>
+            <th class="text-primary" scope="col">Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doctor in Model.Items)
+        {
+            <tr>
+                <td>
+                    <span class="badge @(doctor.Type == TypeDoctor.Residente ? "bg-dark" : "bg-info")">@(Enum.GetName(doctor.Type))</span>
+                </td>
+                <td>@doctor.Exequatur</td>
+                <td>@(String.Concat(doctor.Sex ? "Dra. " : "Dr. ", doctor.FirstName, " ", doctor.LastName))</td>
+                <td>
+                    <a class="btn btn-warning" asp-controller="Doctor" asp-action="Edit"><i class="bi bi-pencil-square"></i> Editar</a>
+                    <a class="btn btn-danger" asp-controller="Doctor" asp-action="Delete"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.TotalPages > 1)
+{
+    <div class="w-100 d-flex justify-content-center align-items-center position-absolute bottom-0">
+        <ul class="pagination">
+            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                <a class="page-link" asp-route-page="1" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">Primero</a>
+            </li>
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" asp-route-page="@(Model.PageIndex - 1)" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">&laquo;</a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                    <a class="page-link" asp-route-page="@i" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" asp-route-page="@(Model.PageIndex + 1)" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">&raquo;</a>
+            </li>
+            <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-route-page="@(Model.TotalPages)" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">Último</a>
+            </li>
+        </ul>
+    </div>
+}
