@@ -60,7 +60,7 @@ namespace MyPatient.Models
         [ForeignKey("MA")]
         public int? MAId { get; set; }
        
-        public MA? MA { get; set; }
+        public Doctor? MA { get; set; }
         
         // **********MEDICA ORDER DETAIL***********
         public List<MedicalOrderDetail>? Solutions { get; set; }

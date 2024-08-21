@@ -163,7 +163,7 @@
                         <th class="text-primary" scope="col">Frecuencia</th>
                         <th class="text-primary" scope="col">Via</th>
                         <th class="text-primary" scope="col" style="position: relative">
-                            <button id="btnadd" type="button" class="btn btn-secondary visible" style="position: absolute; top: 0%; left: 0%" onclick="addDetail(this)">
+                            <button id="btnadd" type="button" class="btn btn-secondary visible" style="position: absolute; top: 0%; left: 0%" onclick="addSolutionDetail(this)">
                                 Agregar
                             </button>
                         </th>
@@ -191,7 +191,7 @@
                                 <span asp-validation-for="@Model.MedicalOrder.Solutions[i].Via" class="text-danger"></span>
                             </td>
                             <td style="position: relative">
-                                <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeDetail(this)">Eliminar</button>
+                                <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeSolutionDetail(this)">Eliminar</button>
                             </td>
                         </tr>
                     }

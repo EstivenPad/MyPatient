@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MyPatient.Application.Services.MAServices;
+using MyPatient.Application.Services.DoctorServices;
 using MyPatient.Application.Services.MedicalOrderServices;
 using MyPatient.Application.Services.PatientServices;
 using System;
@@ -14,7 +14,7 @@ namespace MyPatient.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IMAService, MAService>();
+            services.AddScoped<IDoctorService, DoctorService>();
             services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IMedicalOrderService, MedicalOrderService>();
 

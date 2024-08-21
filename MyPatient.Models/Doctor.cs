@@ -1,12 +1,14 @@
-﻿using MyPatient.Web.Models.Enums;
+﻿using MyPatient.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyPatient.Models
 {
-    public class MA
+    public class Doctor
     {
         [Key]
         public int Id { get; set; }
+
+        public TypeDoctor Type { get; set; } = TypeDoctor.Residente;
 
         [Required(ErrorMessage = "El Nombre es requerido.")]
         public string FirstName { get; set; } = string.Empty;
@@ -14,7 +16,6 @@ namespace MyPatient.Models
         [Required(ErrorMessage = "El Apellido es requerido.")]
         public string LastName { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "La Identificación es requerida.")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[- ]?([0-9]{7})[- ]?([0-9]{1})$", ErrorMessage = "La Identificación no es válido.")]
         [Length(11,13,ErrorMessage = "La Identificación debe tener 11 digitos.")]
         public string? Identification { get; set; }

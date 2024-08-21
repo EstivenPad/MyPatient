@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace MyPatient.DataAccess.Repository
 {
-    public class MARepository : BaseRepository<MA>, IMARepository
+    public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
     {
-        public MARepository(DatabaseContext context) : base(context)
+        public DoctorRepository(DatabaseContext context) : base(context)
         {
         }
     }

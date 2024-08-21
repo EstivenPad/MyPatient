@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyPatient.DataAccess.Repository.IRepository
 {
-    public interface IMARepository : IBaseRepository<MA>
+    public interface IDoctorRepository : IBaseRepository<Doctor>
     {
     }
 }

@@ -1,4 +1,4 @@
-﻿function addDetail() {
+﻿function addSolutionDetail() {
     var index = $('#solutionDetails tr').length;
     var row = '<tr>'
         + '<td><input class="form-control" name="MedicalOrder.Solutions[' + index + '].MedicalOrderDetailId" type="hidden" value="0" />'
@@ -6,7 +6,7 @@
         + '<td><input class="form-control" name="MedicalOrder.Solutions[' + index + '].Dose" type="text" /></td>'
         + '<td><input class="form-control" name="MedicalOrder.Solutions[' + index + '].Frecuency" type="text" /></td>'
         + '<td><input class="form-control" name="MedicalOrder.Solutions[' + index + '].Via" type="text" /></td>'
-        + '<td style="position: relative"><button type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeDetail(this)">Eliminar</button></td>'
+        + '<td style="position: relative"><button type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeSolutionDetail(this)">Eliminar</button></td>'
         + '</tr>';
     $('#solutionDetails').append(row);
 
@@ -15,7 +15,7 @@
     $.validator.unobtrusive.parse(form);
 }
 
-function removeDetail(button) {
+function removeSolutionDetail(button) {
     var rows = $('#solutionDetails tr');
 
     if (rows.length > 1) {

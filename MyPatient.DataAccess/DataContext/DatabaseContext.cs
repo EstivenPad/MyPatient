@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyPatient.Models;
+using MyPatient.Models.Enums;
 
 namespace MyPatient.DataAccess.DataContext
 {
@@ -8,7 +9,7 @@ namespace MyPatient.DataAccess.DataContext
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options){}
 
         public DbSet<Patient> Patients { get; set; }
-        public DbSet<MA> MAs { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
         public DbSet<MedicalOrder> MedicalOrders { get; set; }
         public DbSet<MedicalOrderDetail> MedicalOrderDetails { get; set; }
 
@@ -38,10 +39,11 @@ namespace MyPatient.DataAccess.DataContext
                 .HasForeignKey(mod => mod.MedicalOrderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<MA>().HasData(
-                new MA
+            modelBuilder.Entity<Doctor>().HasData(
+                new Doctor
                 {
                     Id = 1,
+                    Type = TypeDoctor.MA,
                     FirstName = "Miguel",
                     LastName = "Tejada",
                     Sex = false,

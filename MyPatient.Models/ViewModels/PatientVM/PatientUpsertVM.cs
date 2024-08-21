@@ -12,7 +12,7 @@ namespace MyPatient.Models.ViewModels.PatientVM
     {
         public Patient Patient { get; set; }
 
-        public MA? MA { get; set; }
+        public Doctor? MA { get; set; }
 
         [ValidateNever]
         public IEnumerable<SelectListItem> MAs { get; set; }
