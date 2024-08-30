@@ -309,10 +309,8 @@ namespace MyPatient.Web.Controllers
         {
             var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Solutions");
 
-            if(medicalOrder is null) 
-            { 
+            if(medicalOrder is null)
                 return NotFound();
-            }
 
             await _medicalOrderService.RemoveMedicalOrder(medicalOrder);
             TempData["Success"] = "Orden Médica eliminada correctamente.";

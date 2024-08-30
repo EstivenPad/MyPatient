@@ -1,4 +1,5 @@
-﻿using MyPatient.DataAccess.DataContext;
+﻿using Microsoft.EntityFrameworkCore;
+using MyPatient.DataAccess.DataContext;
 using MyPatient.DataAccess.Repository.IRepository;
 using MyPatient.Models;
 using System;
@@ -13,6 +14,11 @@ namespace MyPatient.DataAccess.Repository
     {
         public DoctorRepository(DatabaseContext context) : base(context)
         {
+        }
+
+        public async Task<bool> HasAnyPatient(int doctorId)
+        {
+            return await _dbContext.Patients.AnyAsync(p => p.MAId == doctorId) == true;
         }
     }
 }

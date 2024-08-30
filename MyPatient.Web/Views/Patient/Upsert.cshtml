@@ -4,6 +4,7 @@
 
 <div class="container">
     <form method="post">
+        @Html.AntiForgeryToken()
         <input asp-for="Patient.Id" hidden />
 
         <div class="row">
@@ -21,7 +22,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="name" class="form-label">Nombre</label>
+            <label for="name" class="form-label">Nombre completo</label>
             <input class="form-control" id="name" asp-for="Patient.Name" />
             <span asp-validation-for="Patient.Name" class="text-danger"></span>
         </div>
@@ -32,7 +33,7 @@
 
                 <div>
                     <input type="radio" class="form-check-input" id="female" asp-for="Patient.Sex" value="false" />
-                    <label for="female" class="form-check-label">Masculino</label>
+                    <label for="female" class="form-check-label me-2">Masculino</label>
 
                     <input type="radio" class="form-check-input" id="male" asp-for="Patient.Sex" value="true" />
                     <label for="male" class="form-check-label">Femenino</label>
@@ -58,7 +59,7 @@
                 <h4 class="text-primary">MA</h4>
                 <div class="border border-primary p-3 mb-3" style="border-radius: 10px">
                     <div>
-                        <label class="form-label">MA</label>
+                        <label class="form-label">MA Responsable</label>
                         <div class="mb-3 input-group">
                             <select class="form-select input-group-prepend" asp-for="@Model.Patient.MAId" asp-items="@Model.MAs">
                                 <option disabled selected>--Seleccione MA--</option>

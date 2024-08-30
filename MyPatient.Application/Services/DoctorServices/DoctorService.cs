@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using MyPatient.Models.Enums;
 
 namespace MyPatient.Application.Services.DoctorServices
 {
@@ -36,9 +37,14 @@ namespace MyPatient.Application.Services.DoctorServices
             return await _doctorRepository.Get(filter, string.Empty);
         }
 
-        public IEnumerable<SelectListItem> PopulateDoctorSelect()
+        public async Task<bool> HasPatients(int doctorId)
         {
-            var DoctorList = _doctorRepository.GetAll(x => true, string.Empty);
+            return await _doctorRepository.HasAnyPatient(doctorId);
+        }
+
+        public IEnumerable<SelectListItem> PopulateMADroplist()
+        {
+            var DoctorList = _doctorRepository.GetAll(d => d.Type == TypeDoctor.MA, string.Empty);
 
             DoctorList = DoctorList.OrderBy(doctor => doctor.FirstName);
 

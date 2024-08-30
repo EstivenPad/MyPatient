@@ -50,7 +50,7 @@ function alertDelete(title, text, deleteUrl, redirectUrl) {
                             text: text,
                             icon: "success",
                             showConfirmButton: false,
-                            timer: 1800
+                            timer: 1500
                         }).then(() => {
                             if (redirectUrl) {
                                 window.location = redirectUrl;

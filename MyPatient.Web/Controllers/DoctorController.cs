@@ -67,13 +67,14 @@ namespace MyPatient.Web.Controllers
 
             ViewData["Title"] = "Doctores";
 
-            if (Request.Headers != null && Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            //Check if the request come from ajax or fetch for display index as a partial view
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 return PartialView(doctorIndexVM);
 
             return View(doctorIndexVM);
         }
 
-
+        //*********MODAL CREATE MA IN PATIENT FORM************
         [HttpPost]
         public async Task<IActionResult> Create(Doctor doctor)
         {
@@ -98,6 +99,80 @@ namespace MyPatient.Web.Controllers
 
             return View("Views/Patient/Upsert.cshtml", patientVM);
 
+        }
+
+        public async Task<IActionResult> Upsert(int? id)
+        {
+            var doctor = new Doctor();
+
+            if(id is not null)
+                doctor = await _doctorService.GetDoctor(d => d.Id == id);
+
+            ViewData["Title"] = "Doctores";
+
+            return View(doctor);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upsert(Doctor doctor)
+        {
+            if (ModelState.IsValid)
+            {
+                if (doctor.Id == 0)
+                {
+                    await _doctorService.AddDoctor(doctor);
+                    TempData["Success"] = "Doctor creado correctamente.";
+                }
+                else
+                {
+                    await _doctorService.UpdateDoctor(doctor);
+                    TempData["Success"] = "Doctor actualizado correctamente.";
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            ViewData["Title"] = "Doctores";
+
+            return View(doctor);
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var doctor = await _doctorService.GetDoctor(d => d.Id == id);
+
+            if (doctor is null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Title"] = "Doctores";
+
+            return View(doctor);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            var doctor = await _doctorService.GetDoctor(d => d.Id == id);
+
+            if (doctor is null)
+                return NotFound();
+            
+            bool hasPatients = await _doctorService.HasPatients(id);
+
+            if (hasPatients)
+            {
+                TempData["Danger"] = "¡No se puede eliminar el Doctor debido a que tiene Pacientes asignados!";
+                return Json(new { success = false, redirectUrl = $"/Doctor/Delete/{id}" });
+            }
+
+            await _doctorService.RemoveDoctor(doctor);
+            TempData["Success"] = "Doctor eliminado correctamente.";
+
+            return Json(new { success = true });
         }
     }
 }

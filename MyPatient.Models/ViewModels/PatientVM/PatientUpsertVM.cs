@@ -12,6 +12,7 @@ namespace MyPatient.Models.ViewModels.PatientVM
     {
         public Patient Patient { get; set; }
 
+        //For the Create MA modal in Patient View
         public Doctor? MA { get; set; }
 
         [ValidateNever]

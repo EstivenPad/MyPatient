@@ -75,20 +75,18 @@ namespace MyPatient.Web.Controllers
             {
                 Patient = new Patient(),
                 MA = new Doctor(),
-                MAs = _doctorService.PopulateDoctorSelect()
+                MAs = _doctorService.PopulateMADroplist()
             };
             
             ViewData["Title"] = "Pacientes";
 
-            if (id is null || id == 0)
-            {
-                return View(patientVM);
-            }
-            else
+            if (id is not null)
             {
                 patientVM.Patient = await _patientService.GetPatient(p => p.Id == id);
-                return View(patientVM);
+                patientVM.MA = await _doctorService.GetDoctor(d => d.Id == patientVM.Patient.MAId);
             }
+
+            return View(patientVM);
         }
 
         [HttpPost]
@@ -112,7 +110,7 @@ namespace MyPatient.Web.Controllers
             }
             else
             {
-                patientVM.MAs = _doctorService.PopulateDoctorSelect();
+                patientVM.MAs = _doctorService.PopulateMADroplist();
             }
 
             ViewData["Title"] = "Pacientes";
@@ -124,14 +122,14 @@ namespace MyPatient.Web.Controllers
         {
             var patient = await _patientService.GetPatient(p => p.Id == id);
 
-            if (patient == null)
+            if (patient is null)
             {
                 return NotFound();
             }
 
             var doctor = await _doctorService.GetDoctor(m => m.Id == patient.MAId);
 
-            if (doctor == null)
+            if (doctor is null)
             {
                 return NotFound();
             }
@@ -164,7 +162,7 @@ namespace MyPatient.Web.Controllers
             {
                 TempData["Danger"] = "¡No se puede eliminar el Paciente debido a que tiene Ordenes Medicas asignadas!";
 
-                return Json(new { success = false, redirectUrl = $"/Patient/Delete/{id}"});
+                return Json(new { success = false, redirectUrl = $"/Patient/Delete/{id}" });
             }
 
             await _patientService.RemovePatient(patient);
