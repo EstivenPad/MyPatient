@@ -5,17 +5,21 @@ using MyPatient.Models;
 using MyPatient.Models.ViewModels.PatientVM;
 using MyPatient.Models.Enums;
 using MyPatient.Models.ViewModels.DoctorVM;
-using Azure.Core;
+using FluentValidation;
+using MyPatient.Application.Validations;
+using FluentValidation.Results;
 
 namespace MyPatient.Web.Controllers
 {
     public class DoctorController : Controller
     {
         private readonly IDoctorService _doctorService;
+        private readonly IValidator<Doctor> _validator;
 
-        public DoctorController(IDoctorService doctorService)
+        public DoctorController(IDoctorService doctorService, IValidator<Doctor> validator)
         {
             _doctorService = doctorService;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -117,25 +121,35 @@ namespace MyPatient.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(Doctor doctor)
         {
-            if (ModelState.IsValid)
-            {
-                if (doctor.Id == 0)
-                {
-                    await _doctorService.AddDoctor(doctor);
-                    TempData["Success"] = "Doctor creado correctamente.";
-                }
-                else
-                {
-                    await _doctorService.UpdateDoctor(doctor);
-                    TempData["Success"] = "Doctor actualizado correctamente.";
-                }
+            ValidationResult validationResult;
 
-                return RedirectToAction("Index");
+            if (doctor.Id != 0)
+            {
+                validationResult = await _validator.ValidateAsync(doctor);
+                
+                if(!validationResult.IsValid)
+                    validationResult.AddToModelState(this.ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(doctor);
+            }
+
+            if (doctor.Id == 0)
+            {
+                await _doctorService.AddDoctor(doctor);
+                TempData["Success"] = "Doctor creado correctamente.";
+            }
+            else
+            {
+                await _doctorService.UpdateDoctor(doctor);
+                TempData["Success"] = "Doctor actualizado correctamente.";
             }
 
             ViewData["Title"] = "Doctores";
 
-            return View(doctor);
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Delete(int id)

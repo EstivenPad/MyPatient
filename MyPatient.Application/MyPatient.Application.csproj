@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.9.2" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MyPatient.DataAccess\MyPatient.DataAccess.csproj" />
     <ProjectReference Include="..\MyPatient.Models\MyPatient.Models.csproj" />
   </ItemGroup>
