@@ -5,6 +5,7 @@ using MyPatient.Application.Services.MedicalOrderServices;
 using MyPatient.Application.Services.PatientServices;
 using MyPatient.Models;
 using MyPatient.Models.ViewModels.PatientVM;
+using MyPatient.Models.Enums;
 
 namespace MyPatient.Web.Controllers
 {
@@ -75,16 +76,15 @@ namespace MyPatient.Web.Controllers
             {
                 Patient = new Patient(),
                 MA = new Doctor(),
-                MAs = _doctorService.PopulateMADroplist()
+                MADropList = _doctorService.PopulateMADroplist()
             };
             
             ViewData["Title"] = "Pacientes";
 
+            patientVM.MA.Type = TypeDoctor.MA;
+
             if (id is not null)
-            {
                 patientVM.Patient = await _patientService.GetPatient(p => p.Id == id);
-                patientVM.MA = await _doctorService.GetDoctor(d => d.Id == patientVM.Patient.MAId);
-            }
 
             return View(patientVM);
         }
@@ -110,7 +110,7 @@ namespace MyPatient.Web.Controllers
             }
             else
             {
-                patientVM.MAs = _doctorService.PopulateMADroplist();
+                patientVM.MADropList = _doctorService.PopulateMADroplist();
             }
 
             ViewData["Title"] = "Pacientes";
@@ -123,21 +123,17 @@ namespace MyPatient.Web.Controllers
             var patient = await _patientService.GetPatient(p => p.Id == id);
 
             if (patient is null)
-            {
                 return NotFound();
-            }
 
             var doctor = await _doctorService.GetDoctor(m => m.Id == patient.MAId);
 
             if (doctor is null)
-            {
                 return NotFound();
-            }
 
             var patientVM = new PatientDeleteVM
             {
                 Patient = patient,
-                MA = String.Concat(doctor.Sex ? "Dra. " : "Dr. ", " ", doctor.FirstName, " ", doctor.LastName)
+                MA = String.Concat(doctor.Sex ? "Dra. " : "Dr. ", doctor.FirstName, " ", doctor.LastName)
             };
 
             ViewData["Title"] = "Pacientes";
@@ -152,9 +148,7 @@ namespace MyPatient.Web.Controllers
             var patient = await _patientService.GetPatient(p => p.Id == id);
 
             if (patient is null)
-            {
                 return NotFound();
-            }
 
             var patientHasMedicalOrder = await _patientService.HasMedicalOrders(id);
 

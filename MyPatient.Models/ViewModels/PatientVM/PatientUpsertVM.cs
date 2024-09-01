@@ -16,6 +16,6 @@ namespace MyPatient.Models.ViewModels.PatientVM
         public Doctor? MA { get; set; }
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> MAs { get; set; }
+        public IEnumerable<SelectListItem> MADropList { get; set; }
     }
 }

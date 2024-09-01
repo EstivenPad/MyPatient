@@ -82,27 +82,21 @@ namespace MyPatient.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Doctor doctor)
         {
+            doctor.Type = TypeDoctor.MA;
+
             if (ModelState.IsValid)
-            {
                 await _doctorService.AddDoctor(doctor);
-            }
-            
+
             var patientVM = new PatientUpsertVM()
             {
                 Patient = new Patient(),
                 MA = new Doctor(),
+                MADropList = _doctorService.PopulateMADroplist()
             };
 
-            var MAList = _doctorService.GetAllDoctors(d => d.Type == TypeDoctor.MA);
-
-            patientVM.MAs = MAList.OrderBy(ma => ma.FirstName).Select(ma => new SelectListItem
-            {
-                Text = String.Concat(ma.Sex ? "Dra. " : "Dr. ", " ", ma.FirstName, " ", ma.LastName),
-                Value = ma.Id.ToString()
-            });
+            patientVM.MA.Type = TypeDoctor.MA;
 
             return View("Views/Patient/Upsert.cshtml", patientVM);
-
         }
 
         public async Task<IActionResult> Upsert(int? id)
@@ -121,11 +115,9 @@ namespace MyPatient.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(Doctor doctor)
         {
-            ValidationResult validationResult;
-
             if (doctor.Id != 0)
             {
-                validationResult = await _validator.ValidateAsync(doctor);
+                var validationResult = await _validator.ValidateAsync(doctor);
                 
                 if(!validationResult.IsValid)
                     validationResult.AddToModelState(this.ModelState);
@@ -157,9 +149,7 @@ namespace MyPatient.Web.Controllers
             var doctor = await _doctorService.GetDoctor(d => d.Id == id);
 
             if (doctor is null)
-            {
                 return NotFound();
-            }
 
             ViewData["Title"] = "Doctores";
 
