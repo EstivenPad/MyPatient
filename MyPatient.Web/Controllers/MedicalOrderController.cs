@@ -41,17 +41,17 @@ namespace MyPatient.Web.Controllers
             var incomeMedicalOrderList = medicalOrderList
                 .Where(mo => mo.Type == TypeMedicalOrder.Ingreso)
                 .OrderByDescending(mo => mo.CreatedDate)
-                .OrderByDescending(mo => mo.CreatedTime);
+                .ThenByDescending(mo => mo.CreatedTime);
 
             var dailyMedicalOrderList = medicalOrderList
                 .Where(mo => mo.Type == TypeMedicalOrder.Diaria)
                 .OrderByDescending(mo => mo.CreatedDate)
-                .OrderByDescending(mo => mo.CreatedTime);
+                .ThenByDescending(mo => mo.CreatedTime);
 
             var postOperativeMedicalOrderList = medicalOrderList
                 .Where(mo => mo.Type == TypeMedicalOrder.Postquirurgica)
                 .OrderByDescending(mo => mo.CreatedDate)
-                .OrderByDescending(mo => mo.CreatedTime);
+                .ThenByDescending(mo => mo.CreatedTime);
 
             medicalOrderVM.Patient = patient;
             medicalOrderVM.Income = incomeMedicalOrderList;
@@ -109,8 +109,7 @@ namespace MyPatient.Web.Controllers
             var medicalOrderVM = new MedicalOrderVM();
 
             medicalOrderVM.MedicalOrder = new MedicalOrder();
-            medicalOrderVM.MedicalOrder.Solutions = new List<MedicalOrderDetail>();
-            medicalOrderVM.MedicalOrder.Solutions.Add(new MedicalOrderDetail());
+            medicalOrderVM.MedicalOrder.Solutions = new List<MedicalOrderDetail> { new MedicalOrderDetail() };
 
             medicalOrderVM.MedicalOrder.Patient = patient;
             medicalOrderVM.MedicalOrder.PatientId = patient.Id;
@@ -141,7 +140,7 @@ namespace MyPatient.Web.Controllers
             if (lastMedicalOrder is null)
             {
                 TempData["Warning"] = $"¡No existe ninguna Orden Médica {(copyIncome ? "de Ingreso" : "Post-quirúrgica")} creada!";
-                return RedirectToAction("Index", new { patientId = patientId });
+                return RedirectToAction("Index", new { patientId });
             }
 
             var medicalOrderVM = new MedicalOrderVM();
@@ -310,10 +309,8 @@ namespace MyPatient.Web.Controllers
         {
             var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Solutions");
 
-            if(medicalOrder is null) 
-            { 
+            if(medicalOrder is null)
                 return NotFound();
-            }
 
             await _medicalOrderService.RemoveMedicalOrder(medicalOrder);
             TempData["Success"] = "Orden Médica eliminada correctamente.";

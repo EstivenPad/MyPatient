@@ -1,38 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
-using MyPatient.Application.Services.MAServices;
+using MyPatient.Application.Services.DoctorServices;
 using MyPatient.Application.Services.MedicalOrderServices;
 using MyPatient.Application.Services.PatientServices;
 using MyPatient.Models;
 using MyPatient.Models.ViewModels.PatientVM;
-using System.Drawing.Printing;
+using MyPatient.Models.Enums;
 
 namespace MyPatient.Web.Controllers
 {
     public class PatientController : Controller
     {
         private readonly IPatientService _patientService;
-        private readonly IMAService _maService;
+        private readonly IDoctorService _doctorService;
         private readonly IMedicalOrderService _medicalOrderService;
 
-        public PatientController(IPatientService patientService, IMAService maService, IMedicalOrderService medicalOrderService)
+        public PatientController(IPatientService patientService, IDoctorService doctorService, IMedicalOrderService medicalOrderService)
         {
             _patientService = patientService;
-            _maService = maService;
+            _doctorService = doctorService;
             _medicalOrderService = medicalOrderService;
         }
 
         public async Task<IActionResult> Index(int? page, string? filterSelected, string? filterCriteria)
         {
-            IEnumerable<Patient> patientsList;
+            IQueryable<Patient> patientsList;
             var patientIndexVM = new PatientIndexVM();
             int pageSize = 10;
 
             ViewData["FilterSelected"] = filterSelected;
             ViewData["FilterCriteria"] = filterCriteria;
 
-            if (!String.IsNullOrEmpty(filterCriteria))
+            if (!String.IsNullOrWhiteSpace(filterCriteria))
             {
                 switch (filterSelected)
                 {
@@ -58,7 +57,7 @@ namespace MyPatient.Web.Controllers
                 patientsList = _patientService.GetAllPatients(p => true, includeProperties: "MA");
             }
 
-            patientIndexVM.Patients = await PaginatedList<Patient>.CreateAsync(patientsList.AsQueryable(), page ?? 1, pageSize);
+            patientIndexVM.Patients = await PaginatedList<Patient>.CreateAsync(patientsList, page ?? 1, pageSize);
             patientIndexVM.FilterOptions = new List<SelectListItem>
             {
                 new SelectListItem{ Text = "Nombre", Value = "Name" },
@@ -76,21 +75,18 @@ namespace MyPatient.Web.Controllers
             var patientVM = new PatientUpsertVM
             {
                 Patient = new Patient(),
-                MA = new MA(),
-                MAs = _maService.PopulateMASelect()
+                MA = new Doctor(),
+                MADropList = _doctorService.PopulateMADroplist()
             };
             
             ViewData["Title"] = "Pacientes";
 
-            if (id == null || id == 0)
-            {
-                return View(patientVM);
-            }
-            else
-            {
+            patientVM.MA.Type = TypeDoctor.MA;
+
+            if (id is not null)
                 patientVM.Patient = await _patientService.GetPatient(p => p.Id == id);
-                return View(patientVM);
-            }
+
+            return View(patientVM);
         }
 
         [HttpPost]
@@ -114,7 +110,7 @@ namespace MyPatient.Web.Controllers
             }
             else
             {
-                patientVM.MAs = _maService.PopulateMASelect();
+                patientVM.MADropList = _doctorService.PopulateMADroplist();
             }
 
             ViewData["Title"] = "Pacientes";
@@ -126,22 +122,18 @@ namespace MyPatient.Web.Controllers
         {
             var patient = await _patientService.GetPatient(p => p.Id == id);
 
-            if (patient == null)
-            {
+            if (patient is null)
                 return NotFound();
-            }
 
-            var ma = await _maService.GetMA(m => m.Id == patient.MAId);
+            var doctor = await _doctorService.GetDoctor(m => m.Id == patient.MAId);
 
-            if (ma == null)
-            {
+            if (doctor is null)
                 return NotFound();
-            }
 
             var patientVM = new PatientDeleteVM
             {
                 Patient = patient,
-                MA = String.Concat(ma.Sex ? "Dra. " : "Dr. ", " ", ma.FirstName, " ", ma.LastName)
+                MA = String.Concat(doctor.Sex ? "Dra. " : "Dr. ", doctor.FirstName, " ", doctor.LastName)
             };
 
             ViewData["Title"] = "Pacientes";
@@ -156,9 +148,7 @@ namespace MyPatient.Web.Controllers
             var patient = await _patientService.GetPatient(p => p.Id == id);
 
             if (patient is null)
-            {
                 return NotFound();
-            }
 
             var patientHasMedicalOrder = await _patientService.HasMedicalOrders(id);
 
@@ -166,7 +156,7 @@ namespace MyPatient.Web.Controllers
             {
                 TempData["Danger"] = "¡No se puede eliminar el Paciente debido a que tiene Ordenes Medicas asignadas!";
 
-                return Json(new { success = false, redirectUrl = $"/Patient/Delete/{id}"});
+                return Json(new { success = false, redirectUrl = $"/Patient/Delete/{id}" });
             }
 
             await _patientService.RemovePatient(patient);

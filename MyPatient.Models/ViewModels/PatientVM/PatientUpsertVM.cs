@@ -12,9 +12,10 @@ namespace MyPatient.Models.ViewModels.PatientVM
     {
         public Patient Patient { get; set; }
 
-        public MA? MA { get; set; }
+        //For the Create MA modal in Patient View
+        public Doctor? MA { get; set; }
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> MAs { get; set; }
+        public IEnumerable<SelectListItem> MADropList { get; set; }
     }
 }

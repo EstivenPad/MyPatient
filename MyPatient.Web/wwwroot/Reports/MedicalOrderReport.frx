@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="07/28/2024 13:23:07" ReportInfo.Modified="08/10/2024 14:34:50" ReportInfo.CreatorVersion="2022.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="07/28/2024 13:23:07" ReportInfo.Modified="08/22/2024 16:42:38" ReportInfo.CreatorVersion="2022.2.0.0">
   <Dictionary>
-    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqM3/HbiZANEYP3Y6oNtE7mrUmT0ytl94C6DYS4DXvgc8JqhVjVQGe7Sc2pOMNI3eDtZ1+Zn/7Cy5AYXay0+gH/mr019ETOrhZLJV2hG1wfccHkIZtQpMYVAftEK98STPB7i4z8N+0V285xSEmSEJz0qSXUD3W/zPqziH2RugbxNU+ryJX7y7ToF9MMhfrQ50N" ConnectionStringExpression="[Conn]">
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqM3/HbiZANEYP3Y6oNtE7mrUmT0ytl94C6DYS4DXvgc8JqhVjVQGe7Sc2pOMNI3eDtZ1+Zn/7Cy5AYXay0+gH/mr019ETOrhZLJV2hG1wfccHkIZtQpMYVAftEK98STPB7i4z8N+0V285xSEmSEJz0qSXUD3W/zPqziH2RugbxNWSu2PruhPp+vaGdtVJTShb" ConnectionStringExpression="[Conn]">
       <TableDataSource Name="MedicalOrders" DataType="System.Int32" Enabled="true" TableName="MedicalOrders" SelectCommand="EXEC SP_GetMedicalOrderById @Id, @Type">
         <Column Name="Id" DataType="System.Int64"/>
         <Column Name="Type" DataType="System.Int32"/>

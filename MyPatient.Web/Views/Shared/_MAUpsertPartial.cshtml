@@ -1,11 +1,11 @@
-﻿@model MA
+﻿@model Doctor
 
 <div class="modal fade" id="MAModal" tabindex="-1" aria-labelledby="MAModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form asp-controller="MA" asp-action="Create" method="post">
+            <form asp-controller="Doctor" asp-action="Create" method="post">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="MAModalLabel">REGISTRO DE MA</h1>
+                    <b class="modal-title text-primary fs-5" id="MAModalLabel">CREAR NUEVO MA</b>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -24,7 +24,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col">
+                            <div class="col-6">
                                 <label class="form-label">Sexo</label>
                                 <div>
                                     <input type="radio" class="form-check-input" id="female" asp-for="Sex" value="false" />
@@ -34,6 +34,13 @@
                                     <label for="male" class="form-check-label">Femenino</label>
                                 </div>
                             </div>
+                        <div class="col-6">
+                            <label for="type" class="form-label">Nivel Médico</label>
+                            <select id="type" class="form-select" asp-for="Type" disabled>
+                                <option value="0">Residente</option>
+                                <option value="1" selected>MA</option>
+                            </select>
+                        </div>
                         </div>
 
                         <div class="row mb-3">
@@ -45,7 +52,7 @@
 
                             <div class="col-6">
                                 <label for="exequatur" class="form-label">Exequatur</label>
-                                <input class="form-control" id="exequatur" placeholder="00000-00" asp-for="Exequatur" />
+                                <input class="form-control" id="exequatur" placeholder="0000-00" asp-for="Exequatur" />
                                 <span asp-validation-for="Exequatur" class="text-danger"></span>
                             </div>
                         </div>

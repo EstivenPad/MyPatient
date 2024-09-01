@@ -16,7 +16,7 @@ namespace MyPatient.DataAccess
 
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IPatientRepository, PatientRepository>();
-            services.AddScoped<IMARepository, MARepository>();
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IMedicalOrderRepository, MedicalOrderRepository>();
 
             return services;

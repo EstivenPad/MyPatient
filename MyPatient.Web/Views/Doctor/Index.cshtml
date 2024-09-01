@@ -1,0 +1,86 @@
+﻿@using MyPatient.Models.Enums;
+
+@model DoctorIndexVM
+
+@{
+    ViewData["Title"] = "Doctores";
+}
+
+<div id="doctorListContainer">
+    <h1 class="text-center mb-3">DOCTORES</h1>
+
+    <form asp-action="Index" method="get">
+        <div class="row input-group mb-2">
+            <div class="col-2">
+                <select class="form-select" name="FilterSelected" asp-for="@ViewData["FilterSelected"]" asp-items="@Model.FilterOptions">
+                    <option disabled selected>--Seleccionar filtro--</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Criterio de búsqueda" name="FilterCriteria" value="@ViewData["FilterCriteria"]" />
+
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-search"></i>
+                        Buscar
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-auto mx-2">
+                <b class="d-block text-center">NIVEL MÉDICO:</b>
+                <div class="d-flex gap-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="@ViewData["MedicalLevelOption"]" name="medicalLevelOption" id="medicalLevelOption1" value="All" checked="">
+                        <label class="form-check-label" for="medicalLevelOption1">
+                            Todos
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="@ViewData["MedicalLevelOption"]" name="medicalLevelOption" id="medicalLevelOption2" value="MA">
+                        <label class="form-check-label" for="medicalLevelOption2">
+                            MA
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="@ViewData["MedicalLevelOption"]" name="medicalLevelOption" id="medicalLevelOption3" value="Resident">
+                        <label class="form-check-label" for="medicalLevelOption3">
+                            Residente
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col text-end">
+                <a class="btn btn-primary" asp-controller="Doctor" asp-action="Upsert"><i class="bi bi-person-plus-fill"></i> Crear nuevo doctor</a>
+            </div>
+        </div>
+    </form>
+
+    <div id="doctorListContainer">
+        @await Html.PartialAsync("_DoctorListIndex", Model.Doctors)
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    $(function () {
+        $('input[name="medicalLevelOption"]').change(function () {
+            var selectedValue = $(this).val();
+
+            $.ajax({
+                url: `/Doctor?medicalLevelOption=${selectedValue}`,
+                type: 'GET',
+                data: { medicalLevelOption: selectedValue },
+                success: function (response) {
+                    $('#doctorListContainer').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error');
+                }
+            });
+        });
+    });
+</script>

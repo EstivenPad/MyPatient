@@ -21,8 +21,8 @@
         <li><b>Nombre:</b> @Model.Patient.Name</li>
         <li><b>Record:</b> @Model.Patient.Record</li>
         <li><b>Sexo:</b> @(Model.Patient.Sex ? "Femenino" : "Masculino")</li>
-        <li><b>Edad:</b> @Model.Patient.Age.ToString() @(Model.Patient.Age > 1 ? "Años" : "Año")</li>
-        <li><b>Peso:</b> @Model.Patient.Weight @("Libras")</li>
+        <li><b>Edad:</b> @Model.Patient.Age.ToString() @(Model.Patient.Age is not null ? (Model.Patient.Age > 1 ? "Años" : "Año") : (""))</li>
+        <li><b>Peso:</b> @Model.Patient.Weight @(Model.Patient.Weight is not null ? ("Libras") : (""))</li>
         <li><b>Identificación:</b> @Model.Patient.Identification</li>
     </ul>
 </div>
@@ -62,7 +62,9 @@
                 @foreach (var incomeMedicalOrder in Model.Income)
                 {
                     <tr>
-                        <td>@incomeMedicalOrder.Type</td>
+                        <td>
+                            <span class="badge bg-info">@incomeMedicalOrder.Type</span>
+                        </td>
                         <td>@incomeMedicalOrder.CreatedDate.ToString()</td>
                         <td>@incomeMedicalOrder.Room</td>
                         <td>
@@ -102,7 +104,9 @@
                 @foreach (var dailyMedicalOrder in Model.Daily)
                 {
                     <tr>
-                        <td>@dailyMedicalOrder.Type</td>
+                        <td>
+                            <span class="badge bg-dark">@dailyMedicalOrder.Type</span>
+                        </td>
                         <td>@dailyMedicalOrder.CreatedDate.ToString()</td>
                         <td>@dailyMedicalOrder.Room</td>
                         <td>
@@ -139,7 +143,9 @@
                 @foreach (var postOperativeMedicalOrder in Model.PostOperative)
                 {
                     <tr>
-                        <td>@postOperativeMedicalOrder.Type</td>
+                        <td>
+                            <span class="badge bg-success">@postOperativeMedicalOrder.Type</span>
+                        </td>
                         <td>@postOperativeMedicalOrder.CreatedDate.ToString()</td>
                         <td>@postOperativeMedicalOrder.Room</td>
                         <td>
