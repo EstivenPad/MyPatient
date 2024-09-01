@@ -12,6 +12,7 @@ namespace MyPatient.DataAccess.DataContext
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<MedicalOrder> MedicalOrders { get; set; }
         public DbSet<MedicalOrderDetail> MedicalOrderDetails { get; set; }
+        public DbSet<SurgicalProcedure> SurgicalProcedures { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +39,20 @@ namespace MyPatient.DataAccess.DataContext
                 .WithOne(mod => mod.MedicalOrder)
                 .HasForeignKey(mod => mod.MedicalOrderId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Doctor_SurgicalProcedure>()
+                        .HasKey(ds => new { ds.DoctorId, ds.SurgicalProdecureId });
+
+            modelBuilder.Entity<Doctor_SurgicalProcedure>()
+                .HasOne(ds => ds.Doctor)
+                .WithMany(s => s.DoctorSurgicalProcedures)
+                .HasForeignKey(ds => ds.DoctorId);
+
+            modelBuilder.Entity<Doctor_SurgicalProcedure>()
+                .HasOne(ds => ds.SurgicalProcedure)
+                .WithMany(d => d.DoctorSurgicalProcedures)
+                .HasForeignKey(ds => ds.SurgicalProdecureId);
+
 
             modelBuilder.Entity<Doctor>().HasData(
                 new Doctor
