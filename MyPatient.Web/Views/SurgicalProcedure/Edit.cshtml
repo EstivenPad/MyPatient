@@ -93,7 +93,7 @@
                             {
                                 <tr>
                                     <td class="w-75">
-                                        <select class="form-select" asp-for="@Model.SurgicalProcedure.DoctorSurgicalProcedures[i].DoctorId" asp-items="@Model.ResidentDroplist">
+                                        <select id="doctorSelect-@i" class="form-select doctorSelect" asp-for="@Model.SurgicalProcedure.DoctorSurgicalProcedures[i].DoctorId" asp-items="@Model.ResidentDroplist">
                                             <option disabled selected>--Seleccione Residente--</option>
                                         </select>
                                     </td>
@@ -119,4 +119,10 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script type="text/javascript">
+        $(function () {
+            $('.doctorSelect').select2({ theme: 'bootstrap-5' });
+        });
+    </script>
 }

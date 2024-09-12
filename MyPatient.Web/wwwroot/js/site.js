@@ -116,7 +116,7 @@ function addDoctorDetail() {
         var row = `
             <tr>
                 <td class="w-75">
-                    <select class="form-select" name="SurgicalProcedure.DoctorSurgicalProcedures[${index}].DoctorId">
+                    <select id="doctorSelect[${index}]" class="form-select doctorSelect" name="SurgicalProcedure.DoctorSurgicalProcedures[${index}].DoctorId">
                         <option disabled selected>--Seleccione Residente--</option>
                         ${options}
                     </select>
@@ -134,6 +134,8 @@ function addDoctorDetail() {
             </tr>`;
 
         $('#doctorDetails').append(row);
+
+        $('#doctorDetails .doctorSelect').last().select2({ theme: 'bootstrap-5' });
     })
 
     // Re-apply validation to the newly added row
