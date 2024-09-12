@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using MyPatient.Models;
+using MyPatient.Models.Enums;
 
 namespace MyPatient.Application.Services.DoctorServices
 {
@@ -15,7 +16,7 @@ namespace MyPatient.Application.Services.DoctorServices
         IQueryable<Doctor> GetAllDoctors(Expression<Func<Doctor, bool>>? filter);
         Task<Doctor> GetDoctor(Expression<Func<Doctor, bool>> filter);
         Task<bool> HasPatients(int doctorId);
-        IEnumerable<SelectListItem> PopulateMADroplist();
+        IEnumerable<SelectListItem> PopulateDoctorDroplist(TypeDoctor type);
         Task RemoveDoctor(Doctor doctor);
         Task UpdateDoctor(Doctor doctor);
     }

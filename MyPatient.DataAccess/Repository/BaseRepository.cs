@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyPatient.DataAccess.DataContext;
 using MyPatient.DataAccess.Repository.IRepository;
+using MyPatient.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +34,12 @@ namespace MyPatient.DataAccess.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<T> Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public async Task<T> Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool? asNoTracking = true)
         {
-            IQueryable<T> query = dbSet.AsNoTracking();
+            IQueryable<T> query = dbSet;
+
+            if (asNoTracking ?? true)
+                query = query.AsNoTracking();
 
             query = query.Where(filter);
 

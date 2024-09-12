@@ -13,6 +13,8 @@ namespace MyPatient.DataAccess.DataContext
         public DbSet<MedicalOrder> MedicalOrders { get; set; }
         public DbSet<MedicalOrderDetail> MedicalOrderDetails { get; set; }
         public DbSet<SurgicalProcedure> SurgicalProcedures { get; set; }
+        public DbSet<SurgicalProcedureDiscoveries> SurgicalProceduresDiscoveries { get; set; }
+        public DbSet<Doctor_SurgicalProcedure> Doctor_SurgicalProcedure { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

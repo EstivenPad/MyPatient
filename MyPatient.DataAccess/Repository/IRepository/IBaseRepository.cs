@@ -10,7 +10,7 @@ namespace MyPatient.DataAccess.Repository.IRepository
     public interface IBaseRepository<T> where T : class
     {
         IQueryable<T> GetAll(Expression<Func<T, bool>>? filter, string? includePropeties);
-        Task<T> Get(Expression<Func<T, bool>> filter, string? includePropeties);
+        Task<T> Get(Expression<Func<T, bool>> filter, string? includePropeties, bool? asNoTracking = true);
         Task Create(T entity);
         Task Update(T entity);
         Task Delete(T entity);

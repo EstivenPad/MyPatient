@@ -102,9 +102,7 @@ namespace MyPatient.Web.Controllers
             var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
 
             if(patient is null || patient.MA is null)
-            {
                 return NotFound();
-            }
 
             var medicalOrderVM = new MedicalOrderVM();
 
@@ -168,16 +166,14 @@ namespace MyPatient.Web.Controllers
             var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
 
             if (patient is null || patient.MA is null)
-            {
                 return NotFound();
-            }
 
             var lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Ingreso, patientId);
             
             if (lastMedicalOrder is null)
             {
-                TempData["Warning"] = $"¡No existe ninguna Orden Médica de Ingreso creada!";
-                return RedirectToAction("Index", new { patientId = patientId });
+                TempData["Warning"] = "¡No existe ninguna Orden Médica de Ingreso creada para copiarla!";
+                return RedirectToAction("Index", new { patientId });
             }
 
             var medicalOrderVM = new MedicalOrderVM();
@@ -231,9 +227,7 @@ namespace MyPatient.Web.Controllers
             var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Patient,MA,Solutions");
 
             if (medicalOrder is null || medicalOrder.Patient is null || medicalOrder.MA is null)
-            {
                 return NotFound();
-            }
 
             var medicalOrderVM = new MedicalOrderVM();
 
@@ -283,9 +277,7 @@ namespace MyPatient.Web.Controllers
             var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Patient,MA,Solutions");
 
             if (medicalOrder is null || medicalOrder.Patient is null || medicalOrder.MA is null)
-            {
                 return NotFound();
-            }
 
             var medicalOrderVM = new MedicalOrderVM();
 

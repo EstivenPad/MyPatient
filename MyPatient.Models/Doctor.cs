@@ -27,7 +27,7 @@ namespace MyPatient.Models
         [Length(5, 7, ErrorMessage = "El Exequatur debe tener de 5 a 6 digitos.")]
         public string Exequatur { get; set; } = string.Empty;
         
-        // ***********Many To Many************
-        public ICollection<Doctor_SurgicalProcedure> DoctorSurgicalProcedures { get; set; }
+        
+        public IList<Doctor_SurgicalProcedure>? DoctorSurgicalProcedures { get; set; }
     }
 }

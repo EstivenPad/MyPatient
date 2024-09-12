@@ -15,18 +15,21 @@ namespace MyPatient.Models
         
         public DateOnly CreatedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
+        [Required(ErrorMessage = "El Diagnostico es requerido.")]
         public string Diagnostic { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "El Procedimiento es requerido.")]
         public string Procedure { get; set; } = string.Empty;
 
+        public List<SurgicalProcedureDiscoveries>? Discoveries { get; set; }
 
-        // **********PATIENT***********
+
         [ForeignKey("Patient")]
         public long? PatientId { get; set; }
 
         public Patient? Patient { get; set; }
 
-        // ***********Many To Many************
-        public ICollection<Doctor_SurgicalProcedure> DoctorSurgicalProcedures { get; set; }
+
+        public List<Doctor_SurgicalProcedure>? DoctorSurgicalProcedures { get; set; }
     }
 }
