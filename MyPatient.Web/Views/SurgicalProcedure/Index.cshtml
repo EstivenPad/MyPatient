@@ -50,7 +50,7 @@
                     <td>@(string.Concat(surgicalProcedure.Patient.MA.Sex ? "Dra. " : "Dr. ", surgicalProcedure.Patient.MA.FirstName, " ", surgicalProcedure.Patient.MA.LastName))</td>
                     <td>
                         <a class="btn btn-warning" asp-controller="SurgicalProcedure" asp-action="Edit" asp-route-surgicalProcedureId="@surgicalProcedure.Id"><i class="bi bi-pencil-square"></i> Editar</a>
-                        <a class="btn btn-danger" asp-controller="SurgicalProcedure" asp-action="Delete" asp-route-id="@surgicalProcedure.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                        <a class="btn btn-danger" asp-controller="SurgicalProcedure" asp-action="Delete" asp-route-surgicalProcedureId="@surgicalProcedure.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
                     </td>
                 </tr>
             }

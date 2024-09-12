@@ -139,27 +139,52 @@ namespace MyPatient.Web.Controllers
             }
             catch
             {
-                return NotFound();
+                throw;
             }
         }
 
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
+        [HttpGet]
+        public async Task<ActionResult> Delete(long surgicalProcedureId)
+        {
+            try
+            {
+                var surgicalProcedure = await _surgicalProcedureService.GetSurgicalProcedure(sp => sp.Id == surgicalProcedureId, includeProperties: "Patient,Patient.MA,Discoveries,DoctorSurgicalProcedures", asNoTracking: false);
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+                var surgicalProcedureVM = new SurgicalProcedureVM
+                {
+                    SurgicalProcedure = surgicalProcedure,
+                    ResidentDroplist = _doctorService.PopulateDoctorDroplist(TypeDoctor.Residente),
+                    NameMA = string.Concat(surgicalProcedure.Patient.MA.Sex ? "Dra. " : "Dr. ", surgicalProcedure.Patient.MA.FirstName, " ", surgicalProcedure.Patient.MA.LastName)
+                };
+
+                return View(surgicalProcedureVM);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeletePost(long surgicalProcedureId)
+        {
+            try
+            {
+                var surgicalProcedure = await _surgicalProcedureService.GetSurgicalProcedure(mo => mo.Id == surgicalProcedureId, includeProperties: "Patient,Patient.MA,Discoveries,DoctorSurgicalProcedures", asNoTracking: false);
+
+                if (surgicalProcedure is null)
+                    return NotFound();
+
+                await _surgicalProcedureService.RemoveSurgicalProcedure(surgicalProcedure);
+                TempData["Success"] = "Procedimiento Quirurgico eliminado correctamente.";
+
+                return Json(new { success = true });
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

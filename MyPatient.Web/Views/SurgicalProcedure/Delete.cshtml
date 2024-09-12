@@ -1,0 +1,105 @@
+﻿@model SurgicalProcedureVM
+
+<h1 class="text-danger text-center">ELIMINAR PROCEDIMIENTO QUIRURGICO</h1>
+
+<div class="container">
+    <form id="surgicalProcedureForm" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="@Model.SurgicalProcedure.Id" hidden />
+
+        @* PATIENT DATA *@
+        <h4 class="text-primary">Datos del Paciente</h4>
+        <div class="row p-3 mb-3 border border-primary rounded-3">
+            <input type="hidden" asp-for="@Model.SurgicalProcedure.PatientId" />
+            <div class="col-6 mb-2">
+                <label for="record" class="form-label">Record</label>
+                <input class="form-control" id="record" asp-for="@Model.SurgicalProcedure.Patient.Record" disabled />
+            </div>
+            <div class="col-6 mb-2">
+                <label for="name" class="form-label">Nombre Completo</label>
+                <input class="form-control" id="name" asp-for="@Model.SurgicalProcedure.Patient.Name" disabled />
+            </div>
+        </div>
+
+        <div class="row p-3 mb-3 border border-primary rounded-3">
+            <div class="col-6 mb-2">
+                <label for="diagnostic" class="form-label">Diagnóstico</label>
+                <textarea class="form-control" id="diagnostic" asp-for="@Model.SurgicalProcedure.Diagnostic" rows="5" disabled ></textarea>
+            </div>
+            <div class="col-6 mb-2">
+                <label for="procedure" class="form-label">Procedimiento</label>
+                <textarea class="form-control" id="procedure" asp-for="@Model.SurgicalProcedure.Procedure" rows="5" disabled ></textarea>
+            </div>
+        </div>
+
+        <div class="row gap-4">
+            <div class="col p-0">
+                @* DISCOVERIES DETAIL *@
+                <h4 class="text-primary">Hallazgos</h4>
+                <div class="p-3 border border-primary rounded-3">
+                    <table id="DiscoveriesTable" class="table DetailTable">
+                        <thead>
+                            <tr>
+                                <th class="text-primary w-75" scope="col">Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="discoveryDetails">
+                            @for (int i = 0; i < Model.SurgicalProcedure.Discoveries.Count; i++)
+                            {
+                                <tr>
+                                    <td class="w-75">
+                                        <input type="hidden" asp-for="@Model.SurgicalProcedure.Discoveries[i].Id" />
+                                        <input asp-for="@Model.SurgicalProcedure.Discoveries[i].Description" class="form-control" disabled />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col p-0">
+                @* DOCTOR DETAIL *@
+                <h4 class="text-primary">Doctores</h4>
+                <div class="p-3 border border-primary rounded-3">
+                    <div class="mb-2 pb-3 border-bottom border-primary">
+                        <label for="ma" class="form-label fw-bold">MA Responsable</label>
+                        <input class="form-control" id="ma" asp-for="@Model.NameMA" disabled />
+                    </div>
+                    <table id="DoctorTable" class="table DetailTable">
+                        <thead>
+                            <tr>
+                                <th class="text-primary w-75" scope="col">Residente</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorDetails">
+                            @for (int i = 0; i < Model.SurgicalProcedure.DoctorSurgicalProcedures.Count; i++)
+                            {
+                                <tr>
+                                    <td class="w-75">
+                                        <select class="form-select" asp-for="@Model.SurgicalProcedure.DoctorSurgicalProcedures[i].DoctorId" asp-items="@Model.ResidentDroplist" disabled >
+                                            <option disabled selected>--Seleccione Residente--</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3 d-flex gap-2">
+            <a onclick="alertDelete('Está seguro que desea eliminar este Procedimiento Quirúrgico?', 'El Procedimiento Quirúrgico ha sido eliminado.','/SurgicalProcedure/Delete?patientId=@Model.SurgicalProcedure.PatientId&surgicalProcedureId=@Model.SurgicalProcedure.Id', '/SurgicalProcedure')" class="btn btn-danger w-50">Eliminar</a>
+            
+            <a class="btn btn-secondary w-50" asp-action="Index">Volver</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
