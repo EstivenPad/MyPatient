@@ -2,6 +2,7 @@
 using MyPatient.DataAccess.DataContext;
 using MyPatient.DataAccess.Repository.IRepository;
 using MyPatient.Models;
+using MyPatient.Models.ViewModels.SurgicalProcedureVM;
 using System.Linq.Expressions;
 
 namespace MyPatient.DataAccess.Repository
@@ -37,6 +38,39 @@ namespace MyPatient.DataAccess.Repository
             }
 
             return query;
+        }
+
+        public async Task<List<SurgicalProcedureSummary>> GetReportData(long doctorId, DateOnly fromDate, DateOnly toDate)
+        {
+            var query = await _dbContext.Database
+                                        .SqlQuery<SurgicalProcedureReportVM>(
+                                            $"EXEC SP_GetSurgicalProcedureReport {doctorId}, {fromDate}, {toDate}")
+                                        .AsNoTracking()
+                                        .ToListAsync();
+
+            var data = query.GroupBy(x => x.SurgicalProcedureID)
+                            .Select(x => new SurgicalProcedureSummary {
+                                Id = x.Key,
+                                SurgicalProcedure = new SurgicalProcedureInfo {
+                                                        CreatedDate = x.First().CreatedDate,
+                                                        Name_Patient = x.First().Name_Patient,
+                                                        Age_Patient = x.First().Age_Patient,
+                                                        Diagnostic = x.First().Diagnostic,
+                                                        Procedure = x.First().Procedure,
+                                                        Name_MA = x.First().Name_MA,
+                                                        Level_MA = x.First().Level_MA },
+                                Discoveries = x.Select(x => new DiscoveryInfo {
+                                                    ID = x.ID_Discovery,
+                                                    Description = x.Discovery
+                                                }).DistinctBy(h => h.ID).ToList(),
+                                Residents = x.Select(x => new ResidentInfo {
+                                    ID = x.ID_Resident,
+                                    Name = x.Name_Resident,
+                                    Level = x.Level_Resident
+                                }).DistinctBy(r => r.ID).ToList()
+                            }).ToList();
+
+            return data;
         }
 
         public override async Task Update(SurgicalProcedure updatedSurgicalProcedure)
@@ -102,5 +136,7 @@ namespace MyPatient.DataAccess.Repository
 
             await _dbContext.SaveChangesAsync();
         }
+
+        
     }
 }

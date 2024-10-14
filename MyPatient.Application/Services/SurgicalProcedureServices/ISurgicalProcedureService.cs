@@ -1,11 +1,6 @@
 ﻿using MyPatient.Models;
-using MyPatient.Web.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using MyPatient.Models.ViewModels.SurgicalProcedureVM;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyPatient.Application.Services.SurgicalProcedureServices
 {
@@ -16,5 +11,6 @@ namespace MyPatient.Application.Services.SurgicalProcedureServices
         Task<SurgicalProcedure> GetSurgicalProcedure(Expression<Func<SurgicalProcedure, bool>> filter, string? includeProperties = null, bool? asNoTracking = false);
         Task RemoveSurgicalProcedure(SurgicalProcedure medicalOrder);
         Task UpdateSurgicalProcedure(SurgicalProcedure medicalOrder);
+        Task<List<SurgicalProcedureSummary>> GetSurgicalProceduresReport(long doctorId, DateOnly fromDate, DateOnly toDate);
     }
 }

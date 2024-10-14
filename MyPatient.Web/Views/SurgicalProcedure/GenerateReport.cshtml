@@ -1,0 +1,99 @@
+﻿@model List<SurgicalProcedureSummary>
+
+@{
+    Layout = null;
+}
+
+<title>Proc. Quirurgico - Reporte</title>
+
+<div class="container">
+    <img class="image" src="https://localhost:7192/images/report1.jpg" alt="Alternative Text" />
+
+    <div class="text-content">
+        <b>HOSPITAL DR. FRANCISCO E. MOSCOSO PUELLO</b><br />
+        <b>LISTADO DE PROCEDIMIENTOS QUIRURGICOS</b><br />
+        <b>RESIDENCIA CIRUGIA GENERAL</b>
+    </div>
+    
+    <img class="image" src="https://localhost:7192/images/report2.jpg" alt="Alternative Text 2" />
+</div>
+
+
+<table style="width:100%; margin:0 auto;">
+    <thead>
+        <tr>
+            <th>NO.</th>
+            <th>FECHA</th>
+            <th>NOMBRE</th>
+            <th>EDAD</th>
+            <th>DIAGNOSTICO</th>
+            <th>PROCEDIMIENTO</th>
+            <th>HALLAZGOS</th>
+            <th>RESPONSABLES</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td>@(i+1)</td>
+                <td>@Model[i].SurgicalProcedure.CreatedDate</td>
+                <td>@Model[i].SurgicalProcedure.Name_Patient</td>
+                <td>@Model[i].SurgicalProcedure.Age_Patient</td>
+                <td>@Model[i].SurgicalProcedure.Diagnostic</td>
+                <td>@Model[i].SurgicalProcedure.Procedure</td>
+                <td>
+                    <ul>
+                        @for (int j = 0; j < Model[i].Discoveries.Count; j++)
+                        {
+                            <li>@Model[i].Discoveries[j].Description</li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    <ul style="list-style:none; padding-left: 10px;">
+                        <li>@Model[i].SurgicalProcedure.Name_MA (MA)</li>
+                        @for (int j = 0; j < Model[i].Residents.Count; j++)
+                        {
+                            <li>@Model[i].Residents[j].Name</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    * {
+        font-family: Calibri, "Times New Roman", sans-serif;
+    }
+
+    table, th, td {
+        border: 1px solid;
+        border-collapse: collapse;
+    }
+
+    td {
+        padding-left: 5px;
+    }
+
+    .container {
+        display: -webkit-box;
+        -webkit-flex-direction: row;
+        -webkit-box-pack: justify;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+    }
+
+    .text-content {
+        flex: 1;
+        text-align: center;
+    }
+</style>
