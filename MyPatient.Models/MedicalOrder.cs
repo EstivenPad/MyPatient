@@ -58,7 +58,7 @@ namespace MyPatient.Models
         
         // **********MA***********
         [ForeignKey("MA")]
-        public int? MAId { get; set; }
+        public long? MAId { get; set; }
        
         public Doctor? MA { get; set; }
         

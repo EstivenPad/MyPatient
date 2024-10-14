@@ -15,7 +15,7 @@ namespace MyPatient.Application.Services.DoctorServices
         Task AddDoctor(Doctor doctor);
         IQueryable<Doctor> GetAllDoctors(Expression<Func<Doctor, bool>>? filter);
         Task<Doctor> GetDoctor(Expression<Func<Doctor, bool>> filter);
-        Task<bool> HasPatients(int doctorId);
+        Task<bool> HasPatients(long doctorId);
         IEnumerable<SelectListItem> PopulateDoctorDroplist(TypeDoctor type);
         Task RemoveDoctor(Doctor doctor);
         Task UpdateDoctor(Doctor doctor);

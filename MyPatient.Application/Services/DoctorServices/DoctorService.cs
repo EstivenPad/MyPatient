@@ -37,7 +37,7 @@ namespace MyPatient.Application.Services.DoctorServices
             return await _doctorRepository.Get(filter, string.Empty);
         }
 
-        public async Task<bool> HasPatients(int doctorId)
+        public async Task<bool> HasPatients(long doctorId)
         {
             return await _doctorRepository.HasAnyPatient(doctorId);
         }
