@@ -1,14 +1,155 @@
-﻿@model FastReport.Web.WebReport
-
-@{
-    ViewData["Title"] = "Ordenes Médicas - Reporte";
+﻿@{
+    Layout = null;
 }
 
-<div>
-    <a class="btn btn-secondary" asp-controller="MedicalOrder" asp-action="Index" asp-route-patientId="@(ViewData["PatientId"])">
-        <i class="bi bi-box-arrow-left"></i>
-        Volver
-    </a>
+<title>Orden Medica - Reporte</title>
+
+<div class="header-report">
+    <img class="image" src="https://localhost:7192/images/hospital-logo.png" alt="Hospital Logo" />
+
+    <div class="text-content">
+        <b>SERVICIO NACIONAL DE SALUD</b><br />
+        <b>SERVICIO REGIONAL DE SALUD METROPOLITANO</b><br />
+        <b>HOSPITAL DR. FRANCISCO E. MOSCOSO PUELLO</b><br />
+        <b>RESIDENCIA DE CIRUGIA GENERAL</b>
+    </div>
+
+    <img class="image" src="https://localhost:7192/images/resident-logo.jpeg" alt="Resident Logo" />
 </div>
 
-@await Model.Render()
+<div style="width: 80%; margin: 0 auto; border: 1px solid">
+    <div class="grid-header" style="padding: 5px 0;">
+        <b>ORDEN MEDICA</b>
+    </div>
+
+    <div class="grid-container">
+        <div class="flex" style="width: 100%;">
+            <div class="border" style="width: 50%;">
+                <ul style="list-style-type:none; margin: 0 0 0 5px; padding:0;">
+                    <li><b>DATOS GENERALES</b> </li>
+                    <li><b>RECORD:</b> </li>
+                    <li><b>NOMBRE:</b> </li>
+                    <li><b>EDAD:</b> Años</li>
+                    <li><b>PESO:</b> Libras</li>
+                    <li><b>SEGURO:</b> 0 <b>NSS:</b> 0</li>
+                </ul>
+            </div>
+
+            <div class="border" style="width: 50%; border-left: 1px solid;">
+                <ul style="list-style-type:none; margin: 0 0 0 5px; padding:0;">
+                    <li><b>SERVICIO:</b> </li>
+                    <li><b>SALA:</b> </li>
+                    <li><b>SEXO:</b> </li>
+                    <li><b>FECHA:</b> </li>
+                    <li><b>HORA:</b> </li>
+                    <li><b>MEDICO RESPONSABLE:</b> MA</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border" style="padding-left: 5px;">
+            <p style="padding:0; margin:0;"><b>DIAGNOSTICO:</b></p>
+        </div>
+
+        <div class="flex">
+            <div class="border" style="width: 50%;">
+                <ul style="list-style-type:none; margin: 0 0 0 5px; padding:0;">
+                    <li><b>MEDIDAS GENERALES:</b> </li>
+                    <li><b>DIETA:</b> </li>
+                    <li><b>CURAS:</b> </li>
+                    <li><b>POSTURA:</b> </li>
+                    <li><b>CONTROLES ESPECIALES:</b> </li>
+                </ul>
+            </div>
+
+            <div class="border" style="width: 50%; border-left: 1px solid;">
+                <div style="display: -webkit-box; padding-left: 5px;">
+                    <div style="width:50%;">
+                        <span><b>DREN:</b> sssssss</span>
+                    </div>
+                    <div style="width:50%;">
+                        <span><b>ALERGIAS:</b> xxxxxxxx</span>
+                    </div>
+                </div>
+                <div>
+                    <ul style="list-style-type:none; margin: 0 0 0 5px; padding:0;">
+                        <li><b>INTERCONSULTAS:</b> </li>
+                        <li><b>LABORATORIOS:</b> </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="border" style="padding-left: 5px;">
+            <p style="padding:0; margin:0;"> &nbsp;</p>
+        </div>
+
+        <div style="width: 100%;">
+            <table style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>SOLUCIONES</th>
+                        <th>DOSIS</th>
+                        <th>FRECUENCIA</th>
+                        <th>VIA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1. Solucion1</td>
+                        <td>Dosis1</td>
+                        <td>Frecuencia1</td>
+                        <td>Via1</td>
+                    </tr>
+                    <tr>
+                        <td>x</td>
+                        <td>x</td>
+                        <td>x</td>
+                        <td>x</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .flex {
+        display: -webkit-box;
+    }
+
+    .header-report {
+        display: -webkit-box;
+        -webkit-box-pack: justify;
+        width: 80%;
+        margin: 25px auto;
+        text-align: center;
+    }
+
+    .grid-container {
+        display: table;
+        width: 100%;
+    }
+
+    .grid-header {
+        text-align: center;
+        background-color: #ccc;
+    }
+
+    .border {
+        border-top: 1px solid black;
+    }
+    
+    .image{
+        width: 80px;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    * {
+        font-family: Calibri, "Times New Roman", sans-serif;
+    }
+</style>
