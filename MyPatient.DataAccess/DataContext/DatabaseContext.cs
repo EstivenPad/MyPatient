@@ -74,7 +74,7 @@ namespace MyPatient.DataAccess.DataContext
                     Id = 1,
                     Record = "1234",
                     Name = "Guillermo Reyes",
-                    Weight = 145.3,
+                    Weight = 145.3f,
                     Age = 25,
                     Identification = "402-1234567-1",
                     Sex = false,

@@ -8,14 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastReport.Data.MsSql" Version="2024.2.14" />
-    <PackageReference Include="FastReport.OpenSource" Version="2024.2.14" />
-    <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2024.2.14" />
-    <PackageReference Include="FastReport.OpenSource.Web" Version="2024.2.14" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -29,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Rotativa\" />
     <Folder Include="wwwroot\Reports\" />
   </ItemGroup>
 

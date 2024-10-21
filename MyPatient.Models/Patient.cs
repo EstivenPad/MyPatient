@@ -19,7 +19,7 @@ namespace MyPatient.Models
         [Required(ErrorMessage = "El Nombre es requerido.")]
         public string Name { get; set; } = string.Empty;
         
-        public double? Weight { get; set; }
+        public float? Weight { get; set; }
 
         public int? Age { get; set; }
         

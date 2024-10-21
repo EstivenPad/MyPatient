@@ -70,7 +70,7 @@
                         <td>
                             <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@incomeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="false" asp-route-patientId="@incomeMedicalOrder.PatientId"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-eye-fill"></i> Previsualizar</a>
                             <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@incomeMedicalOrder.Id" asp-route-medicalOrderType="@incomeMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
                         </td>
                     </tr>
@@ -112,7 +112,7 @@
                         <td>
                             <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@dailyMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@dailyMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="false" asp-route-patientId="@dailyMedicalOrder.PatientId"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-eye-fill"></i> Previsualizar</a>
                             <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@dailyMedicalOrder.Id" asp-route-medicalOrderType="@dailyMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
                         </td>
                     </tr>
@@ -151,7 +151,7 @@
                         <td>
                             <a class="btn btn-warning" asp-action="Edit" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-patientId="@Model.Patient.Id" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="false" asp-route-patientId="@postOperativeMedicalOrder.PatientId"><i class="bi bi-printer-fill"></i> Imprimir</a>
+                            <a class="btn btn-secondary" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="false"><i class="bi bi-eye-fill"></i> Previsualizar</a>
                             <a class="btn btn-dark" asp-action="GenerateReport" asp-route-medicalOrderId="@postOperativeMedicalOrder.Id" asp-route-medicalOrderType="@postOperativeMedicalOrder.Type" asp-route-downloadPDF="true"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
                         </td>
                     </tr>
