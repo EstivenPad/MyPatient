@@ -1,0 +1,123 @@
+﻿@model SurgicalProcedureIndexVM
+
+@{
+    ViewData["Title"] = "Proc. Quirurgicos";
+}
+
+<div>
+    <h1 class="text-center mb-3">PROCEDIMIENTOS QUIRURGICOS</h1>
+
+    <form asp-action="Index" method="get">
+        <div class="row input-group mb-2">
+            <div class="col-2">
+                <select class="form-select" name="FilterSelected" asp-for="@ViewData["FilterSelected"]" asp-items="@Model.FilterOptions">
+                    <option disabled selected>--Seleccionar filtro--</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Criterio de búsqueda" name="FilterCriteria" value="@ViewData["FilterCriteria"]" />
+
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-search"></i>
+                        Buscar
+                    </button>
+                </div>
+            </div>
+
+            <div class="col">
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#SurgicalProcedureModal">
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i> Generar Reporte
+                </button>
+            </div>
+
+            <div class="col text-end">
+                <a class="btn btn-primary" asp-controller="SurgicalProcedure" asp-action="Create"><i class="bi bi-person-plus-fill"></i> Crear Proc. Quirurgico</a>
+            </div>
+        </div>
+    </form>
+    
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-primary" scope="col">Fecha</th>
+                <th class="text-primary" scope="col">Paciente</th>
+                <th class="text-primary" scope="col">MA Responsable</th>
+                <th class="text-primary" scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var surgicalProcedure in Model.SurgicalProcedures.Items)
+             {
+                <tr>
+                    <td>@surgicalProcedure.CreatedDate</td>
+                    <td>@(surgicalProcedure.Patient?.Name ?? "")</td>
+                    <td>@(string.Concat(surgicalProcedure.Patient.MA.Sex ? "Dra. " : "Dr. ", surgicalProcedure.Patient.MA.FirstName, " ", surgicalProcedure.Patient.MA.LastName))</td>
+                    <td>
+                        <a class="btn btn-warning" asp-controller="SurgicalProcedure" asp-action="Edit" asp-route-surgicalProcedureId="@surgicalProcedure.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                        <a class="btn btn-danger" asp-controller="SurgicalProcedure" asp-action="Delete" asp-route-surgicalProcedureId="@surgicalProcedure.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (Model.SurgicalProcedures.TotalPages > 1)
+    {
+        <div class="w-100 d-flex justify-content-center align-items-center position-absolute bottom-0">
+            <ul class="pagination">
+                <li class="page-item @(Model.SurgicalProcedures.PageIndex == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-route-page="1" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">Primero</a>
+                </li>
+                <li class="page-item @(Model.SurgicalProcedures.HasPreviousPage ? "" : "disabled")">
+                    <a class="page-link" asp-route-page="@(Model.SurgicalProcedures.PageIndex - 1)" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">&laquo;</a>
+                </li>
+
+                @for (int i = 1; i <= Model.SurgicalProcedures.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.SurgicalProcedures.PageIndex == i ? "active" : "")">
+                        <a class="page-link" asp-route-page="@i" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.SurgicalProcedures.HasNextPage ? "" : "disabled")">
+                    <a class="page-link" asp-route-page="@(Model.SurgicalProcedures.PageIndex + 1)" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">&raquo;</a>
+                </li>
+                <li class="page-item @(Model.SurgicalProcedures.PageIndex == Model.SurgicalProcedures.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-route-page="@(Model.SurgicalProcedures.TotalPages)" asp-route-filterCriteria="@ViewData["FilterCriteria"]" asp-route-filterSelected="@ViewData["FilterSelected"]">Último</a>
+                </li>
+            </ul>
+        </div>
+    }
+</div>
+
+<partial name="~/Views/Shared/_SurgicalProcedureReportPartial.cshtml" model="new SurgicalProcedureReportModalVM()" />
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).on('show.bs.modal', '#SurgicalProcedureModal', function () {
+            $.ajax({
+                url: '@Url.Action("PopulateDoctorDropList", "SurgicalProcedure")',
+                type: 'GET',
+                success: function (data) {
+                    // Populate the select list
+                    var select = $('#doctorSelect');
+                    
+                    select.empty();
+                    
+                    select.append('<option disabled selected>--Seleccionar Residente--</option>');
+                    
+                    $.each(data, function (i, item) {
+                        select.append('<option value="' + item.value + '">' + item.text + '</option>');
+                    });
+
+                    $('#doctorSelect').select2({ theme: 'bootstrap-5', dropdownParent: $('#SurgicalProcedureModal') });
+                },
+                error: function () {
+                    alert('Error loading data.');
+                }
+            });
+        });
+    </script>
+}

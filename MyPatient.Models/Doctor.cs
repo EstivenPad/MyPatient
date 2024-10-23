@@ -6,7 +6,7 @@ namespace MyPatient.Models
     public class Doctor
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public TypeDoctor Type { get; set; } = TypeDoctor.Residente;
 
@@ -26,5 +26,7 @@ namespace MyPatient.Models
         [RegularExpression(@"^([0-9]{3,4})[- ]?([0-9]{2})", ErrorMessage = "El Exequatur no tiene el formato válido (000-00)/(0000-00).")]
         [Length(5, 7, ErrorMessage = "El Exequatur debe tener de 5 a 6 digitos.")]
         public string Exequatur { get; set; } = string.Empty;
+        
+        public IList<Doctor_SurgicalProcedure>? DoctorSurgicalProcedures { get; set; }
     }
 }

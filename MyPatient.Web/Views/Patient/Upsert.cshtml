@@ -61,7 +61,7 @@
                     <div>
                         <label class="form-label">MA Responsable</label>
                         <div class="mb-3 input-group">
-                            <select class="form-select input-group-prepend" asp-for="@Model.Patient.MAId" asp-items="@Model.MADropList">
+                            <select id="MASelect" class="form-select input-group-prepend" asp-for="@Model.Patient.MAId" asp-items="@Model.MADropList">
                                 <option disabled selected>--Seleccione MA--</option>
                             </select>
 
@@ -110,22 +110,29 @@
 <partial name="~/Views/Shared/_MAUpsertPartial.cshtml" model="Model.MA"/>
 
 @section Scripts {
+    @{<partial name="_ValidationScriptsPartial"/>}
+
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function () {
-            var checkbox = document.getElementById('isInsured');
-            var arsTextInput = document.getElementById('ars');
-            var nssTextInput = document.getElementById('nss');
+        $(function () {
+            var isInsured = $('#isInsured');
+            var ars = $('#ars');
+            var nss = $('#nss');
 
-            checkbox.addEventListener('change', function () {
-                arsTextInput.disabled = !this.checked;
-                nssTextInput.disabled = !this.checked;
+            isInsured.on('change', function () {
+                ars.prop('disabled', !this.checked);
+                nss.prop('disabled', !this.checked);
             });
-
+            
             // Initialize the state based on the model value
-            arsTextInput.disabled = !checkbox.checked;
-            nssTextInput.disabled = !checkbox.checked;
+            if(ars.val() != "" || nss.val() != ""){
+                ars.prop('disabled', false);
+                nss.prop('disabled', false);
+            } else{
+                ars.prop('disabled', true);
+                nss.prop('disabled', true);
+            }
+
+            $('#MASelect').select2({ theme: 'bootstrap-5' });
         });
     </script>
-
-    @{<partial name="_ValidationScriptsPartial"/>}
 }

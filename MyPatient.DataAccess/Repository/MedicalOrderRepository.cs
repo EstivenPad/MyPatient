@@ -2,6 +2,8 @@
 using MyPatient.DataAccess.DataContext;
 using MyPatient.DataAccess.Repository.IRepository;
 using MyPatient.Models;
+using MyPatient.Models.ViewModels.MedicalOrderVM;
+using MyPatient.Models.ViewModels.SurgicalProcedureVM;
 using MyPatient.Web.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -38,6 +40,62 @@ namespace MyPatient.DataAccess.Repository
         public override Task Create(MedicalOrder entity)
         {   
             return base.Create(entity);
+        }
+
+        public async Task<MedicalOrderSummary> GetReportData(long medicalOrderId, TypeMedicalOrder type)
+        {
+            var query = await _dbContext.Database
+                                        .SqlQuery<MedicalOrderReportVM>(
+                                            $"EXEC SP_GetMedicalOrderById {medicalOrderId}, {type}")
+                                        .AsNoTracking()
+                                        .ToListAsync();
+
+            var data = query.GroupBy(x => x.Id)
+                            .Select(x => new MedicalOrderSummary
+                            {
+                                Id = x.Key,
+                                MedicalOrder = new MedicalOrderInfo
+                                {
+                                    Type = x.First().Type,
+                                    Service = x.First().Service,
+                                    Room = x.First().Room,
+                                    CreatedDate = x.First().CreatedDate,
+                                    CreatedTime = x.First().CreatedTime,
+                                    Diagnostic = x.First().Diagnostic,
+                                    GeneralMeasures = x.First().GeneralMeasures,
+                                    Diet = x.First().Diet,
+                                    Cures = x.First().Cures,
+                                    Position = x.First().Position,
+                                    SpecialControls = x.First().SpecialControls,
+                                    DREN = x.First().DREN,
+                                    Alergies = x.First().Alergies,
+                                    Enterconsult = x.First().Enterconsult,
+                                    Labs = x.First().Labs,
+                                    CountDays = x.First().CountDays
+                                },
+                                Solutions = x.Select(x => new SolutionInfo
+                                {
+                                    Id = x.MedicalOrderDetailId,
+                                    Name = x.SolutionName,
+                                    Dose = x.Dose,
+                                    Frecuency = x.Frecuency,
+                                    Via = x.Via,
+                                }).DistinctBy(h => h.Id).ToList(),
+                                Patient = new PatientInfo
+                                {
+                                    Id_Patient = x.First().Id_Patient,
+                                    Record = x.First().Record,
+                                    Name = x.First().Name_Patient,
+                                    Age = x.First().Age,
+                                    Weight = x.First().Weight,
+                                    ARS = x.First().ARS,
+                                    NSS = x.First().NSS,
+                                    Sex = x.First().Sex_Patient,
+                                    MA = x.First().Name_MA,
+                                }
+                            }).FirstOrDefault();
+
+            return data;
         }
 
         public override async Task Update(MedicalOrder entity)

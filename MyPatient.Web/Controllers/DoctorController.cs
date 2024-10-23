@@ -7,7 +7,6 @@ using MyPatient.Models.Enums;
 using MyPatient.Models.ViewModels.DoctorVM;
 using FluentValidation;
 using MyPatient.Application.Validations;
-using FluentValidation.Results;
 
 namespace MyPatient.Web.Controllers
 {
@@ -91,7 +90,7 @@ namespace MyPatient.Web.Controllers
             {
                 Patient = new Patient(),
                 MA = new Doctor(),
-                MADropList = _doctorService.PopulateMADroplist()
+                MADropList = _doctorService.PopulateDoctorDroplist(TypeDoctor.MA)
             };
 
             patientVM.MA.Type = TypeDoctor.MA;
@@ -124,9 +123,7 @@ namespace MyPatient.Web.Controllers
             }
 
             if (!ModelState.IsValid)
-            {
                 return View(doctor);
-            }
 
             if (doctor.Id == 0)
             {

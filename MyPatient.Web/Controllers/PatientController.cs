@@ -76,7 +76,7 @@ namespace MyPatient.Web.Controllers
             {
                 Patient = new Patient(),
                 MA = new Doctor(),
-                MADropList = _doctorService.PopulateMADroplist()
+                MADropList = _doctorService.PopulateDoctorDroplist(TypeDoctor.MA)
             };
             
             ViewData["Title"] = "Pacientes";
@@ -110,7 +110,7 @@ namespace MyPatient.Web.Controllers
             }
             else
             {
-                patientVM.MADropList = _doctorService.PopulateMADroplist();
+                patientVM.MADropList = _doctorService.PopulateDoctorDroplist(TypeDoctor.MA);
             }
 
             ViewData["Title"] = "Pacientes";

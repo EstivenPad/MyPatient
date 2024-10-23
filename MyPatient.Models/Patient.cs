@@ -19,7 +19,7 @@ namespace MyPatient.Models
         [Required(ErrorMessage = "El Nombre es requerido.")]
         public string Name { get; set; } = string.Empty;
         
-        public double? Weight { get; set; }
+        public float? Weight { get; set; }
 
         public int? Age { get; set; }
         
@@ -34,7 +34,7 @@ namespace MyPatient.Models
         // **********MA***********
         [Required(ErrorMessage = "Debe seleccionar un MA.")]
         [ForeignKey("MA")]
-        public int MAId { get; set; }
+        public long MAId { get; set; }
 
         public Doctor? MA { get; set; }
     }

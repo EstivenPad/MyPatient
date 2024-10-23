@@ -1,13 +1,10 @@
-﻿using FastReport.Data;
-using FastReport.Export.PdfSimple;
-using FastReport.Web;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyPatient.Application.Services.MedicalOrderServices;
 using MyPatient.Application.Services.PatientServices;
 using MyPatient.Models;
 using MyPatient.Models.ViewModels.MedicalOrderVM;
 using MyPatient.Web.Models.Enums;
+using Rotativa.AspNetCore;
 using System.Data;
 
 namespace MyPatient.Web.Controllers
@@ -16,18 +13,14 @@ namespace MyPatient.Web.Controllers
     {
         private readonly IMedicalOrderService _medicalOrderService;
         private readonly IPatientService _patientService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IConfiguration _configuration;
 
-        public MedicalOrderController(IMedicalOrderService medicalOrderService, IPatientService patientService, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
+        public MedicalOrderController(IMedicalOrderService medicalOrderService, IPatientService patientService)
         {
             _medicalOrderService = medicalOrderService;
             _patientService = patientService;
-            _webHostEnvironment = webHostEnvironment;
-            _configuration = configuration;
         }
-        
-        public async Task<IActionResult> Index(long patientId) 
+
+        public async Task<IActionResult> Index(long patientId)
         {
             var medicalOrderVM = new MedicalOrderIndexVM();
 
@@ -63,37 +56,22 @@ namespace MyPatient.Web.Controllers
             return View(medicalOrderVM);
         }
 
-        public IActionResult GenerateReport(long medicalOrderId, TypeMedicalOrder medicalOrderType, bool downloadPDF, long patientId = 0)
+        public async Task<IActionResult> GenerateReport(long medicalOrderId, TypeMedicalOrder medicalOrderType, bool downloadPDF)
         {
-            WebReport web = new WebReport();
+            var data = await _medicalOrderService.GetMedicalOrderReport(medicalOrderId, medicalOrderType);
             
-            var path = $"{_webHostEnvironment.WebRootPath}\\Reports\\MedicalOrderReport.frx";
-            web.Report.Load(path);
-
-            var mssqlDataConnection = new MsSqlDataConnection();
-            mssqlDataConnection.ConnectionString = _configuration.GetConnectionString("DefaultConnectionString");
-            var Conn = mssqlDataConnection.ConnectionString;
-            
-            web.Report.SetParameterValue("Conn", Conn);
-            web.Report.SetParameterValue("@Id", medicalOrderId);
-            web.Report.SetParameterValue("@Type", (int)medicalOrderType);
-
-            if (web.Report.Prepare() && !downloadPDF)
+            if (!downloadPDF)
             {
-                ViewData["PatientId"] = patientId;
-                return View(web);
+                ViewData["IsPreview"] = true;
+                return View(data);
             }
             else
             {
-                var pdfExport = new PDFSimpleExport();
-
-                MemoryStream stream = new MemoryStream();
-                web.Report.Export(pdfExport, stream);
-                web.Report.Dispose();
-                pdfExport.Dispose();
-                stream.Position = 0;
-
-                return File(stream, "application/pdf", "orden_medica.pdf");
+                ViewData["IsPreview"] = false;
+                return new ViewAsPdf(data)
+                {
+                    PageSize = Rotativa.AspNetCore.Options.Size.Letter
+                };
             }
         }
 
@@ -101,10 +79,8 @@ namespace MyPatient.Web.Controllers
         {
             var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
 
-            if(patient is null || patient.MA is null)
-            {
+            if (patient is null || patient.MA is null)
                 return NotFound();
-            }
 
             var medicalOrderVM = new MedicalOrderVM();
 
@@ -136,7 +112,7 @@ namespace MyPatient.Web.Controllers
                 lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Ingreso, patientId);
             else
                 lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Postquirurgica, patientId);
-            
+
             if (lastMedicalOrder is null)
             {
                 TempData["Warning"] = $"¡No existe ninguna Orden Médica {(copyIncome ? "de Ingreso" : "Post-quirúrgica")} creada!";
@@ -168,16 +144,14 @@ namespace MyPatient.Web.Controllers
             var patient = await _patientService.GetPatient(p => p.Id == patientId, includeProperties: "MA");
 
             if (patient is null || patient.MA is null)
-            {
                 return NotFound();
-            }
 
             var lastMedicalOrder = await _medicalOrderService.GetLastMedicalOrder(TypeMedicalOrder.Ingreso, patientId);
-            
+
             if (lastMedicalOrder is null)
             {
-                TempData["Warning"] = $"¡No existe ninguna Orden Médica de Ingreso creada!";
-                return RedirectToAction("Index", new { patientId = patientId });
+                TempData["Warning"] = "¡No existe ninguna Orden Médica de Ingreso creada para copiarla!";
+                return RedirectToAction("Index", new { patientId });
             }
 
             var medicalOrderVM = new MedicalOrderVM();
@@ -213,7 +187,7 @@ namespace MyPatient.Web.Controllers
             }
 
             var patient = await _patientService.GetPatient(p => p.Id == medicalOrderVM.MedicalOrder.PatientId, includeProperties: "MA");
-                
+
             medicalOrderVM.MedicalOrder.Patient = patient;
             medicalOrderVM.MedicalOrder.PatientId = patient.Id;
 
@@ -231,9 +205,7 @@ namespace MyPatient.Web.Controllers
             var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Patient,MA,Solutions");
 
             if (medicalOrder is null || medicalOrder.Patient is null || medicalOrder.MA is null)
-            {
                 return NotFound();
-            }
 
             var medicalOrderVM = new MedicalOrderVM();
 
@@ -258,9 +230,9 @@ namespace MyPatient.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _medicalOrderService.UpdateMedicalOrder(medicalOrderVM.MedicalOrder);
-                
+
                 TempData["Success"] = "Orden Médica actualizada correctamente.";
-                
+
                 return RedirectToAction("Index", new { patientId = medicalOrderVM.MedicalOrder.PatientId });
             }
 
@@ -278,14 +250,12 @@ namespace MyPatient.Web.Controllers
             return View(medicalOrderVM);
         }
 
-        public async Task<IActionResult> Delete(long medicalOrderId) 
+        public async Task<IActionResult> Delete(long medicalOrderId)
         {
             var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Patient,MA,Solutions");
 
             if (medicalOrder is null || medicalOrder.Patient is null || medicalOrder.MA is null)
-            {
                 return NotFound();
-            }
 
             var medicalOrderVM = new MedicalOrderVM();
 
@@ -309,7 +279,7 @@ namespace MyPatient.Web.Controllers
         {
             var medicalOrder = await _medicalOrderService.GetMedicalOrder(mo => mo.Id == medicalOrderId, includeProperties: "Solutions");
 
-            if(medicalOrder is null)
+            if (medicalOrder is null)
                 return NotFound();
 
             await _medicalOrderService.RemoveMedicalOrder(medicalOrder);

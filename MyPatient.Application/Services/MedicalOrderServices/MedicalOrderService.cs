@@ -1,6 +1,7 @@
 ﻿using MyPatient.DataAccess.Repository;
 using MyPatient.DataAccess.Repository.IRepository;
 using MyPatient.Models;
+using MyPatient.Models.ViewModels.MedicalOrderVM;
 using MyPatient.Web.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,11 @@ namespace MyPatient.Application.Services.MedicalOrderServices
         public async Task<MedicalOrder> GetMedicalOrder(Expression<Func<MedicalOrder, bool>> filter, string? includeProperties = null)
         {
             return await _medicalOrderRepository.Get(filter, includeProperties);
+        }
+
+        public async Task<MedicalOrderSummary> GetMedicalOrderReport(long medicalOrderId, TypeMedicalOrder type)
+        {
+            return await _medicalOrderRepository.GetReportData(medicalOrderId, type);
         }
 
         public async Task RemoveMedicalOrder(MedicalOrder medicalOrder)

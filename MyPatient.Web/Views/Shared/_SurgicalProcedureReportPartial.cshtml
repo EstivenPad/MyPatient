@@ -1,0 +1,41 @@
+﻿@model SurgicalProcedureReportModalVM
+
+<div class="modal fade" id="SurgicalProcedureModal" tabindex="-1" role="dialog" aria-labelledby="SurgicalProcedureModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-controller="SurgicalProcedure" asp-action="GenerateReport">
+                <div class="modal-header">
+                    <b class="modal-title text-dark fs-5" id="MAModalLabel">REPORTE PROCEDIMIENTO QUIRURGICO</b>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="from-date" class="form-label">Desde:</label>
+                            <input type="date" class="form-control" id="from-date" asp-for="FromDate" />
+                        </div>
+
+                        <div class="col-6">
+                            <label for="to-date" class="form-label">Hasta:</label>
+                            <input type="date" class="form-control" id="to-date" asp-for="ToDate"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="doctorSelect" class="form-label">Residente participante:</label>
+                            <select id="doctorSelect" class="form-select" asp-for="SelectedDoctor">
+                                <option disabled selected>--Seleccionar Residente--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" formaction="@Url.Action("GeneratePreviewReport")" class="btn btn-dark">Visualizar Reporte</button>
+                    <button type="submit" formaction="@Url.Action("GenerateReport")" class="btn btn-danger">Generar Reporte en PDF</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

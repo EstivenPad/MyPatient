@@ -37,14 +37,14 @@ namespace MyPatient.Application.Services.DoctorServices
             return await _doctorRepository.Get(filter, string.Empty);
         }
 
-        public async Task<bool> HasPatients(int doctorId)
+        public async Task<bool> HasPatients(long doctorId)
         {
             return await _doctorRepository.HasAnyPatient(doctorId);
         }
 
-        public IEnumerable<SelectListItem> PopulateMADroplist()
+        public IEnumerable<SelectListItem> PopulateDoctorDroplist(TypeDoctor type)
         {
-            var DoctorList = _doctorRepository.GetAll(d => d.Type == TypeDoctor.MA, string.Empty);
+            var DoctorList = _doctorRepository.GetAll(d => d.Type == type, string.Empty);
 
             DoctorList = DoctorList.OrderBy(doctor => doctor.FirstName);
 
@@ -53,7 +53,6 @@ namespace MyPatient.Application.Services.DoctorServices
                 Text = String.Concat(doctor.Sex ? "Dra. " : "Dr. ", doctor.FirstName, " ", doctor.LastName),
                 Value = doctor.Id.ToString()
             });
-
         }
 
         public async Task RemoveDoctor(Doctor doctor)

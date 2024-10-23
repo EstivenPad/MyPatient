@@ -17,18 +17,18 @@ namespace MyPatient.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("MyPatient.Models.Doctor", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Exequatur")
                         .IsRequired()
@@ -58,7 +58,7 @@ namespace MyPatient.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 1L,
                             Exequatur = "1536-23",
                             FirstName = "Miguel",
                             Identification = "402-1234567-0",
@@ -66,6 +66,21 @@ namespace MyPatient.DataAccess.Migrations
                             Sex = false,
                             Type = 1
                         });
+                });
+
+            modelBuilder.Entity("MyPatient.Models.Doctor_SurgicalProcedure", b =>
+                {
+                    b.Property<long>("DoctorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SurgicalProdecureId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("DoctorId", "SurgicalProdecureId");
+
+                    b.HasIndex("SurgicalProdecureId");
+
+                    b.ToTable("Doctor_SurgicalProcedure");
                 });
 
             modelBuilder.Entity("MyPatient.Models.MedicalOrder", b =>
@@ -114,8 +129,8 @@ namespace MyPatient.DataAccess.Migrations
                     b.Property<string>("Labs")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MAId")
-                        .HasColumnType("int");
+                    b.Property<long?>("MAId")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("PatientId")
                         .HasColumnType("bigint");
@@ -207,8 +222,8 @@ namespace MyPatient.DataAccess.Migrations
                     b.Property<bool>("IsInsured")
                         .HasColumnType("bit");
 
-                    b.Property<int>("MAId")
-                        .HasColumnType("int");
+                    b.Property<long>("MAId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("NSS")
                         .HasColumnType("nvarchar(max)");
@@ -224,8 +239,8 @@ namespace MyPatient.DataAccess.Migrations
                     b.Property<bool>("Sex")
                         .HasColumnType("bit");
 
-                    b.Property<double?>("Weight")
-                        .HasColumnType("float");
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -241,13 +256,83 @@ namespace MyPatient.DataAccess.Migrations
                             Age = 25,
                             Identification = "402-1234567-1",
                             IsInsured = true,
-                            MAId = 1,
+                            MAId = 1L,
                             NSS = "1234",
                             Name = "Guillermo Reyes",
                             Record = "1234",
                             Sex = false,
-                            Weight = 145.30000000000001
+                            Weight = 145.3f
                         });
+                });
+
+            modelBuilder.Entity("MyPatient.Models.SurgicalProcedure", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateOnly>("CreatedDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Diagnostic")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("PatientId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Procedure")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("SurgicalProcedures");
+                });
+
+            modelBuilder.Entity("MyPatient.Models.SurgicalProcedureDiscoveries", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("SurgicalProcedureId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SurgicalProcedureId");
+
+                    b.ToTable("SurgicalProceduresDiscoveries");
+                });
+
+            modelBuilder.Entity("MyPatient.Models.Doctor_SurgicalProcedure", b =>
+                {
+                    b.HasOne("MyPatient.Models.Doctor", "Doctor")
+                        .WithMany("DoctorSurgicalProcedures")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyPatient.Models.SurgicalProcedure", "SurgicalProcedure")
+                        .WithMany("DoctorSurgicalProcedures")
+                        .HasForeignKey("SurgicalProdecureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("SurgicalProcedure");
                 });
 
             modelBuilder.Entity("MyPatient.Models.MedicalOrder", b =>
@@ -255,7 +340,7 @@ namespace MyPatient.DataAccess.Migrations
                     b.HasOne("MyPatient.Models.Doctor", "MA")
                         .WithMany()
                         .HasForeignKey("MAId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("MyPatient.Models.Patient", "Patient")
                         .WithMany()
@@ -289,9 +374,39 @@ namespace MyPatient.DataAccess.Migrations
                     b.Navigation("MA");
                 });
 
+            modelBuilder.Entity("MyPatient.Models.SurgicalProcedure", b =>
+                {
+                    b.HasOne("MyPatient.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("MyPatient.Models.SurgicalProcedureDiscoveries", b =>
+                {
+                    b.HasOne("MyPatient.Models.SurgicalProcedure", null)
+                        .WithMany("Discoveries")
+                        .HasForeignKey("SurgicalProcedureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPatient.Models.Doctor", b =>
+                {
+                    b.Navigation("DoctorSurgicalProcedures");
+                });
+
             modelBuilder.Entity("MyPatient.Models.MedicalOrder", b =>
                 {
                     b.Navigation("Solutions");
+                });
+
+            modelBuilder.Entity("MyPatient.Models.SurgicalProcedure", b =>
+                {
+                    b.Navigation("Discoveries");
+
+                    b.Navigation("DoctorSurgicalProcedures");
                 });
 #pragma warning restore 612, 618
         }

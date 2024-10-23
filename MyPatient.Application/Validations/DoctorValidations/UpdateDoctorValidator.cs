@@ -16,15 +16,16 @@ namespace MyPatient.Application.Validations.DoctorValidations
 
         public UpdateDoctorValidator(IDoctorService doctorService)
         {
+            //Rule for check if doctor 'MA' doesn't have assigned pacients before downgrade to 'Resident'
             RuleFor(d => d.Type)
                 .NotNull()
-                .MustAsync(MACanDowngradeToResident)
+                .MustAsync(CanMADowngradeToResident)
                 .WithMessage("No puede modificar el nivel médico porque tiene pacientes asignados.");
 
             _doctorService = doctorService;
         }
 
-        private async Task<bool> MACanDowngradeToResident(Doctor doctor, TypeDoctor type, CancellationToken token)
+        private async Task<bool> CanMADowngradeToResident(Doctor doctor, TypeDoctor type, CancellationToken token)
         {
             var doctorDB = await _doctorService.GetDoctor(d => d.Id == doctor.Id);
             bool hasPatients = await _doctorService.HasPatients(doctor.Id);

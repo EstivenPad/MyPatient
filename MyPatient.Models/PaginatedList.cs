@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyPatient.Models
 {
@@ -31,7 +26,7 @@ namespace MyPatient.Models
         {
             var count = await source.CountAsync();
             var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            
+
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
 

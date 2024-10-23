@@ -3,12 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MyPatient.Application.Services.DoctorServices;
 using MyPatient.Application.Services.MedicalOrderServices;
 using MyPatient.Application.Services.PatientServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using MyPatient.Application.Services.SurgicalProcedureServices;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyPatient.Application
 {
@@ -19,6 +15,7 @@ namespace MyPatient.Application
             services.AddScoped<IDoctorService, DoctorService>();
             services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IMedicalOrderService, MedicalOrderService>();
+            services.AddScoped<ISurgicalProcedureService, SurgicalProcedureService>();
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

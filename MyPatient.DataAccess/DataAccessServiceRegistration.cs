@@ -18,6 +18,7 @@ namespace MyPatient.DataAccess
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IMedicalOrderRepository, MedicalOrderRepository>();
+            services.AddScoped<ISurgicalProcedureRepository, SurgicalProcedureRepository>();
 
             return services;
         }

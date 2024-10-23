@@ -9,7 +9,7 @@ namespace MyPatient.Models
         [Key]
         public long MedicalOrderDetailId { get; set; }
 
-        [Required(ErrorMessage = "El Nombre de la Solución es requerida.")]
+        [Required(ErrorMessage = "El Nombre de la Solución es requerido.")]
         public string SolutionName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "La Dosis es requerida.")]
