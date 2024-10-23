@@ -16,7 +16,7 @@ namespace MyPatient.DataAccess.Repository
         {
         }
 
-        public async Task<bool> HasAnyPatient(int doctorId)
+        public async Task<bool> HasAnyPatient(long doctorId)
         {
             return await _dbContext.Patients.AnyAsync(p => p.MAId == doctorId) == true;
         }

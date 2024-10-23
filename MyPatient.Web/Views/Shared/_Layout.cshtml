@@ -17,7 +17,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand text-light" asp-controller="Home" asp-action="Index">MyPatient</a>
+                <a class="navbar-brand text-light" asp-controller="Home" asp-action="Index">MyPatient <i class="bi bi-heart-pulse-fill"></i></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -45,17 +45,11 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted bg-primary">
-        <div class="container text-light text-center">
-            MyPatient - Developed with <i class="bi bi-heart-pulse-fill"></i> by Ing. Estiven Padilla Santos.
-        </div>
-    </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/sweetalert2.all.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

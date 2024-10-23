@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyPatient.Models
 {
@@ -12,7 +7,7 @@ namespace MyPatient.Models
     {
         [Key]
         public long Id { get; set; }
-        
+
         public DateOnly CreatedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
         [Required(ErrorMessage = "El Diagnostico es requerido.")]

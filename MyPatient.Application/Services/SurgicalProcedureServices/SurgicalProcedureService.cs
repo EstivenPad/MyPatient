@@ -1,12 +1,7 @@
-﻿using MyPatient.DataAccess.Repository;
-using MyPatient.DataAccess.Repository.IRepository;
+﻿using MyPatient.DataAccess.Repository.IRepository;
 using MyPatient.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using MyPatient.Models.ViewModels.SurgicalProcedureVM;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyPatient.Application.Services.SurgicalProcedureServices
 {
@@ -32,6 +27,11 @@ namespace MyPatient.Application.Services.SurgicalProcedureServices
         public async Task<SurgicalProcedure> GetSurgicalProcedure(Expression<Func<SurgicalProcedure, bool>> filter, string? includeProperties = null, bool? asNoTracking = true)
         {
             return await _surgicalProcedureRepository.Get(filter, includeProperties, asNoTracking);
+        }
+
+        public async Task<List<SurgicalProcedureSummary>> GetSurgicalProceduresReport(long doctorId, DateOnly fromDate, DateOnly toDate)
+        {
+            return await _surgicalProcedureRepository.GetReportData(doctorId, fromDate, toDate);
         }
 
         public async Task RemoveSurgicalProcedure(SurgicalProcedure surgicalProcedure)

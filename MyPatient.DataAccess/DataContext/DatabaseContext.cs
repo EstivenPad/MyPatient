@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyPatient.Models;
 using MyPatient.Models.Enums;
+using MyPatient.Models.ViewModels.SurgicalProcedureVM;
 
 namespace MyPatient.DataAccess.DataContext
 {
@@ -8,8 +9,8 @@ namespace MyPatient.DataAccess.DataContext
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options){}
 
-        public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Patient> Patients { get; set; }
         public DbSet<MedicalOrder> MedicalOrders { get; set; }
         public DbSet<MedicalOrderDetail> MedicalOrderDetails { get; set; }
         public DbSet<SurgicalProcedure> SurgicalProcedures { get; set; }
@@ -34,7 +35,7 @@ namespace MyPatient.DataAccess.DataContext
                 .HasOne(mo => mo.MA)
                 .WithMany()
                 .HasForeignKey(mo => mo.MAId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<MedicalOrder>()
                 .HasMany(mo => mo.Solutions)
@@ -55,7 +56,6 @@ namespace MyPatient.DataAccess.DataContext
                 .WithMany(d => d.DoctorSurgicalProcedures)
                 .HasForeignKey(ds => ds.SurgicalProdecureId);
 
-
             modelBuilder.Entity<Doctor>().HasData(
                 new Doctor
                 {
@@ -67,13 +67,14 @@ namespace MyPatient.DataAccess.DataContext
                     Identification = "402-1234567-0",
                     Exequatur = "1536-23"
                 });
+
             modelBuilder.Entity<Patient>().HasData(
                 new Patient
                 {
                     Id = 1,
                     Record = "1234",
                     Name = "Guillermo Reyes",
-                    Weight = 145.3,
+                    Weight = 145.3f,
                     Age = 25,
                     Identification = "402-1234567-1",
                     Sex = false,

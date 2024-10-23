@@ -9,6 +9,6 @@ namespace MyPatient.DataAccess.Repository.IRepository
 {
     public interface IDoctorRepository : IBaseRepository<Doctor>
     {
-        Task<bool> HasAnyPatient(int doctorId);
+        Task<bool> HasAnyPatient(long doctorId);
     }
 }

@@ -17,18 +17,18 @@ namespace MyPatient.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("MyPatient.Models.Doctor", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Exequatur")
                         .IsRequired()
@@ -58,7 +58,7 @@ namespace MyPatient.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 1L,
                             Exequatur = "1536-23",
                             FirstName = "Miguel",
                             Identification = "402-1234567-0",
@@ -70,8 +70,8 @@ namespace MyPatient.DataAccess.Migrations
 
             modelBuilder.Entity("MyPatient.Models.Doctor_SurgicalProcedure", b =>
                 {
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
+                    b.Property<long>("DoctorId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("SurgicalProdecureId")
                         .HasColumnType("bigint");
@@ -129,8 +129,8 @@ namespace MyPatient.DataAccess.Migrations
                     b.Property<string>("Labs")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MAId")
-                        .HasColumnType("int");
+                    b.Property<long?>("MAId")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("PatientId")
                         .HasColumnType("bigint");
@@ -222,8 +222,8 @@ namespace MyPatient.DataAccess.Migrations
                     b.Property<bool>("IsInsured")
                         .HasColumnType("bit");
 
-                    b.Property<int>("MAId")
-                        .HasColumnType("int");
+                    b.Property<long>("MAId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("NSS")
                         .HasColumnType("nvarchar(max)");
@@ -239,8 +239,8 @@ namespace MyPatient.DataAccess.Migrations
                     b.Property<bool>("Sex")
                         .HasColumnType("bit");
 
-                    b.Property<double?>("Weight")
-                        .HasColumnType("float");
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -256,12 +256,12 @@ namespace MyPatient.DataAccess.Migrations
                             Age = 25,
                             Identification = "402-1234567-1",
                             IsInsured = true,
-                            MAId = 1,
+                            MAId = 1L,
                             NSS = "1234",
                             Name = "Guillermo Reyes",
                             Record = "1234",
                             Sex = false,
-                            Weight = 145.30000000000001
+                            Weight = 145.3f
                         });
                 });
 
@@ -340,7 +340,7 @@ namespace MyPatient.DataAccess.Migrations
                     b.HasOne("MyPatient.Models.Doctor", "MA")
                         .WithMany()
                         .HasForeignKey("MAId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("MyPatient.Models.Patient", "Patient")
                         .WithMany()
@@ -385,13 +385,11 @@ namespace MyPatient.DataAccess.Migrations
 
             modelBuilder.Entity("MyPatient.Models.SurgicalProcedureDiscoveries", b =>
                 {
-                    b.HasOne("MyPatient.Models.SurgicalProcedure", "SurgicalProcedure")
+                    b.HasOne("MyPatient.Models.SurgicalProcedure", null)
                         .WithMany("Discoveries")
                         .HasForeignKey("SurgicalProcedureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("SurgicalProcedure");
                 });
 
             modelBuilder.Entity("MyPatient.Models.Doctor", b =>

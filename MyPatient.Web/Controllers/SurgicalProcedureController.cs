@@ -6,16 +6,20 @@ using MyPatient.Application.Services.SurgicalProcedureServices;
 using MyPatient.Models;
 using MyPatient.Models.Enums;
 using MyPatient.Models.ViewModels.SurgicalProcedureVM;
+using Rotativa.AspNetCore;
 
 namespace MyPatient.Web.Controllers
 {
     public class SurgicalProcedureController : Controller
     {
-        public readonly ISurgicalProcedureService _surgicalProcedureService;
-        public readonly IDoctorService _doctorService;
-        public readonly IPatientService _patientService;
-        
-        public SurgicalProcedureController(ISurgicalProcedureService surgicalProcedureService, IDoctorService doctorService, IPatientService patientService)
+        private readonly ISurgicalProcedureService _surgicalProcedureService;
+        private readonly IDoctorService _doctorService;
+        private readonly IPatientService _patientService;
+
+        public SurgicalProcedureController(
+            ISurgicalProcedureService surgicalProcedureService,
+            IDoctorService doctorService,
+            IPatientService patientService)
         {
             _surgicalProcedureService = surgicalProcedureService;
             _doctorService = doctorService;
@@ -74,11 +78,30 @@ namespace MyPatient.Web.Controllers
             return Json(doctorList);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GenerateReport(SurgicalProcedureReportModalVM searchCriteria)
+        {
+            var reportData = await _surgicalProcedureService.GetSurgicalProceduresReport(searchCriteria.SelectedDoctor, searchCriteria.FromDate, searchCriteria.ToDate);
+                        
+            return new ViewAsPdf(reportData) 
+            { 
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+            };
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePreviewReport(SurgicalProcedureReportModalVM searchCriteria)
+        {
+            var reportData = await _surgicalProcedureService.GetSurgicalProceduresReport(searchCriteria.SelectedDoctor, searchCriteria.FromDate, searchCriteria.ToDate);
+
+            return View("GenerateReport", reportData);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Create(long? patientId = 1)
         {
             var patient = await _patientService.GetPatient(p => p.Id == patientId, "MA");
-            
+
             var surgicalProcedureVM = new SurgicalProcedureVM()
             {
                 SurgicalProcedure = new SurgicalProcedure(),
@@ -90,7 +113,7 @@ namespace MyPatient.Web.Controllers
             surgicalProcedureVM.SurgicalProcedure.PatientId = patient.Id;
             surgicalProcedureVM.SurgicalProcedure.Discoveries = new List<SurgicalProcedureDiscoveries> { new SurgicalProcedureDiscoveries() };
             surgicalProcedureVM.SurgicalProcedure.DoctorSurgicalProcedures = new List<Doctor_SurgicalProcedure> { new Doctor_SurgicalProcedure() };
-            
+
             ViewData["Title"] = "Proc. Quirurgicos";
 
             return View(surgicalProcedureVM);
@@ -103,9 +126,9 @@ namespace MyPatient.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _surgicalProcedureService.AddSurgicalProcedure(surgicalProcedureVM.SurgicalProcedure);
-                
+
                 TempData["Success"] = "Procedimiento Quirurgico creado correctamente.";
-                
+
                 return RedirectToAction("Index");
             }
 

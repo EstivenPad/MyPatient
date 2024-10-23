@@ -26,12 +26,18 @@
                 </div>
             </div>
 
+            <div class="col">
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#SurgicalProcedureModal">
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i> Generar Reporte
+                </button>
+            </div>
+
             <div class="col text-end">
-                <a class="btn btn-primary" asp-controller="SurgicalProcedure" asp-action="Create"><i class="bi bi-person-plus-fill"></i> Crear Nuevo Proc. Quirurgico</a>
+                <a class="btn btn-primary" asp-controller="SurgicalProcedure" asp-action="Create"><i class="bi bi-person-plus-fill"></i> Crear Proc. Quirurgico</a>
             </div>
         </div>
     </form>
-
+    
     <table class="table table-hover">
         <thead>
             <tr>
@@ -85,3 +91,33 @@
         </div>
     }
 </div>
+
+<partial name="~/Views/Shared/_SurgicalProcedureReportPartial.cshtml" model="new SurgicalProcedureReportModalVM()" />
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).on('show.bs.modal', '#SurgicalProcedureModal', function () {
+            $.ajax({
+                url: '@Url.Action("PopulateDoctorDropList", "SurgicalProcedure")',
+                type: 'GET',
+                success: function (data) {
+                    // Populate the select list
+                    var select = $('#doctorSelect');
+                    
+                    select.empty();
+                    
+                    select.append('<option disabled selected>--Seleccionar Residente--</option>');
+                    
+                    $.each(data, function (i, item) {
+                        select.append('<option value="' + item.value + '">' + item.text + '</option>');
+                    });
+
+                    $('#doctorSelect').select2({ theme: 'bootstrap-5', dropdownParent: $('#SurgicalProcedureModal') });
+                },
+                error: function () {
+                    alert('Error loading data.');
+                }
+            });
+        });
+    </script>
+}

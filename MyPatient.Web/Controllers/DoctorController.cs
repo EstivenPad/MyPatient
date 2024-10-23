@@ -7,7 +7,6 @@ using MyPatient.Models.Enums;
 using MyPatient.Models.ViewModels.DoctorVM;
 using FluentValidation;
 using MyPatient.Application.Validations;
-using FluentValidation.Results;
 
 namespace MyPatient.Web.Controllers
 {
