@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="m-0">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,38 +11,47 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
-
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand text-light" asp-controller="Home" asp-action="Index">MyPatient <i class="bi bi-heart-pulse-fill"></i></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+<body class="m-0 overflow-hidden">
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-3 col-xl-2 px-0 bg-primary">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-3 text-white min-vh-100">
+                    <div class="d-flex justify-content-center align-items-center mb-md-0 w-100 text-white text-decoration-none" style="border-bottom: 2px solid #fff">
+                        <span class="fs-4 d-none d-sm-inline">MENU</span>
+                    </div>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Patient" asp-action="Index">Pacientes</a>
+                            <a asp-controller="Home" asp-action="Index" class="nav-link align-middle px-0 text-white">
+                                <i class="fs-4 bi-house-fill"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Doctor" asp-action="Index">Doctores</a>
+                            <a asp-controller="Patient" asp-action="Index" class="nav-link align-middle px-0 text-white">
+                                <i class="fs-4 bi-people-fill"></i> <span class="ms-1 d-none d-sm-inline">Pacientes</span>
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="SurgicalProcedure" asp-action="Index">Proc. Quirurgicos</a>
+                        <li>
+                            <a asp-controller="Doctor" asp-action="Index" class="nav-link px-0 align-middle text-white">
+                                <i class="fs-4 bi-person-badge-fill"></i> <span class="ms-1 d-none d-sm-inline">Doctores</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="SurgicalProcedure" asp-action="Index" class="nav-link px-0 align-middle text-white">
+                                <i class="fs-4 bi-file-earmark-text-fill"></i> <span class="ms-1 d-none d-sm-inline">Procedimientos Quirurgicos</span>
+                            </a>
                         </li>
                     </ul>
+                    <div>
+                        <span class="fst-italic">Developed by @@estivenpad</span>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3 position-relative" style="min-height: 80vh">
-            <partial name="_Notification"/>
-            @RenderBody()
-        </main>
+            <main role="main" class="col py-3 pb-3" style="min-height: 100vh">
+                <partial name="_Notification" />
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
