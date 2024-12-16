@@ -5,7 +5,7 @@
 <table class="table table-hover">
     <thead>
         <tr>
-            <th class="text-primary" scope="col">Nivel Médico</th>
+            <th class="text-primary" scope="col">Nivel médico</th>
             <th class="text-primary" scope="col">Exequatur</th>
             <th class="text-primary" scope="col">Nombre</th>
             <th class="text-primary" scope="col">Opciones</th>
@@ -16,10 +16,12 @@
         {
             <tr>
                 <td>
-                    <span class="badge @(doctor.Type == TypeDoctor.Residente ? "bg-dark" : "bg-info")">@(Enum.GetName(doctor.Type))</span>
+                    <span class="badge @(doctor.Type == TypeDoctor.Residente ? "bg-primary" : "bg-success")">
+                        @(Enum.GetName(doctor.Type))
+                    </span>
                 </td>
                 <td>@doctor.Exequatur</td>
-                <td>@(String.Concat(doctor.Sex ? "Dra. " : "Dr. ", doctor.FirstName, " ", doctor.LastName))</td>
+                <td>@(string.Concat(doctor.Sex ? "Dra. " : "Dr. ", doctor.FirstName, " ", doctor.LastName))</td>
                 <td>
                     <a class="btn btn-warning" asp-controller="Doctor" asp-action="Upsert" asp-route-id="@doctor.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                     <a class="btn btn-danger" asp-controller="Doctor" asp-action="Delete" asp-route-id="@doctor.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>

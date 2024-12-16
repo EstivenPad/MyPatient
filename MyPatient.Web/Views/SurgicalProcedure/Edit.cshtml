@@ -1,15 +1,20 @@
 ﻿@model SurgicalProcedureVM
 
-<h1 class="text-warning text-center">EDITAR PROCEDIMIENTO QUIRURGICO</h1>
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="SurgicalProcedure" asp-action="Index">Procedimientos quirurgicos</a>
+    </li>
+    <li class="breadcrumb-item active">Editar procedimiento quirurgico</li>
+</ol>
 
-<div class="container">
+<div class="container p-4 border bg-white rounded-3 shadow-sm">
     <form id="surgicalProcedureForm" method="post">
         @Html.AntiForgeryToken()
         <input asp-for="@Model.SurgicalProcedure.Id" hidden />
 
-        @* PATIENT DATA *@
-        <h4 class="text-primary">Datos del Paciente</h4>
-        <div class="row p-3 mb-3 border border-primary rounded-3">
+        @* GENERAL DATA *@
+        <h5 class="text-primary">Datos del Paciente</h5>
+        <div class="py-2 px-3 mb-3 border border-primary rounded-3">
             <input type="hidden" asp-for="@Model.SurgicalProcedure.PatientId" />
             <div class="col-6 mb-2">
                 <label for="record" class="form-label">Record</label>
@@ -21,15 +26,15 @@
             </div>
         </div>
 
-        <div class="row p-3 mb-3 border border-primary rounded-3">
+        <div class="py-2 px-3 mb-3 border border-primary rounded-3">
             <div class="col-6 mb-2">
                 <label for="diagnostic" class="form-label">Diagnóstico</label>
-                <textarea class="form-control" id="diagnostic" asp-for="@Model.SurgicalProcedure.Diagnostic" rows="5"></textarea>
+                <textarea class="form-control" id="diagnostic" asp-for="@Model.SurgicalProcedure.Diagnostic" rows="3"></textarea>
                 <span asp-validation-for="@Model.SurgicalProcedure.Diagnostic" class="text-danger"></span>
             </div>
             <div class="col-6 mb-2">
                 <label for="procedure" class="form-label">Procedimiento</label>
-                <textarea class="form-control" id="procedure" asp-for="@Model.SurgicalProcedure.Procedure" rows="5"></textarea>
+                <textarea class="form-control" id="procedure" asp-for="@Model.SurgicalProcedure.Procedure" rows="3"></textarea>
                 <span asp-validation-for="@Model.SurgicalProcedure.Procedure" class="text-danger"></span>
             </div>
         </div>
@@ -37,7 +42,7 @@
         <div class="row gap-4">
             <div class="col p-0">
                 @* DISCOVERIES DETAIL *@
-                <h4 class="text-primary">Hallazgos</h4>
+                <h5 class="text-primary">Hallazgos</h5>
                 <div class="p-3 border border-primary rounded-3">
                     <table id="DiscoveriesTable" class="table DetailTable">
                         <thead>
@@ -71,7 +76,7 @@
 
             <div class="col p-0">
                 @* DOCTOR DETAIL *@
-                <h4 class="text-primary">Doctores</h4>
+                <h5 class="text-primary">Doctores</h5>
                 <div class="p-3 border border-primary rounded-3">
                     <div class="mb-2 pb-3 border-bottom border-primary">
                         <label for="ma" class="form-label fw-bold">MA Responsable</label>

@@ -55,7 +55,7 @@ namespace MyPatient.DataAccess.Repository
             return await query.FirstOrDefaultAsync();
         }
 
-        public IQueryable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public virtual IQueryable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet.AsNoTracking();
 

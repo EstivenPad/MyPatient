@@ -1,18 +1,25 @@
 ﻿@model MedicalOrderVM
 
-<h1 class="text-center"><span class="text-warning">EDITAR ORDEN MÉDICA:</span> @(Enum.GetName(Model.MedicalOrder.Type).ToUpper())</h1>
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="Patient" asp-action="Index">Pacientes</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a asp-action="Index" asp-route-patientId="@Model.MedicalOrder.PatientId">Ordenes médicas</a>
+    </li>
+    <li class="breadcrumb-item active">Editar orden médica</li>
+</ol>
 
-<div class="container">
+<div class="container p-4 border bg-white rounded-3 shadow-sm">
     <form id="medicalOrderForm" method="post">
         @Html.AntiForgeryToken()
         @* PATIENT DATA *@
         <input asp-for="MedicalOrder.Id" hidden />
-        <input asp-for="MedicalOrder.Type" hidden />
         <input asp-for="MedicalOrder.PatientId" hidden />
         <input asp-for="MedicalOrder.MAId" hidden />
 
-        <h4 class="text-primary">Datos Generales</h4>
-        <div class="row p-3 mb-3 border border-primary rounded-3">
+        <h5 class="text-primary">Datos Generales</h5>
+        <div class="row py-2 px-0 mb-3 border border-primary rounded-3">
             <div class="col-6">
                 <div class="mb-2">
                     <label for="record" class="form-label">Record</label>
@@ -22,33 +29,57 @@
                     <label for="name" class="form-label">Nombre</label>
                     <input class="form-control" id="name" asp-for="MedicalOrder.Patient.Name" disabled />
                 </div>
-                <div class="row">
-                    <div class="col-6 mb-2">
+                <div class="row align-items-baseline">
+                    <div class="col-4 mb-2">
                         <label for="age" class="form-label">Edad</label>
                         <div class="input-group">
                             <input class="form-control" id="age" placeholder="0" min="0" asp-for="MedicalOrder.Patient.Age" disabled />
                             <span class="input-group-text" id="age_measure">Años</span>
                         </div>
                     </div>
-                    <div class="col-6 mb-2">
+                    <div class="col-4 mb-2">
                         <label for="weight" class="form-label">Peso</label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="weight" placeholder="0" asp-for="MedicalOrder.Patient.Weight" min="1" disabled />
                             <span class="input-group-text" id="weight_measure">Lb.</span>
                         </div>
                     </div>
+                    <div class="col-4 mb-3">
+                        <label class="form-label">Sexo</label>
+                        <div class="mt-1 d-flex flex-column">
+                            <span>
+                                <input type="radio" class="form-check-input" id="female" asp-for="MedicalOrder.Patient.Sex" value="false" disabled />
+                                <label for="female" class="form-check-label">Masculino</label>
+                            </span>
+                            <span>
+                                <input type="radio" class="form-check-input" id="male" asp-for="MedicalOrder.Patient.Sex" value="true" disabled />
+                                <label for="male" class="form-check-label">Femenino</label>
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-2">
-                    <label for="ars" class="form-label">Seguro</label>
-                    <input class="form-control" id="ars" asp-for="MedicalOrder.Patient.ARS" disabled />
-                </div>
-                <div class="mb-2">
-                    <label for="nss" class="form-label">NSS</label>
-                    <input class="form-control" id="nss" asp-for="MedicalOrder.Patient.NSS" disabled />
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <label for="ars" class="form-label">Seguro Médico</label>
+                        <input class="form-control" id="ars" asp-for="MedicalOrder.Patient.ARS" disabled />
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label for="nss" class="form-label">NSS</label>
+                        <input class="form-control" id="nss" asp-for="MedicalOrder.Patient.NSS" disabled />
+                    </div>
                 </div>
             </div>
 
             <div class="col-6">
+                <div class="mb-2">
+                    <label for="type" class="form-label">TIPO DE ORDEN MÉDICA</label>
+                    <select id="type" class="form-select form-control-color bg-success text-white" asp-for="MedicalOrder.Type">
+                        <option class="bg-success" value="0">Ingreso</option>
+                        <option class="bg-primary" value="1">Diaria</option>
+                        <option class="bg-info" value="2">Postquirúrgica</option>
+                    </select>
+                    <span asp-validation-for="MedicalOrder.Type" class="text-danger"></span>
+                </div>
                 <div class="mb-2">
                     <label for="service" class="form-label">Servicio</label>
                     <input class="form-control" id="service" asp-for="MedicalOrder.Service" />
@@ -58,16 +89,6 @@
                     <label for="room" class="form-label">Sala y Cama</label>
                     <input class="form-control" id="room" asp-for="MedicalOrder.Room" />
                     <span asp-validation-for="MedicalOrder.Room" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Sexo</label>
-                    <div class="mt-1">
-                        <input type="radio" class="form-check-input" id="female" asp-for="MedicalOrder.Patient.Sex" value="false" disabled />
-                        <label for="female" class="form-check-label">Masculino</label>
-
-                        <input type="radio" class="form-check-input" id="male" asp-for="MedicalOrder.Patient.Sex" value="true" disabled />
-                        <label for="male" class="form-check-label">Femenino</label>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-6 mb-2">
@@ -86,8 +107,8 @@
             </div>
         </div>
 
-        <h4 class="text-primary">Diagnóstico</h4>
-        <div class="row mb-3 p-3 border border-primary rounded-3">
+        <h5 class="text-primary">Diagnóstico</h5>
+        <div class="row py-2 px-0 mb-3 border border-primary rounded-3">
             <div>
                 <label for="diagnostic" class="form-label">Diagnóstico</label>
                 <input class="form-control" id="diagnostic" asp-for="MedicalOrder.Diagnostic" />
@@ -95,7 +116,7 @@
             </div>
         </div>
 
-        <div class="row mb-3 p-3 border border-primary rounded-3">
+        <div class="row py-2 px-0 mb-3 border border-primary rounded-3">
             <div class="col-6">
                 <div class="mb-2">
                     <label for="general_measure" class="form-label">Medidas Generales</label>
@@ -153,7 +174,7 @@
         </div>
 
         @* SOLUTIONS DETAIL *@
-        <h4 class="text-primary">Soluciones</h4>
+        <h5 class="text-primary">Soluciones</h5>
         <div class="row p-3 border border-primary rounded-3">
             <table id="ExpTable" class="table DetailTable">
                 <thead>
@@ -163,8 +184,8 @@
                         <th class="text-primary" scope="col">Frecuencia</th>
                         <th class="text-primary" scope="col">Via</th>
                         <th class="text-primary" scope="col" style="position: relative">
-                            <button id="btnadd" type="button" class="btn btn-secondary visible" style="position: absolute; top: 0%; left: 0%" onclick="addSolutionDetail(this)">
-                                Agregar
+                            <button id="btnadd" type="button" class="btn btn-primary visible" style="position: absolute; top: 0%; left: 0%" onclick="addSolutionDetail(this)">
+                                <i class="bi bi-plus-circle"></i>
                             </button>
                         </th>
                     </tr>
@@ -191,7 +212,9 @@
                                 <span asp-validation-for="@Model.MedicalOrder.Solutions[i].Via" class="text-danger"></span>
                             </td>
                             <td style="position: relative">
-                                <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeSolutionDetail(this)">Eliminar</button>
+                                <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeSolutionDetail(this)">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
                             </td>
                         </tr>
                     }
@@ -199,14 +222,32 @@
             </table>
         </div>
 
-        <div class="mt-3 d-flex gap-2">
-            <button type="submit" class="btn btn-warning w-50">Editar</button>
-            <a class="btn btn-secondary w-50" asp-action="Index" asp-route-patientId="@Model.MedicalOrder.PatientId">Volver</a>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-pencil-square"></i> Editar
+            </button>
         </div>
     </form>
 </div>
 
 @section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('#type').change(function() {
+                var optionSelected = $('#type option:selected');
+                
+                $('#type').removeClass(function(){
+                    var classArr = this.attr('class').split('/\s+/');
+                    console.log(classArr);
+                    // classArr.forEach(c => console.log(c));
+                });
+                    // console.log(optionSelected.attr('class'));
+                // $('#type').addClass(function(){
+                //     return optionSelected.attr('class');
+                // });
+            });
+        });
+    </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

@@ -1,14 +1,8 @@
-﻿using MyPatient.DataAccess.Repository;
-using MyPatient.DataAccess.Repository.IRepository;
+﻿using MyPatient.DataAccess.Repository.IRepository;
 using MyPatient.Models;
 using MyPatient.Models.ViewModels.MedicalOrderVM;
 using MyPatient.Web.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyPatient.Application.Services.MedicalOrderServices
 {
@@ -31,9 +25,9 @@ namespace MyPatient.Application.Services.MedicalOrderServices
             return _medicalOrderRepository.GetAll(filter, includeProperties);
         }
 
-        public async Task<MedicalOrder> GetLastMedicalOrder(TypeMedicalOrder type, long patientId)
+        public async Task<MedicalOrder> GetLastMedicalOrder(long patientId)
         {
-            return await _medicalOrderRepository.GetLast(type, patientId);
+            return await _medicalOrderRepository.GetLast(patientId);
         }
 
         public async Task<MedicalOrder> GetMedicalOrder(Expression<Func<MedicalOrder, bool>> filter, string? includeProperties = null)

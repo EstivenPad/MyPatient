@@ -13,13 +13,14 @@ namespace MyPatient.Web.Controllers
     {
         private readonly IPatientService _patientService;
         private readonly IDoctorService _doctorService;
-        private readonly IMedicalOrderService _medicalOrderService;
 
-        public PatientController(IPatientService patientService, IDoctorService doctorService, IMedicalOrderService medicalOrderService)
-        {
+        public PatientController(
+            IPatientService patientService,
+            IDoctorService doctorService,
+            IMedicalOrderService medicalOrderService
+        ){
             _patientService = patientService;
             _doctorService = doctorService;
-            _medicalOrderService = medicalOrderService;
         }
 
         public async Task<IActionResult> Index(int? page, string? filterSelected, string? filterCriteria)
@@ -33,24 +34,13 @@ namespace MyPatient.Web.Controllers
 
             if (!String.IsNullOrWhiteSpace(filterCriteria))
             {
-                switch (filterSelected)
+                patientsList = filterSelected switch
                 {
-                    case "Name":
-                        patientsList = _patientService.GetAllPatients(p => p.Name.Contains(filterCriteria), includeProperties: "MA");
-                        break;
-
-                    case "Record":
-                        patientsList = _patientService.GetAllPatients(p => p.Record.Contains(filterCriteria), includeProperties: "MA");
-                        break;
-
-                    case "MA":
-                        patientsList = _patientService.GetAllPatients(p => p.MA.FirstName.Contains(filterCriteria) || p.MA.LastName.Contains(filterCriteria), includeProperties: "MA");
-                        break;
-
-                    default:
-                        patientsList = _patientService.GetAllPatients(p => true, includeProperties: "MA");
-                        break;
-                }
+                    "Name" => _patientService.GetAllPatients(p => p.Name.Contains(filterCriteria), includeProperties: "MA"),
+                    "Record" => _patientService.GetAllPatients(p => p.Record.Contains(filterCriteria), includeProperties: "MA"),
+                    "MA" => _patientService.GetAllPatients(p => p.MA.FirstName.Contains(filterCriteria) || p.MA.LastName.Contains(filterCriteria), includeProperties: "MA"),
+                    _ => _patientService.GetAllPatients(p => true, includeProperties: "MA"),
+                };
             }
             else
             {

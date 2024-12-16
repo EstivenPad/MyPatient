@@ -27,36 +27,43 @@ namespace MyPatient.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? page, string? filterSelected, string? filterCriteria)
+        public async Task<IActionResult> Index(long patientId, int? page, string? filterSelected, string? filterCriteria)
         {
+            int pageSize = 10;
             IQueryable<SurgicalProcedure> surgicalProcedureList;
             var surgicalProcedureIndexVM = new SurgicalProcedureIndexVM();
-            int pageSize = 10;
 
             ViewData["FilterSelected"] = filterSelected;
             ViewData["FilterCriteria"] = filterCriteria;
 
-            if (!String.IsNullOrWhiteSpace(filterCriteria))
-            {
-                switch (filterSelected)
-                {
-                    case "Pacient":
-                        surgicalProcedureList = _surgicalProcedureService.GetAllSurgicalProcedures(sp => sp.Patient.Name.Contains(filterCriteria), includeProperties: "Patient,Patient.MA");
-                        break;
+            var patient = await _patientService.GetPatient(p => p.Id == patientId);
 
-                    case "MA":
-                        surgicalProcedureList = _surgicalProcedureService.GetAllSurgicalProcedures(sp => sp.Patient.MA.FirstName.Contains(filterCriteria) || sp.Patient.MA.LastName.Contains(filterCriteria), includeProperties: "Patient,Patient.MA");
-                        break;
+            if (patient is null)
+                return NotFound();
 
-                    default:
-                        surgicalProcedureList = _surgicalProcedureService.GetAllSurgicalProcedures(sp => true, includeProperties: "Patient,Patient.MA");
-                        break;
-                }
-            }
-            else
-            {
-                surgicalProcedureList = _surgicalProcedureService.GetAllSurgicalProcedures(sp => true, includeProperties: "Patient,Patient.MA");
-            }
+            surgicalProcedureList = _surgicalProcedureService.GetAllSurgicalProcedures(sp => sp.PatientId == patientId);
+
+            //if (!String.IsNullOrWhiteSpace(filterCriteria))
+            //{
+            //    switch (filterSelected)
+            //    {
+            //        case "Pacient":
+            //            surgicalProcedureList = _surgicalProcedureService.GetAllSurgicalProcedures(sp => sp.Patient.Name.Contains(filterCriteria), includeProperties: "Patient,Patient.MA");
+            //            break;
+
+            //        case "MA":
+            //            surgicalProcedureList = _surgicalProcedureService.GetAllSurgicalProcedures(sp => sp.Patient.MA.FirstName.Contains(filterCriteria) || sp.Patient.MA.LastName.Contains(filterCriteria), includeProperties: "Patient,Patient.MA");
+            //            break;
+
+            //        default:
+            //            surgicalProcedureList = _surgicalProcedureService.GetAllSurgicalProcedures(sp => true, includeProperties: "Patient,Patient.MA");
+            //            break;
+            //    }
+            //}
+            //else
+            //{
+            //    surgicalProcedureList = _surgicalProcedureService.GetAllSurgicalProcedures(sp => true, includeProperties: "Patient,Patient.MA");
+            //}
 
             surgicalProcedureIndexVM.SurgicalProcedures = await PaginatedList<SurgicalProcedure>.CreateAsync(surgicalProcedureList, page ?? 1, pageSize);
             surgicalProcedureIndexVM.FilterOptions = new List<SelectListItem>

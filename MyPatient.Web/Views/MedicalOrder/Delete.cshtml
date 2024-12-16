@@ -1,19 +1,35 @@
 ﻿@model MedicalOrderVM
 
-<h1 class="text-center"><span class="text-danger">ELIMINAR ORDEN MÉDICA:</span> @(Enum.GetName(Model.MedicalOrder.Type).ToUpper())</h1>
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="Patient" asp-action="Index">Pacientes</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a asp-action="Index" asp-route-patientId="@Model.MedicalOrder.PatientId">Ordenes médicas</a>
+    </li>
+    <li class="breadcrumb-item active">Eliminar orden médica</li>
+</ol>
 
-<div class="container">
+<div class="container p-4 border bg-white rounded-3 shadow-sm">
     <form method="post">
         @Html.AntiForgeryToken()
         @* PATIENT DATA *@
         <input asp-for="MedicalOrder.Id" hidden />
-        <input asp-for="MedicalOrder.Type" hidden />
         <input asp-for="MedicalOrder.PatientId" hidden />
         <input asp-for="MedicalOrder.MAId" hidden />
 
-        <h4 class="text-primary">Datos Generales</h4>
-        <div class="row p-3 mb-3 border border-primary rounded-3">
+        <h5 class="text-primary">Datos Generales</h5>
+        <div class="row py-2 px-0 mb-3 border border-primary rounded-3">
             <div class="col-6">
+                <div class="mb-2">
+                    <label for="type" class="form-label">Tipo de orden médica</label>
+                    <select id="type" class="form-select" asp-for="MedicalOrder.Type">
+                        <option value="0">Ingreso</option>
+                        <option value="1">Diaria</option>
+                        <option value="2">Postquirúrgica</option>
+                    </select>
+                    <span asp-validation-for="MedicalOrder.Type" class="text-danger"></span>
+                </div>
                 <div class="mb-2">
                     <label for="record" class="form-label">Record</label>
                     <input class="form-control" id="record" asp-for="MedicalOrder.Patient.Record" disabled />
@@ -38,13 +54,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-2">
-                    <label for="ars" class="form-label">Seguro</label>
-                    <input class="form-control" id="ars" asp-for="MedicalOrder.Patient.ARS" disabled />
-                </div>
-                <div class="mb-2">
-                    <label for="nss" class="form-label">NSS</label>
-                    <input class="form-control" id="nss" asp-for="MedicalOrder.Patient.NSS" disabled />
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <label for="ars" class="form-label">Seguro Médico</label>
+                        <input class="form-control" id="ars" asp-for="MedicalOrder.Patient.ARS" disabled />
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label for="nss" class="form-label">NSS</label>
+                        <input class="form-control" id="nss" asp-for="MedicalOrder.Patient.NSS" disabled />
+                    </div>
                 </div>
             </div>
 
@@ -84,15 +102,15 @@
             </div>
         </div>
 
-        <h4 class="text-primary">Diagnóstico</h4>
-        <div class="row mb-3 p-3 border border-primary rounded-3">
+        <h5 class="text-primary">Diagnóstico</h5>
+        <div class="row py-2 px-0 mb-3 border border-primary rounded-3">
             <div>
                 <label for="diagnostic" class="form-label">Diagnóstico</label>
                 <input class="form-control" id="diagnostic" asp-for="MedicalOrder.Diagnostic" disabled />
             </div>
         </div>
 
-        <div class="row mb-3 p-3 border border-primary rounded-3">
+        <div class="row py-2 px-0 mb-3 border border-primary rounded-3">
             <div class="col-6">
                 <div class="mb-2">
                     <label for="general_measure" class="form-label">Medidas Generales</label>
@@ -141,7 +159,7 @@
         </div>
 
         @* SOLUTIONS DETAIL *@
-        <h4 class="text-primary">Soluciones</h4>
+        <h5 class="text-primary">Soluciones</h5>
         <div class="row p-3 border border-primary rounded-3">
             <table id="ExpTable" class="table DetailTable">
                 <thead>
@@ -174,10 +192,15 @@
             </table>
         </div>
 
-        <div class="mt-3 d-flex gap-2">
-            <a onclick="alertDelete('Está seguro que desea eliminar esta Orden Médica?', 'La Orden Médica ha sido eliminada.','/MedicalOrder/Delete?patientId=@Model.MedicalOrder.PatientId&medicalOrderId=@Model.MedicalOrder.Id', '/MedicalOrder?patientId=@Model.MedicalOrder.PatientId')" class="btn btn-danger w-50">Eliminar</a>
-
-            <a class="btn btn-secondary w-50" asp-action="Index" asp-route-patientId="@Model.MedicalOrder.PatientId">Volver</a>
+        <div class="mt-3">
+            <a class="btn btn-danger w-100"
+               onclick="alertDelete('Está seguro que desea eliminar esta orden médica?',
+                                    'La orden médica ha sido eliminada.',
+                                    '/MedicalOrder/Delete?patientId=@Model.MedicalOrder.PatientId&medicalOrderId=@Model.MedicalOrder.Id',
+                                    '/MedicalOrder?patientId=@Model.MedicalOrder.PatientId')"
+            >
+                <i class="bi bi-trash-fill"></i> Eliminar
+            </a>
         </div>
     </form>
 </div>

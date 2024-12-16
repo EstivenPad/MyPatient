@@ -1,8 +1,13 @@
 ﻿@model PatientDeleteVM
 
-<h1 class="text-center text-danger">ELIMINAR PACIENTE</h1>
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="Patient" asp-action="Index">Pacientes</a>
+    </li>
+    <li class="breadcrumb-item active">Eliminar paciente</li>
+</ol>
 
-<div class="container">
+<div class="container p-4 border bg-white rounded-3 shadow-sm">
     <form method="post">
         <input asp-for="Patient.Id" hidden />
         <div class="row">
@@ -35,7 +40,10 @@
             </div>
             <div class="col-12 col-md-4">
                 <label for="age" class="form-label">Edad</label>
-                <input class="form-control" id="age" placeholder="0" asp-for="Patient.Age" min="1" disabled />
+                <div class="input-group">
+                    <input class="form-control" id="age" placeholder="0" asp-for="Patient.Age" min="1" disabled />
+                    <span class="input-group-text" id="age_measure">Años</span>
+                </div>
             </div>
             <div class="col-12 col-md-4">
                 <label for="weight" class="form-label">Peso</label>
@@ -48,25 +56,28 @@
 
         <div class="row">
             <div class="col-6">
-                <h4 class="text-primary">MA</h4>
+                <h5 class="text-primary">MA</h5>
                 <div class="border border-primary p-3 mb-3" style="border-radius: 10px">
                     <div class="mb-3">
-                        <label class="form-label">MA</label>
+                        <label class="form-label">MA Responsable</label>
                         <input class="form-control" id="ma" asp-for="MA" disabled />
                     </div>
                 </div>
 
-                <div class="mt-3 d-flex gap-2">
-                    <a onclick="alertDelete('Está seguro que desea eliminar este Paciente?', 'El Paciente ha sido eliminado.','/Patient/Delete/@Model.Patient.Id', '/Patient')" class="btn btn-danger w-50">Eliminar</a>
-
-                    <a class="btn btn-secondary w-50" asp-controller="Patient" asp-action="Index">
-                        Volver
+                <div class="mt-3">
+                    <a class="btn btn-danger w-100"
+                       onclick="alertDelete('Está seguro que desea eliminar este paciente?',
+                                            'El paciente ha sido eliminado.',
+                                            '/Patient/Delete/@Model.Patient.Id',
+                                            '/Patient')" 
+                    >
+                        <i class="bi bi-trash-fill"></i> Eliminar
                     </a>
                 </div>
             </div>
 
             <div class="col-6">
-                <h4 class="text-primary">Seguro Médico</h4>
+                <h5 class="text-primary">Seguro Médico</h5>
                 <div class="border border-primary p-3" style="border-radius: 10px">
                     <div class="mb-3">
                         <input type="checkbox" class="form-check-input" id="isInsured" asp-for="Patient.IsInsured" disabled />

@@ -16,7 +16,7 @@ namespace MyPatient.Application.Services.MedicalOrderServices
     {
         Task AddMedicalOrder(MedicalOrder medicalOrder);
         IQueryable<MedicalOrder> GetAllMedicalOrders(Expression<Func<MedicalOrder, bool>>? filter, string? includeProperties = "");
-        Task<MedicalOrder> GetLastMedicalOrder(TypeMedicalOrder type, long patientId);
+        Task<MedicalOrder> GetLastMedicalOrder(long patientId);
         Task<MedicalOrder> GetMedicalOrder(Expression<Func<MedicalOrder, bool>> filter, string? includeProperties = null);
         Task<MedicalOrderSummary> GetMedicalOrderReport(long medicalOrderId, TypeMedicalOrder type);
         Task RemoveMedicalOrder(MedicalOrder medicalOrder);

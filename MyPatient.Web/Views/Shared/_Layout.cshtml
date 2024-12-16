@@ -12,13 +12,13 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 </head>
-<body class="m-0 overflow-hidden">
+<body class="m-0 overflow-auto">
     <div class="container-fluid">
         <div class="row flex-nowrap">
-            <div class="col-auto col-md-3 col-xl-2 px-0 bg-primary">
+            <div class="col-auto col-md-3 col-xl-2 px-0 bg-primary" style="max-height: 100vh">
                 <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-3 text-white min-vh-100">
-                    <div class="d-flex justify-content-center align-items-center mb-md-0 w-100 text-white text-decoration-none" style="border-bottom: 2px solid #fff">
-                        <span class="fs-4 d-none d-sm-inline">MENU</span>
+                    <div class="d-flex justify-content-center align-items-center mb-md-4 w-100 text-white text-decoration-none" style="border-radius: 15px; border-bottom: 2px solid #fff">
+                        <span class="fs-4 d-none d-sm-inline">MyPatient</span>
                     </div>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                         <li class="nav-item">
@@ -38,16 +38,16 @@
                         </li>
                         <li>
                             <a asp-controller="SurgicalProcedure" asp-action="Index" class="nav-link px-0 align-middle text-white">
-                                <i class="fs-4 bi-file-earmark-text-fill"></i> <span class="ms-1 d-none d-sm-inline">Procedimientos Quirurgicos</span>
+                                <i class="fs-4 bi-file-earmark-text-fill"></i> <span class="ms-1 d-none d-sm-inline">Proc. Quirurgicos</span>
                             </a>
                         </li>
                     </ul>
-                    <div>
+                    <div class="pb-1">
                         <span class="fst-italic">Developed by @@estivenpad</span>
                     </div>
                 </div>
             </div>
-            <main role="main" class="col py-3 pb-3" style="min-height: 100vh">
+            <main role="main" class="col py-3 px-5 overflow-scroll bg-body-tertiary" style="max-height: 100vh">
                 <partial name="_Notification" />
                 @RenderBody()
             </main>

@@ -7,9 +7,9 @@
 <div>
     <h1 class="text-center mb-3">PACIENTES</h1>
 
-    <form asp-action="Index" method="get">
-        <div class="row input-group mb-2">
-            <div class="col-2">
+    <form class="mb-3" asp-action="Index" method="get">
+        <div class="row mb-2">
+            <div class="col-auto">
                 <select class="form-select" name="FilterSelected" asp-for="@ViewData["FilterSelected"]" asp-items="@Model.FilterOptions">
                     <option disabled selected>--Seleccionar filtro--</option>
                 </select>
@@ -27,7 +27,9 @@
             </div>
 
             <div class="col text-end">
-                <a class="btn btn-primary" asp-controller="Patient" asp-action="Upsert"><i class="bi bi-person-plus-fill"></i> Crear nuevo paciente</a>
+                <a class="btn btn-primary" asp-controller="Patient" asp-action="Upsert">
+                    <i class="bi bi-person-plus-fill"></i>&nbsp; Crear nuevo paciente
+                </a>
             </div>
         </div>
     </form>
@@ -52,7 +54,8 @@
                     <td>
                         <a class="btn btn-warning" asp-controller="Patient" asp-action="Upsert" asp-route-id="@patient.Id"><i class="bi bi-pencil-square"></i> Editar</a>
                         <a class="btn btn-danger" asp-controller="Patient" asp-action="Delete" asp-route-id="@patient.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
-                        <a class="btn btn-dark" asp-controller="MedicalOrder" asp-action="Index" asp-route-patientId="@patient.Id"><i class="bi bi-file-earmark-text-fill"></i> Orden Médica</a>
+                        <a class="btn btn-primary" asp-controller="MedicalOrder" asp-action="Index" asp-route-patientId="@patient.Id"><i class="bi bi-file-earmark-text-fill"></i> Ordenes médicas</a>
+                        <a class="btn btn-success" asp-controller="SurgicalProcedure" asp-action="Index" asp-route-patientId="@patient.Id"><i class="bi bi-file-earmark-medical-fill"></i> Proc. quirurgicos</a>
                     </td>
                 </tr>
             }

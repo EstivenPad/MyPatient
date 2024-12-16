@@ -9,7 +9,7 @@
 
     <form asp-action="Index" method="get">
         <div class="row input-group mb-2">
-            <div class="col-2">
+            <div class="col-auto">
                 <select class="form-select" name="FilterSelected" asp-for="@ViewData["FilterSelected"]" asp-items="@Model.FilterOptions">
                     <option disabled selected>--Seleccionar filtro--</option>
                 </select>
@@ -28,12 +28,12 @@
 
             <div class="col">
                 <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#SurgicalProcedureModal">
-                    <i class="bi bi-file-earmark-bar-graph-fill"></i> Generar Reporte
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i> Generar reporte
                 </button>
             </div>
 
             <div class="col text-end">
-                <a class="btn btn-primary" asp-controller="SurgicalProcedure" asp-action="Create"><i class="bi bi-person-plus-fill"></i> Crear Proc. Quirurgico</a>
+                <a class="btn btn-primary" asp-controller="SurgicalProcedure" asp-action="Create"><i class="bi bi-file-earmark-fill"></i> Crear nuevo proc. qco.</a>
             </div>
         </div>
     </form>

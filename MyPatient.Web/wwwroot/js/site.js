@@ -18,7 +18,7 @@
             </td>
             <td style="position: relative">
                 <button type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeSolutionDetail(this)">
-                    Eliminar
+                    <i class="bi bi-trash-fill"></i>
                 </button>
             </td>
         </tr>`;
@@ -63,7 +63,7 @@ function addDiscoveryDetail() {
             </td>
             <td style="position: relative">
                 <button type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeDiscoveryDetail(this)">
-                    Eliminar
+                    <i class="bi bi-trash-fill"></i>
                 </button>
             </td>
         </tr>`;
@@ -128,7 +128,7 @@ function addDoctorDetail() {
                         style="position: absolute; left: 0%"
                         onclick="removeDoctorDetail(this)"
                     >
-                        Eliminar
+                        <i class="bi bi-trash-fill"></i>
                     </button>
                 </td>
             </tr>`;
@@ -167,7 +167,7 @@ function removeDoctorDetail(button) {
 function alertDelete(title, text, deleteUrl, redirectUrl) {
     Swal.fire({
         title: title,
-        text: "Los cambios son irrevertibles!",
+        text: "ESTOS CAMBIOS SERÁN IRREVERSIBLES!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",

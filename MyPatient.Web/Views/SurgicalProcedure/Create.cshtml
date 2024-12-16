@@ -1,51 +1,57 @@
 ﻿@model SurgicalProcedureVM
 
-<h1 class="text-primary text-center">CREAR PROCEDIMIENTO QUIRURGICO</h1>
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="SurgicalProcedure" asp-action="Index">Procedimientos quirurgicos</a>
+    </li>
+    <li class="breadcrumb-item active">Crear nuevo procedimiento quirurgico</li>
+</ol>
 
-<div class="container">
+<div class="container p-4 border bg-white rounded-3 shadow-sm">
     <form id="surgicalProcedureForm" method="post">
         @Html.AntiForgeryToken()
         <input asp-for="@Model.SurgicalProcedure.Id" hidden />
 
-        @* PATIENT DATA *@
-        <h4 class="text-primary">Datos del Paciente</h4>
-        <div class="row p-3 mb-3 border border-primary rounded-3">
+        @* GENERAL DATA *@
+        <h5 class="text-primary">Datos Generales</h5>
+        <div class="py-2 px-3 mb-3 border border-primary rounded-3">
             <input type="hidden" asp-for="@Model.SurgicalProcedure.PatientId" />
-            <div class="col-6 mb-2">
-                <label for="record" class="form-label">Record</label>
-                <input class="form-control" id="record" asp-for="@Model.SurgicalProcedure.Patient.Record" disabled />
+            <div class="row">
+                <div class="col-6 mb-2">
+                    <label for="record" class="form-label">Record</label>
+                    <input class="form-control" id="record" asp-for="@Model.SurgicalProcedure.Patient.Record" disabled />
+                </div>
+                <div class="col-6 mb-2">
+                    <label for="name" class="form-label">Nombre del paciente</label>
+                    <input class="form-control" id="name" asp-for="@Model.SurgicalProcedure.Patient.Name" disabled />
+                </div>
             </div>
-            <div class="col-6 mb-2">
-                <label for="name" class="form-label">Nombre Completo</label>
-                <input class="form-control" id="name" asp-for="@Model.SurgicalProcedure.Patient.Name" disabled />
+            <div class="row">
+                <div class="col-6 mb-2">
+                    <label for="diagnostic" class="form-label">Diagnóstico</label>
+                    <textarea class="form-control" id="diagnostic" asp-for="@Model.SurgicalProcedure.Diagnostic" rows="3"></textarea>
+                    <span asp-validation-for="@Model.SurgicalProcedure.Diagnostic" class="text-danger"></span>
+                </div>
+                <div class="col-6 mb-2">
+                    <label for="procedure" class="form-label">Procedimiento</label>
+                    <textarea class="form-control" id="procedure" asp-for="@Model.SurgicalProcedure.Procedure" rows="3"></textarea>
+                    <span asp-validation-for="@Model.SurgicalProcedure.Procedure" class="text-danger"></span>
+                </div>
             </div>
         </div>
 
-        <div class="row p-3 mb-3 border border-primary rounded-3">
-            <div class="col-6 mb-2">
-                <label for="diagnostic" class="form-label">Diagnóstico</label>
-                <textarea class="form-control" id="diagnostic" asp-for="@Model.SurgicalProcedure.Diagnostic" rows="5"></textarea>
-                <span asp-validation-for="@Model.SurgicalProcedure.Diagnostic" class="text-danger"></span>
-            </div>
-            <div class="col-6 mb-2">
-                <label for="procedure" class="form-label">Procedimiento</label>
-                <textarea class="form-control" id="procedure" asp-for="@Model.SurgicalProcedure.Procedure" rows="5"></textarea>
-                <span asp-validation-for="@Model.SurgicalProcedure.Procedure" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="row gap-4">
-            <div class="col p-0">
+        <div class="d-flex gap-4">
+            <div class="p-0">
                 @* DISCOVERIES DETAIL *@
-                <h4 class="text-primary">Hallazgos</h4>
-                <div class="p-3 border border-primary rounded-3">
+                <h5 class="text-primary">Hallazgos</h5>
+                <div class="py-2 px-3 border border-primary rounded-3">
                     <table id="DiscoveriesTable" class="table DetailTable" >
                         <thead>
                             <tr>
                                 <th class="text-primary w-75" scope="col">Descripción</th>
                                 <th class="text-primary" scope="col" style="position: relative">
-                                    <button id="btnadd" type="button" class="btn btn-secondary visible" style="position: absolute; top: 0%; left: 0%" onclick="addDiscoveryDetail(this)">
-                                        Agregar
+                                    <button id="btnadd" type="button" class="btn btn-primary visible" style="position: absolute; top: 0%; left: 0%;" onclick="addDiscoveryDetail(this)">
+                                        <i class="bi bi-plus-circle"></i>
                                     </button>
                                 </th>
                             </tr>
@@ -60,7 +66,9 @@
                                         <span asp-validation-for="@Model.SurgicalProcedure.Discoveries[i].Description" class="text-danger"></span>
                                     </td>
                                     <td style="position: relative">
-                                        <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeDiscoveryDetail(this)">Eliminar</button>
+                                        <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%;" onclick="removeDiscoveryDetail(this)">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             }
@@ -69,10 +77,10 @@
                 </div>
             </div>
 
-            <div class="col p-0">
+            <div class="p-0">
                 @* DOCTOR DETAIL *@
-                <h4 class="text-primary">Doctores</h4>
-                <div class="p-3 border border-primary rounded-3">
+                <h5 class="text-primary">Doctores</h5>
+                <div class="py-2 px-3 border border-primary rounded-3">
                     <div class="mb-2 pb-3 border-bottom border-primary">
                         <label for="ma" class="form-label fw-bold">MA Responsable</label>
                         <input class="form-control" id="ma" asp-for="@Model.NameMA" disabled />
@@ -82,8 +90,8 @@
                             <tr>
                                 <th class="text-primary w-75" scope="col">Residente</th>
                                 <th class="text-primary" scope="col" style="position: relative">
-                                    <button id="btnadd" type="button" class="btn btn-secondary visible" style="position: absolute; top: 0%; left: 0%;" onclick="addDoctorDetail(this)">
-                                        Agregar
+                                    <button id="btnadd" type="button" class="btn btn-primary visible" style="position: absolute; top: 0%; left: 0%;" onclick="addDoctorDetail(this)">
+                                        <i class="bi bi-plus-circle"></i>
                                     </button>
                                 </th>
                             </tr>
@@ -98,7 +106,9 @@
                                         </select>
                                     </td>
                                     <td style="position: relative">
-                                        <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%" onclick="removeDoctorDetail(this)">Eliminar</button>
+                                        <button id="btnremove-@i" type="button" class="btn btn-danger visible" style="position: absolute; left: 0%;" onclick="removeDoctorDetail(this)">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             }
@@ -108,10 +118,9 @@
             </div>
         </div>
 
-        <div class="mt-3 d-flex gap-2">
-            <button type="submit" asp-action="Create" class="btn btn-primary w-50">Guardar</button>
-            <a class="btn btn-secondary w-50" asp-action="Index">Volver</a>
-        </div>
+        <button type="submit" asp-action="Create" class="btn btn-primary w-100 mt-3">
+            <i class="bi bi-floppy2-fill"></i> Guardar
+        </button>
     </form>
 </div>
 

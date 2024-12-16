@@ -71,7 +71,7 @@ namespace MyPatient.Web.Controllers
             ViewData["Title"] = "Doctores";
 
             //Check if the request come from ajax or fetch for display index as a partial view
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
                 return PartialView(doctorIndexVM);
 
             return View(doctorIndexVM);

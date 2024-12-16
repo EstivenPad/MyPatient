@@ -1,8 +1,13 @@
 ﻿@model PatientUpsertVM
 
-<h1 class="text-center ms-2 @(Model.Patient.Id == 0 ? "text-primary" : "text-warning")">@(Model.Patient.Id == 0 ? "CREAR" : "EDITAR") PACIENTE</h1>
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="Patient" asp-action="Index">Pacientes</a>
+    </li>
+    <li class="breadcrumb-item active">@(Model.Patient.Id == 0 ? "Crear nuevo" : "Editar") paciente</li>
+</ol>
 
-<div class="container">
+<div class="container p-4 border bg-white rounded-3 shadow-sm">
     <form method="post">
         @Html.AntiForgeryToken()
         <input asp-for="Patient.Id" hidden />
@@ -42,7 +47,10 @@
 
             <div class="col-12 col-md-4">
                 <label for="age" class="form-label">Edad</label>
-                <input class="form-control" id="age" placeholder="0" asp-for="Patient.Age" min="1" />
+                <div class="input-group">
+                    <input type="number" class="form-control" id="age" placeholder="0" asp-for="Patient.Age" min="1" />
+                    <span class="input-group-text" id="age_measure">Años</span>
+                </div>
             </div>
 
             <div class="col-12 col-md-4">
@@ -56,7 +64,7 @@
 
         <div class="row">
             <div class="col-6">
-                <h4 class="text-primary">MA</h4>
+                <h5 class="text-primary">MA</h5>
                 <div class="border border-primary p-3 mb-3" style="border-radius: 10px">
                     <div>
                         <label class="form-label">MA Responsable</label>
@@ -73,19 +81,23 @@
                     </div>
                 </div>
 
-                <div class="mt-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-@(Model.Patient.Id == 0 ? "primary" : "warning") w-50">
-                        @(Model.Patient.Id == 0 ? "Guardar" : "Editar")
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        @if(Model.Patient.Id == 0) {
+                            <span>
+                                <i class="bi bi-floppy2-fill"></i> Guardar
+                            </span>
+                        } else {
+                            <span>
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </span>
+                        }
                     </button>
-
-                    <a class="btn btn-secondary w-50" asp-controller="Patient" asp-action="Index">
-                        Volver
-                    </a>
                 </div>
             </div>
 
             <div class="col-6">
-                <h4 class="text-primary">Seguro Médico</h4>
+                <h5 class="text-primary">Seguro Médico</h5>
                 <div class="border border-primary p-3" style="border-radius: 10px">
                     <div class="mb-3">
                         <input type="checkbox" class="form-check-input" id="isInsured" asp-for="Patient.IsInsured" />

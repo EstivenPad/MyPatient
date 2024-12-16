@@ -26,7 +26,7 @@
     <img class="image" src="https://localhost:7192/images/resident-logo.jpeg" alt="Resident Logo" />
 </div>
 
-<div style="width: 80%; margin: 0 auto; border: 1px solid">
+<div style="width: 80%; margin: 0 auto; border: 1px solid;">
     <div class="grid-header" style="padding: 5px 0;">
         <b>ORDEN MEDICA</b>
     </div>
@@ -89,35 +89,33 @@
             </div>
         </div>
 
-        <div class="border" style="padding-left: 5px;">
+        <div class="border" style="padding-left: 5px; border-bottom: 0px">
             <p style="padding:0; margin:0;"> &nbsp;</p>
-        </div>
-
-        <div style="width: 100%;">
-            <table style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>SOLUCIONES</th>
-                        <th>DOSIS</th>
-                        <th>FRECUENCIA</th>
-                        <th>VIA</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.Solutions.Count; i++)
-                    {
-                        <tr>
-                            <td>@Model.Solutions[i].Name</td>
-                            <td>@Model.Solutions[i].Dose</td>
-                            <td>@Model.Solutions[i].Frecuency</td>
-                            <td>@Model.Solutions[i].Via</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
         </div>
     </div>
 </div>
+
+<table style="width: 80%; margin: 0 auto;">
+    <thead>
+        <tr>
+            <th>SOLUCIONES</th>
+            <th>DOSIS</th>
+            <th>FRECUENCIA</th>
+            <th>VIA</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Solutions.Count; i++)
+        {
+            <tr>
+                <td>@Model.Solutions[i].Name</td>
+                <td>@Model.Solutions[i].Dose</td>
+                <td>@Model.Solutions[i].Frecuency</td>
+                <td>@Model.Solutions[i].Via</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <style>
     .flex {
@@ -139,7 +137,7 @@
 
     .grid-header {
         text-align: center;
-        background-color: #ccc;
+        background-color: #ddd;
     }
 
     .border {

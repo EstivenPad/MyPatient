@@ -3,13 +3,9 @@ using MyPatient.DataAccess.DataContext;
 using MyPatient.DataAccess.Repository.IRepository;
 using MyPatient.Models;
 using MyPatient.Models.ViewModels.MedicalOrderVM;
-using MyPatient.Models.ViewModels.SurgicalProcedureVM;
 using MyPatient.Web.Models.Enums;
-using System;
-using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyPatient.DataAccess.Repository
 {
@@ -22,10 +18,33 @@ namespace MyPatient.DataAccess.Repository
             _dbContext = context;
         }
 
-        public async Task<MedicalOrder> GetLast(TypeMedicalOrder type, long patientId)
+        public override IQueryable<MedicalOrder> GetAll(Expression<Func<MedicalOrder, bool>>? filter = null, string? includeProperties = null)
+        {
+            IQueryable<MedicalOrder> query = dbSet.AsNoTracking();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
+            query = query.OrderByDescending(mo => mo.CreatedDate)
+                         .ThenByDescending(mo => mo.CreatedTime);
+
+            return query;
+        }
+
+        public async Task<MedicalOrder> GetLast(long patientId)
         {
             var lastMedicalOrder = await _dbContext.MedicalOrders
-                .Where(mo => mo.Type == type)
                 .Where(mo => mo.PatientId == patientId)
                 .Include(mo => mo.MA)
                 .Include(mo => mo.Patient)
@@ -35,11 +54,6 @@ namespace MyPatient.DataAccess.Repository
                 .LastOrDefaultAsync();
 
             return lastMedicalOrder;
-        }
-
-        public override Task Create(MedicalOrder entity)
-        {   
-            return base.Create(entity);
         }
 
         public async Task<MedicalOrderSummary> GetReportData(long medicalOrderId, TypeMedicalOrder type)
@@ -139,11 +153,6 @@ namespace MyPatient.DataAccess.Repository
             }
 
             await _dbContext.SaveChangesAsync();
-        }
-
-        public override Task Delete(MedicalOrder entity)
-        {
-            return base.Delete(entity);
         }
     }
 }

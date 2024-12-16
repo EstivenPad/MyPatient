@@ -5,7 +5,7 @@
         <div class="modal-content">
             <form method="post" asp-controller="SurgicalProcedure" asp-action="GenerateReport">
                 <div class="modal-header">
-                    <b class="modal-title text-dark fs-5" id="MAModalLabel">REPORTE PROCEDIMIENTO QUIRURGICO</b>
+                    <b class="modal-title text-primary fs-5" id="MAModalLabel">REPORTE PROCEDIMIENTO QUIRURGICO</b>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -32,8 +32,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" formaction="@Url.Action("GeneratePreviewReport")" class="btn btn-dark">Visualizar Reporte</button>
-                    <button type="submit" formaction="@Url.Action("GenerateReport")" class="btn btn-danger">Generar Reporte en PDF</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" formaction="@Url.Action("GenerateReport")" class="btn btn-danger">Generar PDF</button>
                 </div>
             </form>
         </div>

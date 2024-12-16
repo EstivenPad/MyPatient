@@ -10,8 +10,8 @@
     <h1 class="text-center mb-3">DOCTORES</h1>
 
     <form asp-action="Index" method="get">
-        <div class="row input-group mb-2">
-            <div class="col-2">
+        <div class="row align-items-center input-group mb-2">
+            <div class="col-auto">
                 <select class="form-select" name="FilterSelected" asp-for="@ViewData["FilterSelected"]" asp-items="@Model.FilterOptions">
                     <option disabled selected>--Seleccionar filtro--</option>
                 </select>
@@ -29,7 +29,7 @@
             </div>
 
             <div class="col-auto mx-2">
-                <b class="d-block text-center">NIVEL MÉDICO:</b>
+                <b class="d-block text-center">AGRUPAR POR:</b>
                 <div class="d-flex gap-3">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" asp-for="@ViewData["MedicalLevelOption"]" name="medicalLevelOption" id="medicalLevelOption1" value="All" checked="">
@@ -40,19 +40,19 @@
                     <div class="form-check">
                         <input class="form-check-input" type="radio" asp-for="@ViewData["MedicalLevelOption"]" name="medicalLevelOption" id="medicalLevelOption2" value="MA">
                         <label class="form-check-label" for="medicalLevelOption2">
-                            MA
+                            MA's
                         </label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" asp-for="@ViewData["MedicalLevelOption"]" name="medicalLevelOption" id="medicalLevelOption3" value="Resident">
                         <label class="form-check-label" for="medicalLevelOption3">
-                            Residente
+                            Residentes
                         </label>
                     </div>
                 </div>
             </div>
 
-            <div class="col text-end">
+            <div class="col text-end p-0">
                 <a class="btn btn-primary" asp-controller="Doctor" asp-action="Upsert"><i class="bi bi-person-plus-fill"></i> Crear nuevo doctor</a>
             </div>
         </div>
